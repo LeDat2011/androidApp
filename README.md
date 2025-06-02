@@ -1,111 +1,87 @@
-# Japanese Learning App
+# Ứng Dụng Học Tiếng Nhật
 
-Ứng dụng học tiếng Nhật dành cho người Việt, được xây dựng bằng Jetpack Compose với giao diện người dùng hiện đại và tương tác hấp dẫn.
+Ứng dụng học tiếng Nhật được phát triển bằng Kotlin và Jetpack Compose, giúp người dùng học tiếng Nhật một cách hiệu quả thông qua các tính năng tương tác.
 
-## Tính năng
+## Tính Năng Chính
 
-- **Flashcards**: Học từ vựng thông qua các thẻ lật với hiệu ứng 3D mượt mà
-- **Kiểm tra trắc nghiệm**: Kiểm tra kiến thức với các câu hỏi trắc nghiệm tương tác
-- **Theo dõi tiến độ**: Theo dõi quá trình học tập thông qua biểu đồ và thống kê
-- **Hồ sơ người dùng**: Quản lý thông tin cá nhân, thành tích và thống kê học tập
-- **Điều hướng ngang**: Chuyển đổi giữa các màn hình bằng cách vuốt ngang
-- **Cuộn dọc**: Hỗ trợ cuộn dọc cho tất cả các màn hình với nội dung phong phú
+- 🏠 **Màn hình chính**: Hiển thị tổng quan và điều hướng nhanh đến các chức năng
+- 📚 **Học tập**: 
+  - Flashcard để học từ vựng
+  - Bài tập ngữ pháp
+  - Luyện tập Kanji
+- ✍️ **Kiểm tra**: 
+  - Quiz đa dạng theo chủ đề
+  - Theo dõi tiến độ học tập
+- 👤 **Hồ sơ cá nhân**: 
+  - Quản lý thông tin cá nhân
+  - Theo dõi mục tiêu học tập
+  - Xem lịch sử học tập
 
-## Công nghệ sử dụng
+## Công Nghệ Sử Dụng
 
-- Kotlin
-- Jetpack Compose
-- Material Design 3
-- Accompanist Pager (Google)
-- AndroidX Core KTX
-- AndroidX Credentials
+- **Kotlin**: Ngôn ngữ lập trình chính
+- **Jetpack Compose**: Framework UI hiện đại
+- **Material Design 3**: Thiết kế giao diện
+- **Firebase**: 
+  - Authentication: Xác thực người dùng
+  - Firestore: Lưu trữ dữ liệu
+  - Storage: Lưu trữ hình ảnh và tài liệu
 
-## Cấu trúc dự án
+## Yêu Cầu Hệ Thống
+
+- Android Studio Hedgehog | 2023.1.1
+- Kotlin 1.9.0
+- Gradle 8.0
+- minSdkVersion: 24
+- targetSdkVersion: 34
+
+## Cài Đặt
+
+1. Clone repository:
+```bash
+git clone [repository-url]
+```
+
+2. Mở project trong Android Studio
+
+3. Sync Gradle và cài đặt dependencies
+
+4. Chạy ứng dụng trên thiết bị hoặc máy ảo Android
+
+## Cấu Trúc Project
 
 ```
 app/
 ├── src/
 │   ├── main/
 │   │   ├── java/com/example/composeapp/
-│   │   │   ├── components/           # Các thành phần UI có thể tái sử dụng
-│   │   │   │   ├── FlashcardComponent.kt
-│   │   │   │   ├── QuizComponent.kt
-│   │   │   │   ├── ProgressComponent.kt
-│   │   │   │   └── ProfileComponent.kt
-│   │   │   ├── models/               # Các mô hình dữ liệu
-│   │   │   │   └── Models.kt
-│   │   │   ├── screens/              # Các màn hình chính của ứng dụng
-│   │   │   │   ├── HomeScreen.kt
-│   │   │   │   ├── FlashcardScreen.kt
-│   │   │   │   ├── QuizScreen.kt
-│   │   │   │   ├── ProgressScreen.kt
-│   │   │   │   └── ProfileScreen.kt
-│   │   │   ├── navigation/           # Điều hướng ứng dụng
-│   │   │   │   └── Navigation.kt
-│   │   │   ├── theme/                # Chủ đề và styling
-│   │   │   │   └── Theme.kt
-│   │   │   └── MainActivity.kt       # Điểm khởi chạy ứng dụng
-│   │   └── res/                      # Tài nguyên Android
-│   └── ...
-└── ...
+│   │   │   ├── components/       # Các component tái sử dụng
+│   │   │   ├── models/          # Data models
+│   │   │   ├── navigation/      # Navigation và routing
+│   │   │   ├── screens/         # Các màn hình chính
+│   │   │   ├── ui/theme/        # Theme và styling
+│   │   │   ├── utils/          # Utility functions
+│   │   │   └── viewmodels/     # ViewModels
+│   │   └── res/                # Resources
+└── build.gradle                # Project configuration
 ```
 
-## Các tính năng UI nâng cao
+## Đóng Góp
 
-### Hiệu ứng lật thẻ 3D
+Nếu bạn muốn đóng góp vào dự án, hãy:
 
-Ứng dụng sử dụng hiệu ứng lật thẻ 3D với các tính năng:
-- Góc nhìn 3D thực tế thông qua `cameraDistance`
-- Hiệu ứng đàn hồi và co giãn khi lật
-- Bóng động khi lật
-- Phản hồi xúc giác khi tương tác
+1. Fork repository
+2. Tạo branch mới (`git checkout -b feature/AmazingFeature`)
+3. Commit thay đổi (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
+5. Tạo Pull Request
 
-### Hiệu ứng nút và thành phần
+## License
 
-- Hiệu ứng scale khi nhấn
-- Hiệu ứng đàn hồi cho hoạt ảnh
-- Animation cho thay đổi màu sắc
-- Hiệu ứng thay đổi độ cao
+Distributed under the MIT License. See `LICENSE` for more information.
 
-## Cài đặt
+## Liên Hệ
 
-1. Clone repository:
-```
-git clone https://github.com/your-username/japanese-learning-app.git
-```
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
 
-2. Mở dự án trong Android Studio.
-
-3. Chạy ứng dụng trên thiết bị hoặc giả lập.
-
-## Yêu cầu
-
-- Android 7.0 (API level 26) trở lên
-- Android Studio Arctic Fox trở lên
-- Kotlin 1.6.10 trở lên
-
-## Giấy phép
-
-```
-MIT License
-
-Copyright (c) 2023 Your Name
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-``` 
+Project Link: [https://github.com/yourusername/repo_name](https://github.com/yourusername/repo_name) 
