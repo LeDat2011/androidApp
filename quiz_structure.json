@@ -1,0 +1,169 @@
+{
+  "quizzes": {
+    "grammar": {
+      "N5": {
+        "quiz_1": {
+          "id": "g_n5_1",
+          "title": "Ngữ pháp N5 - Bài 1",
+          "description": "Các mẫu câu cơ bản trong tiếng Nhật",
+          "time_limit": 600,
+          "questions": {
+            "q1": {
+              "id": "g_n5_1_q1",
+              "type": "multiple_choice",
+              "question": "どうぞ＿＿＿ください。",
+              "options": {
+                "a": "よろしく",
+                "b": "よろしい",
+                "c": "いい",
+                "d": "すみません"
+              },
+              "correct_answer": "a",
+              "explanation": "よろしく là cách nói lịch sự trong câu này",
+              "points": 10
+            },
+            "q2": {
+              "id": "g_n5_1_q2",
+              "type": "true_false",
+              "question": "「わたしは学生です。」は正しい文法ですか。",
+              "correct_answer": true,
+              "explanation": "Đây là câu đúng ngữ pháp cơ bản",
+              "points": 5
+            }
+          }
+        }
+      },
+      "N4": {
+        "quiz_1": {
+          "id": "g_n4_1",
+          "title": "Ngữ pháp N4 - Thể て",
+          "description": "Học cách sử dụng thể て trong tiếng Nhật",
+          "time_limit": 900,
+          "questions": {
+            "q1": {
+              "id": "g_n4_1_q1",
+              "type": "fill_blank",
+              "question": "食べ＿＿、寝ます。",
+              "correct_answer": "て",
+              "explanation": "Sử dụng て để nối hai hành động liên tiếp",
+              "points": 15
+            }
+          }
+        }
+      }
+    },
+    "vocabulary": {
+      "N5": {
+        "quiz_1": {
+          "id": "v_n5_1",
+          "title": "Từ vựng N5 - Chủ đề: Gia đình",
+          "description": "Học từ vựng về gia đình",
+          "time_limit": 300,
+          "questions": {
+            "q1": {
+              "id": "v_n5_1_q1",
+              "type": "multiple_choice",
+              "question": "「おとうさん」の意味は何ですか。",
+              "options": {
+                "a": "Mẹ",
+                "b": "Bố",
+                "c": "Anh trai",
+                "d": "Em gái"
+              },
+              "correct_answer": "b",
+              "explanation": "おとうさん có nghĩa là bố/cha",
+              "points": 10
+            }
+          }
+        }
+      }
+    },
+    "kanji": {
+      "N5": {
+        "quiz_1": {
+          "id": "k_n5_1",
+          "title": "Kanji N5 - Bài 1",
+          "description": "Các chữ Kanji cơ bản",
+          "time_limit": 450,
+          "questions": {
+            "q1": {
+              "id": "k_n5_1_q1",
+              "type": "matching",
+              "question": "「日」の読み方を選んでください。",
+              "options": {
+                "a": "ひ",
+                "b": "つき",
+                "c": "とき",
+                "d": "あさ"
+              },
+              "correct_answer": "a",
+              "explanation": "日 có âm kun-yomi là ひ",
+              "points": 10
+            }
+          }
+        }
+      }
+    },
+    "listening": {
+      "N5": {
+        "quiz_1": {
+          "id": "l_n5_1",
+          "title": "Nghe hiểu N5 - Bài 1",
+          "description": "Luyện nghe hội thoại cơ bản",
+          "time_limit": 600,
+          "questions": {
+            "q1": {
+              "id": "l_n5_1_q1",
+              "type": "audio_choice",
+              "audio_url": "https://example.com/audio/n5_1_1.mp3",
+              "question": "会話を聞いて、質問に答えてください。",
+              "options": {
+                "a": "学校に行きます",
+                "b": "家に帰ります",
+                "c": "買い物に行きます",
+                "d": "仕事に行きます"
+              },
+              "correct_answer": "a",
+              "explanation": "Trong đoạn hội thoại, người nói đang nói về việc đi học",
+              "points": 15
+            }
+          }
+        }
+      }
+    }
+  },
+  "user_progress": {
+    "user_id_1": {
+      "completed_quizzes": {
+        "g_n5_1": {
+          "score": 85,
+          "completed_at": "2024-03-20T15:30:00Z",
+          "time_taken": 450
+        }
+      },
+      "current_level": "N5",
+      "total_points": 850,
+      "achievements": {
+        "perfect_score": 3,
+        "fast_completion": 2,
+        "streak_days": 5
+      }
+    }
+  },
+  "leaderboard": {
+    "weekly": {
+      "user_id_1": {
+        "name": "User 1",
+        "points": 850,
+        "rank": 1
+      }
+    },
+    "monthly": {
+      "user_id_1": {
+        "name": "User 1",
+        "points": 2500,
+        "rank": 1
+      }
+    }
+  }
+} 

@@ -10,7 +10,6 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
-import com.example.composeapp.models.FlashcardCategory
 import com.example.composeapp.navigation.Route
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
@@ -138,9 +137,11 @@ fun MainScreen(
                 1 -> LearnScreen()
                 2 -> QuizScreen()
                 3 -> StatusScreen()
-                4 -> {
-                    // Profile tab is now handled by navigation
-                }
+                4 -> ProfileScreen(
+                    onNavigateBack = { selectedIndex = 0 },
+                    onEditProfile = { isShowingEditProfile = true },
+                    onLogout = { navController.navigate("login") }
+                )
             }
 
             // Show edit profile screen as overlay when active
