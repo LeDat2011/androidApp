@@ -189,23 +189,23 @@ class UserProfileViewModel : ViewModel() {
                 _saveProfileState.value = SaveProfileState.Loading
                 
                 val userId = auth.currentUser?.uid ?: throw Exception("User not authenticated")
-                var avatarUrl = profile.avatarUrl
+                var updatedAvatarUrl = profile.avatarUrl
                 
                 // Upload image if provided
                 if (imageUri != null) {
                     val userRef = database.reference.child("users").child(userId).child("profile").child("avatarUrl")
                     userRef.setValue(imageUri.toString()).await()
-                    avatarUrl = imageUri.toString()
+                    updatedAvatarUrl = imageUri.toString()
                 }
                 
                 // Save profile data
                 val profileData = mutableMapOf<String, Any>()
-                profile.name?.let { profileData["name"] = it }
-                profile.age?.let { profileData["age"] = it }
-                profile.currentLevel?.let { profileData["currentLevel"] = it.name }
-                profile.targetLevel?.let { profileData["targetLevel"] = it.name }
-                avatarUrl?.let { profileData["avatarUrl"] = it }
-                profile.registrationDate?.let { profileData["registrationDate"] = it }
+                profileData["name"] = profile.name
+                profileData["age"] = profile.age
+                profileData["currentLevel"] = profile.currentLevel.name
+                profileData["targetLevel"] = profile.targetLevel.name
+                if (updatedAvatarUrl != null) profileData["avatarUrl"] = updatedAvatarUrl
+                if (profile.registrationDate != null) profileData["registrationDate"] = profile.registrationDate
                 
                 // Save progress data
                 val progressData = mutableMapOf<String, Any>()
@@ -213,11 +213,11 @@ class UserProfileViewModel : ViewModel() {
                 progressData["wordsLearned"] = profile.wordsLearned
                 progressData["lessonsCompleted"] = profile.lessonsCompleted
                 progressData["daysActive"] = profile.daysActive
-                profile.lastActiveDate?.let { progressData["lastActiveDate"] = it }
+                if (profile.lastActiveDate != null) progressData["lastActiveDate"] = profile.lastActiveDate
                 
                 // Save settings data
                 val settingsData = mutableMapOf<String, Any>()
-                profile.studyTimeMinutes?.let { settingsData["studyTimeMinutes"] = it }
+                settingsData["studyTimeMinutes"] = profile.studyTimeMinutes
                 
                 // Save to Realtime Database
                 val updates = hashMapOf<String, Any>(
@@ -227,7 +227,7 @@ class UserProfileViewModel : ViewModel() {
                 )
                 database.reference.child("users").child(userId).updateChildren(updates).await()
                 
-                _profileData.value = profile
+                _profileData.value = profile.copy(avatarUrl = updatedAvatarUrl)
                 _saveProfileState.value = SaveProfileState.Success
             } catch (e: Exception) {
                 _saveProfileState.value = SaveProfileState.Error(e.message ?: "Lỗi không xác định")

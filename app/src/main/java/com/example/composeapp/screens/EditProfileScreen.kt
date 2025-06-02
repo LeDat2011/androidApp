@@ -144,16 +144,22 @@ fun EditProfileScreen(
                             keyboardController?.hide()
                             if (validateForm()) {
                                 val profile = UserProfileData(
-                                name = name,
-                                age = age.toIntOrNull() ?: 0,
-                                currentLevel = JapaneseLevel.values()[currentLevelIndex],
-                                targetLevel = JapaneseLevel.values()[targetLevelIndex],
-                                studyTimeMinutes = StudyTimeOptions.options[studyTimeIndex].first,
-                                    registrationDate = System.currentTimeMillis(),
-                                    lastActiveDate = System.currentTimeMillis()
+                                    name = name,
+                                    age = age.toIntOrNull() ?: 0,
+                                    currentLevel = JapaneseLevel.values()[currentLevelIndex],
+                                    targetLevel = JapaneseLevel.values()[targetLevelIndex],
+                                    studyTimeMinutes = StudyTimeOptions.options[studyTimeIndex].first,
+                                    streak = profileData?.streak ?: 0,
+                                    wordsLearned = profileData?.wordsLearned ?: 0,
+                                    lessonsCompleted = profileData?.lessonsCompleted ?: 0,
+                                    daysActive = profileData?.daysActive ?: 0,
+                                    registrationDate = profileData?.registrationDate ?: System.currentTimeMillis(),
+                                    lastActiveDate = System.currentTimeMillis(),
+                                    avatarUrl = profileData?.avatarUrl,
+                                    userId = profileData?.userId ?: ""
                                 )
                                 viewModel.saveUserProfile(profile)
-                                }
+                            }
                         },
                         enabled = !isLoading
                     ) {

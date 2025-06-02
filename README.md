@@ -75,3 +75,13 @@ Nếu bạn muốn đóng góp vào dự án, hãy:
 3. Commit thay đổi (`git commit -m 'Add some AmazingFeature'`)
 4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Tạo Pull Request
+
+## License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+## Liên Hệ
+
+Your Name - [@yourtwitter](https://twitter.com/yourtwitter) - email@example.com
+
+Project Link: [https://github.com/yourusername/repo_name](https://github.com/yourusername/repo_name)

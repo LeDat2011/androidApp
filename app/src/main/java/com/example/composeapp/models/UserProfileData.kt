@@ -1,18 +1,18 @@
 package com.example.composeapp.models
 
 data class UserProfileData(
-    val userId: String = "", // Firebase Auth UID
-    val name: String? = null,
-    val age: Int? = null,
-    val currentLevel: JapaneseLevel? = null,
-    val targetLevel: JapaneseLevel? = null,
-    val studyTimeMinutes: Int? = null,
+    val userId: String = "",
+    val name: String = "",
+    val age: Int = 0,
+    val currentLevel: JapaneseLevel = JapaneseLevel.BEGINNER,
+    val targetLevel: JapaneseLevel = JapaneseLevel.N5,
+    val studyTimeMinutes: Int = 30,
     val streak: Int = 0,
     val wordsLearned: Int = 0,
     val lessonsCompleted: Int = 0,
     val daysActive: Int = 0,
-    val lastActiveDate: Long? = null,
     val registrationDate: Long? = null,
+    val lastActiveDate: Long? = null,
     val avatarUrl: String? = null
 )
 
