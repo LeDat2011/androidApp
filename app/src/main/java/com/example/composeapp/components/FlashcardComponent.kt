@@ -105,32 +105,32 @@ fun FlashcardComponent(
                         .fillMaxSize()
                         .graphicsLayer { alpha = if (!isFlipped) 1f else 0f }
                 ) {
-                    Column(
-                        horizontalAlignment = Alignment.CenterHorizontally,
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center,
                         modifier = Modifier.fillMaxSize()
-                    ) {
-                        Text(
+                ) {
+                    Text(
                             text = flashcard.word,
                             fontSize = 48.sp,
-                            fontWeight = FontWeight.Bold,
+                        fontWeight = FontWeight.Bold,
                             textAlign = TextAlign.Center
-                        )
+                    )
                         Spacer(modifier = Modifier.height(16.dp))
-                        Text(
+                    Text(
                             text = flashcard.reading,
                             fontSize = 24.sp,
                             color = MaterialTheme.colorScheme.primary,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-
+                        textAlign = TextAlign.Center
+                    )
+            }
+        }
+        
                 // Back side
                 Box(
-                    modifier = Modifier
+            modifier = Modifier
                         .fillMaxSize()
-                        .graphicsLayer { 
+                .graphicsLayer {
                             rotationY = 180f
                             alpha = if (isFlipped) 1f else 0f
                         }
@@ -164,9 +164,9 @@ fun FlashcardComponent(
                 }
 
                 // Gesture indicators
-                Box(
-                    modifier = Modifier
-                        .fillMaxSize()
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
                         .padding(16.dp)
                 ) {
                     // Previous card indicator
@@ -206,4 +206,4 @@ fun FlashcardComponent(
             }
         }
     }
-} 
+}

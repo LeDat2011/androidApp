@@ -29,8 +29,6 @@ fun MainScreen(
     navController: NavHostController
 ) {
     var selectedIndex by remember { mutableStateOf(0) }
-    var isShowingQuizContent by remember { mutableStateOf(false) }
-    var selectedQuizCategory by remember { mutableStateOf<FlashcardCategory?>(null) }
     var isShowingEditProfile by remember { mutableStateOf(false) }
     
     Scaffold(
@@ -122,13 +120,7 @@ fun MainScreen(
                         )
                     },
                     selected = selectedIndex == 4,
-                    onClick = { 
-                        selectedIndex = 4
-                        navController.navigate(Route.PROFILE.route) {
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    }
+                    onClick = { selectedIndex = 4 }
                 )
             }
         }
@@ -144,31 +136,10 @@ fun MainScreen(
                     }
                 )
                 1 -> LearnScreen()
-                2 -> QuizScreen(
-                    onNavigateToQuiz = { category ->
-                        selectedQuizCategory = category
-                        isShowingQuizContent = true
-                    }
-                )
+                2 -> QuizScreen()
                 3 -> StatusScreen()
                 4 -> {
                     // Profile tab is now handled by navigation
-                }
-            }
-            
-            // Show quiz content as overlay when active
-            if (isShowingQuizContent && selectedQuizCategory != null) {
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
-                ) {
-                    QuizContentScreen(
-                        category = selectedQuizCategory!!,
-                        onBackPress = {
-                            isShowingQuizContent = false
-                            selectedQuizCategory = null
-                        }
-                    )
                 }
             }
 
