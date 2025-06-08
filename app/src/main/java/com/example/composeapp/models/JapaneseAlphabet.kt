@@ -2,7 +2,8 @@ package com.example.composeapp.models
 
 enum class AlphabetType {
     HIRAGANA,
-    KATAKANA
+    KATAKANA,
+    KANJI
 }
 
 data class JapaneseCharacter(
@@ -11,7 +12,10 @@ data class JapaneseCharacter(
     val strokeOrder: String? = null, // URL hình ảnh thứ tự nét viết từ Firebase Storage (vd: gs://my-app.appspot.com/stroke-orders/hiragana/あ.gif)
     val imageUrl: String? = null,   // URL hình ảnh minh họa từ Firebase Storage
     val audioUrl: String? = null,   // URL file âm thanh phát âm từ Firebase Storage
-    val examples: List<Example> = emptyList() // Ví dụ sử dụng
+    val examples: List<Example> = emptyList(), // Ví dụ sử dụng
+    val meaning: String? = null,    // Nghĩa của Kanji (chỉ dùng cho Kanji)
+    val onReading: String? = null,  // Âm On của Kanji (chỉ dùng cho Kanji)
+    val kunReading: String? = null  // Âm Kun của Kanji (chỉ dùng cho Kanji)
 )
 
 // Object chứa dữ liệu bảng chữ cái Hiragana và Katakana
@@ -19,18 +23,58 @@ object JapaneseAlphabet {
     // Bảng chữ cái Hiragana
     val hiragana = listOf(
         // Nguyên âm
-        JapaneseCharacter("あ", "a"),
-        JapaneseCharacter("い", "i"),
-        JapaneseCharacter("う", "u"),
-        JapaneseCharacter("え", "e"),
-        JapaneseCharacter("お", "o"),
+        JapaneseCharacter(
+            character = "あ",
+            romanization = "a",
+            strokeOrder = "asset:///stroke_order/hiragana/a.svg"
+        ),
+        JapaneseCharacter(
+            character = "い",
+            romanization = "i",
+            strokeOrder = "asset:///stroke_order/hiragana/i.svg"
+        ),
+        JapaneseCharacter(
+            character = "う",
+            romanization = "u",
+            strokeOrder = "asset:///stroke_order/hiragana/u.svg"
+        ),
+        JapaneseCharacter(
+            character = "え",
+            romanization = "e",
+            strokeOrder = "asset:///stroke_order/hiragana/e.svg"
+        ),
+        JapaneseCharacter(
+            character = "お",
+            romanization = "o",
+            strokeOrder = "asset:///stroke_order/hiragana/o.svg"
+        ),
         
         // Phụ âm K
-        JapaneseCharacter("か", "ka"),
-        JapaneseCharacter("き", "ki"),
-        JapaneseCharacter("く", "ku"),
-        JapaneseCharacter("け", "ke"),
-        JapaneseCharacter("こ", "ko"),
+        JapaneseCharacter(
+            character = "か",
+            romanization = "ka",
+            strokeOrder = "asset:///stroke_order/hiragana/ka.svg"
+        ),
+        JapaneseCharacter(
+            character = "き",
+            romanization = "ki",
+            strokeOrder = "asset:///stroke_order/hiragana/ki.svg"
+        ),
+        JapaneseCharacter(
+            character = "く",
+            romanization = "ku",
+            strokeOrder = "asset:///stroke_order/hiragana/ku.svg"
+        ),
+        JapaneseCharacter(
+            character = "け",
+            romanization = "ke",
+            strokeOrder = "asset:///stroke_order/hiragana/ke.svg"
+        ),
+        JapaneseCharacter(
+            character = "こ",
+            romanization = "ko",
+            strokeOrder = "asset:///stroke_order/hiragana/ko.svg"
+        ),
         
         // Phụ âm S
         JapaneseCharacter("さ", "sa"),
@@ -160,18 +204,58 @@ object JapaneseAlphabet {
     // Bảng chữ cái Katakana
     val katakana = listOf(
         // Nguyên âm
-        JapaneseCharacter("ア", "a"),
-        JapaneseCharacter("イ", "i"),
-        JapaneseCharacter("ウ", "u"),
-        JapaneseCharacter("エ", "e"),
-        JapaneseCharacter("オ", "o"),
+        JapaneseCharacter(
+            character = "ア",
+            romanization = "a",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_a.png"
+        ),
+        JapaneseCharacter(
+            character = "イ",
+            romanization = "i",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_i.png"
+        ),
+        JapaneseCharacter(
+            character = "ウ",
+            romanization = "u",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_u.png"
+        ),
+        JapaneseCharacter(
+            character = "エ",
+            romanization = "e",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_e.png"
+        ),
+        JapaneseCharacter(
+            character = "オ",
+            romanization = "o",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_o.png"
+        ),
         
         // Phụ âm K
-        JapaneseCharacter("カ", "ka"),
-        JapaneseCharacter("キ", "ki"),
-        JapaneseCharacter("ク", "ku"),
-        JapaneseCharacter("ケ", "ke"),
-        JapaneseCharacter("コ", "ko"),
+        JapaneseCharacter(
+            character = "カ",
+            romanization = "ka",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ka.png"
+        ),
+        JapaneseCharacter(
+            character = "キ",
+            romanization = "ki",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ki.png"
+        ),
+        JapaneseCharacter(
+            character = "ク",
+            romanization = "ku",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ku.png"
+        ),
+        JapaneseCharacter(
+            character = "ケ",
+            romanization = "ke",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ke.png"
+        ),
+        JapaneseCharacter(
+            character = "コ",
+            romanization = "ko",
+            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ko.png"
+        ),
         
         // Phụ âm S
         JapaneseCharacter("サ", "sa"),
@@ -298,11 +382,445 @@ object JapaneseAlphabet {
         JapaneseCharacter("ピョ", "pyo")
     )
     
+    // Bảng chữ Kanji cơ bản (JLPT N5 và N4)
+    val kanji = listOf(
+        // JLPT N5 Kanji
+        // Chủ đề: Thời gian
+        JapaneseCharacter(
+            character = "日",
+            romanization = "nichi/jitsu",
+            meaning = "ngày, mặt trời",
+            onReading = "ニチ、ジツ",
+            kunReading = "ひ、-び、-か"
+        ),
+        JapaneseCharacter(
+            character = "月",
+            romanization = "getsu/gatsu",
+            meaning = "tháng, mặt trăng",
+            onReading = "ゲツ、ガツ",
+            kunReading = "つき"
+        ),
+        JapaneseCharacter(
+            character = "年",
+            romanization = "nen",
+            meaning = "năm",
+            onReading = "ネン",
+            kunReading = "とし"
+        ),
+        JapaneseCharacter(
+            character = "時",
+            romanization = "ji",
+            meaning = "giờ, thời gian",
+            onReading = "ジ",
+            kunReading = "とき"
+        ),
+
+        // Chủ đề: Con người và gia đình
+        JapaneseCharacter(
+            character = "人",
+            romanization = "jin/nin",
+            meaning = "người",
+            onReading = "ジン、ニン",
+            kunReading = "ひと"
+        ),
+        JapaneseCharacter(
+            character = "父",
+            romanization = "fu",
+            meaning = "bố, cha",
+            onReading = "フ",
+            kunReading = "ちち、とう"
+        ),
+        JapaneseCharacter(
+            character = "母",
+            romanization = "bo",
+            meaning = "mẹ",
+            onReading = "ボ",
+            kunReading = "はは、かあ"
+        ),
+        JapaneseCharacter(
+            character = "子",
+            romanization = "shi/su",
+            meaning = "con, trẻ em",
+            onReading = "シ、ス",
+            kunReading = "こ"
+        ),
+
+        // Chủ đề: Số đếm
+        JapaneseCharacter(
+            character = "一",
+            romanization = "ichi",
+            meaning = "một",
+            onReading = "イチ",
+            kunReading = "ひと-"
+        ),
+        JapaneseCharacter(
+            character = "二",
+            romanization = "ni",
+            meaning = "hai",
+            onReading = "ニ",
+            kunReading = "ふた-"
+        ),
+        JapaneseCharacter(
+            character = "三",
+            romanization = "san",
+            meaning = "ba",
+            onReading = "サン",
+            kunReading = "み-"
+        ),
+        JapaneseCharacter(
+            character = "四",
+            romanization = "shi",
+            meaning = "bốn",
+            onReading = "シ",
+            kunReading = "よ-"
+        ),
+        JapaneseCharacter(
+            character = "五",
+            romanization = "go",
+            meaning = "năm",
+            onReading = "ゴ",
+            kunReading = "いつ-"
+        ),
+
+        // Chủ đề: Học tập
+        JapaneseCharacter(
+            character = "本",
+            romanization = "hon",
+            meaning = "sách, gốc, nguồn gốc",
+            onReading = "ホン",
+            kunReading = "もと"
+        ),
+        JapaneseCharacter(
+            character = "学",
+            romanization = "gaku",
+            meaning = "học",
+            onReading = "ガク",
+            kunReading = "まな.ぶ"
+        ),
+        JapaneseCharacter(
+            character = "校",
+            romanization = "kou",
+            meaning = "trường học",
+            onReading = "コウ",
+            kunReading = ""
+        ),
+        JapaneseCharacter(
+            character = "先",
+            romanization = "sen",
+            meaning = "trước, tiên",
+            onReading = "セン",
+            kunReading = "さき"
+        ),
+
+        // JLPT N4 Kanji
+        // Chủ đề: Công việc và xã hội
+        JapaneseCharacter(
+            character = "会",
+            romanization = "kai",
+            meaning = "gặp gỡ, hội họp",
+            onReading = "カイ、エ",
+            kunReading = "あ.う、あ.わせる"
+        ),
+        JapaneseCharacter(
+            character = "社",
+            romanization = "sha",
+            meaning = "công ty, xã hội",
+            onReading = "シャ",
+            kunReading = "やしろ"
+        ),
+        JapaneseCharacter(
+            character = "仕",
+            romanization = "shi",
+            meaning = "phục vụ, công việc",
+            onReading = "シ",
+            kunReading = "つか.える"
+        ),
+        JapaneseCharacter(
+            character = "事",
+            romanization = "ji",
+            meaning = "việc, sự việc",
+            onReading = "ジ",
+            kunReading = "こと"
+        ),
+
+        // Chủ đề: Địa điểm
+        JapaneseCharacter(
+            character = "国",
+            romanization = "koku",
+            meaning = "quốc gia",
+            onReading = "コク",
+            kunReading = "くに"
+        ),
+        JapaneseCharacter(
+            character = "家",
+            romanization = "ka/ke",
+            meaning = "nhà",
+            onReading = "カ、ケ",
+            kunReading = "いえ、や"
+        ),
+        JapaneseCharacter(
+            character = "駅",
+            romanization = "eki",
+            meaning = "nhà ga",
+            onReading = "エキ",
+            kunReading = ""
+        ),
+        JapaneseCharacter(
+            character = "店",
+            romanization = "ten",
+            meaning = "cửa hàng",
+            onReading = "テン",
+            kunReading = "みせ"
+        ),
+
+        // Chủ đề: Hoạt động
+        JapaneseCharacter(
+            character = "行",
+            romanization = "kou/gyou",
+            meaning = "đi, thực hiện",
+            onReading = "コウ、ギョウ",
+            kunReading = "い.く、おこな.う"
+        ),
+        JapaneseCharacter(
+            character = "来",
+            romanization = "rai",
+            meaning = "đến, tương lai",
+            onReading = "ライ",
+            kunReading = "く.る"
+        ),
+        JapaneseCharacter(
+            character = "見",
+            romanization = "ken",
+            meaning = "nhìn, xem",
+            onReading = "ケン",
+            kunReading = "み.る、み.える"
+        ),
+        JapaneseCharacter(
+            character = "聞",
+            romanization = "bun/mon",
+            meaning = "nghe, hỏi",
+            onReading = "ブン、モン",
+            kunReading = "き.く、き.こえる"
+        ),
+
+        // Chủ đề: Tính chất
+        JapaneseCharacter(
+            character = "新",
+            romanization = "shin",
+            meaning = "mới",
+            onReading = "シン",
+            kunReading = "あたら.しい、あら.た"
+        ),
+        JapaneseCharacter(
+            character = "古",
+            romanization = "ko",
+            meaning = "cũ",
+            onReading = "コ",
+            kunReading = "ふる.い"
+        ),
+        JapaneseCharacter(
+            character = "多",
+            romanization = "ta",
+            meaning = "nhiều",
+            onReading = "タ",
+            kunReading = "おお.い"
+        ),
+        JapaneseCharacter(
+            character = "少",
+            romanization = "shou",
+            meaning = "ít",
+            onReading = "ショウ",
+            kunReading = "すく.ない、すこ.し"
+        ),
+
+        // JLPT N3 Kanji
+        // Chủ đề: Cảm xúc và tính cách
+        JapaneseCharacter(
+            character = "愛",
+            romanization = "ai",
+            meaning = "tình yêu, yêu thương",
+            onReading = "アイ",
+            kunReading = "あい、いと.しい"
+        ),
+        JapaneseCharacter(
+            character = "楽",
+            romanization = "raku/gaku",
+            meaning = "vui vẻ, thoải mái, âm nhạc",
+            onReading = "ガク、ラク",
+            kunReading = "たの.しい"
+        ),
+        JapaneseCharacter(
+            character = "苦",
+            romanization = "ku",
+            meaning = "đắng, khổ sở",
+            onReading = "ク",
+            kunReading = "くる.しい、にが.い"
+        ),
+        JapaneseCharacter(
+            character = "悲",
+            romanization = "hi",
+            meaning = "buồn bã",
+            onReading = "ヒ",
+            kunReading = "かな.しい"
+        ),
+
+        // Chủ đề: Thiên nhiên
+        JapaneseCharacter(
+            character = "山",
+            romanization = "san/zan",
+            meaning = "núi",
+            onReading = "サン、ザン",
+            kunReading = "やま"
+        ),
+        JapaneseCharacter(
+            character = "川",
+            romanization = "sen",
+            meaning = "sông",
+            onReading = "セン",
+            kunReading = "かわ"
+        ),
+        JapaneseCharacter(
+            character = "海",
+            romanization = "kai",
+            meaning = "biển",
+            onReading = "カイ",
+            kunReading = "うみ"
+        ),
+        JapaneseCharacter(
+            character = "空",
+            romanization = "kuu/sora",
+            meaning = "bầu trời, trống rỗng",
+            onReading = "クウ",
+            kunReading = "そら、から"
+        ),
+
+        // Chủ đề: Thời tiết
+        JapaneseCharacter(
+            character = "雨",
+            romanization = "u/ame",
+            meaning = "mưa",
+            onReading = "ウ",
+            kunReading = "あめ"
+        ),
+        JapaneseCharacter(
+            character = "雪",
+            romanization = "setsu",
+            meaning = "tuyết",
+            onReading = "セツ",
+            kunReading = "ゆき"
+        ),
+        JapaneseCharacter(
+            character = "風",
+            romanization = "fuu/kaze",
+            meaning = "gió",
+            onReading = "フウ",
+            kunReading = "かぜ"
+        ),
+        JapaneseCharacter(
+            character = "雲",
+            romanization = "un",
+            meaning = "mây",
+            onReading = "ウン",
+            kunReading = "くも"
+        ),
+
+        // Chủ đề: Hoạt động hàng ngày
+        JapaneseCharacter(
+            character = "食",
+            romanization = "shoku",
+            meaning = "ăn, thức ăn",
+            onReading = "ショク",
+            kunReading = "た.べる"
+        ),
+        JapaneseCharacter(
+            character = "飲",
+            romanization = "in",
+            meaning = "uống",
+            onReading = "イン",
+            kunReading = "の.む"
+        ),
+        JapaneseCharacter(
+            character = "寝",
+            romanization = "shin",
+            meaning = "ngủ",
+            onReading = "シン",
+            kunReading = "ね.る"
+        ),
+        JapaneseCharacter(
+            character = "働",
+            romanization = "dou",
+            meaning = "làm việc",
+            onReading = "ドウ",
+            kunReading = "はたら.く"
+        ),
+
+        // Chủ đề: Giao thông
+        JapaneseCharacter(
+            character = "車",
+            romanization = "sha",
+            meaning = "xe",
+            onReading = "シャ",
+            kunReading = "くるま"
+        ),
+        JapaneseCharacter(
+            character = "道",
+            romanization = "dou",
+            meaning = "đường",
+            onReading = "ドウ",
+            kunReading = "みち"
+        ),
+        JapaneseCharacter(
+            character = "橋",
+            romanization = "kyou",
+            meaning = "cầu",
+            onReading = "キョウ",
+            kunReading = "はし"
+        ),
+        JapaneseCharacter(
+            character = "駐",
+            romanization = "chuu",
+            meaning = "đỗ xe, đậu xe",
+            onReading = "チュウ",
+            kunReading = ""
+        ),
+
+        // Chủ đề: Thời gian nâng cao
+        JapaneseCharacter(
+            character = "朝",
+            romanization = "chou",
+            meaning = "buổi sáng",
+            onReading = "チョウ",
+            kunReading = "あさ"
+        ),
+        JapaneseCharacter(
+            character = "昼",
+            romanization = "chuu",
+            meaning = "buổi trưa",
+            onReading = "チュウ",
+            kunReading = "ひる"
+        ),
+        JapaneseCharacter(
+            character = "夜",
+            romanization = "ya",
+            meaning = "buổi tối",
+            onReading = "ヤ",
+            kunReading = "よる"
+        ),
+        JapaneseCharacter(
+            character = "週",
+            romanization = "shuu",
+            meaning = "tuần",
+            onReading = "シュウ",
+            kunReading = ""
+        )
+    )
+    
     // Hàm lấy danh sách ký tự dựa trên loại bảng chữ cái
     fun getCharacters(type: AlphabetType): List<JapaneseCharacter> {
         return when (type) {
             AlphabetType.HIRAGANA -> hiragana
             AlphabetType.KATAKANA -> katakana
+            AlphabetType.KANJI -> kanji // You'll need to define this list
         }
     }
     
@@ -311,6 +829,7 @@ object JapaneseAlphabet {
         val characters = when (type) {
             AlphabetType.HIRAGANA -> hiragana
             AlphabetType.KATAKANA -> katakana
+            AlphabetType.KANJI -> kanji // You'll need to define this list
         }
         
         return characters.filter { 
@@ -329,6 +848,7 @@ object JapaneseAlphabet {
         val characters = when (type) {
             AlphabetType.HIRAGANA -> hiragana
             AlphabetType.KATAKANA -> katakana
+            AlphabetType.KANJI -> kanji // You'll need to define this list
         }
         
         val map = mutableMapOf<String, MutableList<JapaneseCharacter>>()

@@ -127,6 +127,22 @@ private fun AlphabetContent() {
                     }
                 }
             )
+
+            // Kanji button
+            FilterChip(
+                selected = alphabetType == AlphabetType.KANJI,
+                onClick = { viewModel.switchAlphabetType(AlphabetType.KANJI) },
+                label = { Text("Kanji") },
+                leadingIcon = {
+                    if (alphabetType == AlphabetType.KANJI) {
+                        Icon(
+                            imageVector = Icons.Default.Check,
+                            contentDescription = null,
+                            modifier = Modifier.size(FilterChipDefaults.IconSize)
+                        )
+                    }
+                }
+            )
         }
         
         // Bảng chữ cái

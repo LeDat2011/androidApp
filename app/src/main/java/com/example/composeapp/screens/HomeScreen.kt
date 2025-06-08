@@ -41,7 +41,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.composeapp.components.CategoryCard
-import com.example.composeapp.components.FlashcardSimple
+import com.example.composeapp.components.FlashcardComponent
 import com.example.composeapp.models.*
 import com.example.composeapp.viewmodels.UserProfileViewModel
 import kotlinx.coroutines.delay
@@ -225,7 +225,7 @@ fun JapaneseGreetingHeader(
 }
 
 @Composable
-fun TodaysFlashcardSection(
+private fun DailyFlashcards(
     flashcards: List<Flashcard>,
     currentIndex: Int,
     onPrevious: () -> Unit,
@@ -239,61 +239,24 @@ fun TodaysFlashcardSection(
             .fillMaxWidth()
             .padding(horizontal = 16.dp)
     ) {
-        // Flashcard
-        FlashcardSimple(
-            flashcard = flashcards[currentIndex],
-            modifier = Modifier.padding(bottom = 16.dp)
+        // Convert Flashcard to FlashcardData
+        val flashcardData = FlashcardData(
+            word = flashcards[currentIndex].japaneseWord,
+            reading = flashcards[currentIndex].reading,
+            meaning = flashcards[currentIndex].vietnameseMeaning,
+            example = if (flashcards[currentIndex].examples.isNotEmpty()) 
+                flashcards[currentIndex].examples[0].japanese else "",
+            exampleMeaning = if (flashcards[currentIndex].examples.isNotEmpty()) 
+                flashcards[currentIndex].examples[0].vietnamese else ""
         )
         
-        // Navigation row
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Previous button
-            OutlinedButton(
-                onClick = onPrevious,
-                enabled = currentIndex > 0,
-                border = BorderStroke(1.dp, MaterialTheme.colorScheme.primary),
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-                    contentDescription = "Previous",
-                    modifier = Modifier.size(16.dp)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                Text("Previous")
-            }
-            
-            // Card position indicator
-            Text(
-                text = "${currentIndex + 1}/${flashcards.size}",
-                style = MaterialTheme.typography.bodyMedium,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                modifier = Modifier.padding(horizontal = 16.dp)
-            )
-            
-            // Next button
-            Button(
-                onClick = onNext,
-                enabled = currentIndex < flashcards.size - 1,
-                shape = RoundedCornerShape(16.dp),
-                contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp)
-            ) {
-                Text("Next")
-                Spacer(modifier = Modifier.width(4.dp))
-                Icon(
-                    imageVector = Icons.AutoMirrored.Rounded.ArrowForward,
-                    contentDescription = "Next",
-                    modifier = Modifier.size(16.dp)
-                )
-            }
-        }
+        FlashcardComponent(
+            flashcard = flashcardData,
+            onNext = onNext,
+            onPrevious = onPrevious,
+            canGoNext = currentIndex < flashcards.size - 1,
+            canGoPrevious = currentIndex > 0
+        )
     }
 }
 

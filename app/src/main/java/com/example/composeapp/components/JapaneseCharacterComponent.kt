@@ -1,6 +1,9 @@
 package com.example.composeapp.components
 
+import android.content.Context
+import android.graphics.drawable.PictureDrawable
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -13,11 +16,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.layout.ContentScale
+import coil.compose.AsyncImage
 import com.example.composeapp.models.JapaneseCharacter
+import com.caverock.androidsvg.SVG
+import android.graphics.Bitmap
+import android.graphics.Canvas
 
 @Composable
 fun JapaneseCharacterCard(
@@ -107,6 +117,8 @@ fun JapaneseCharacterDetailCard(
     onClose: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -151,6 +163,84 @@ fun JapaneseCharacterDetailCard(
             )
             
             Spacer(modifier = Modifier.height(24.dp))
+
+            // Thứ tự nét viết (nếu có)
+            if (character.strokeOrder != null) {
+                Text(
+                    text = "Thứ tự nét viết:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+                
+                // Load và hiển thị SVG từ assets
+                val svgBitmap = remember(character.strokeOrder) {
+                    loadSvgFromAssets(context, character.strokeOrder.removePrefix("asset:///"))
+                }
+                
+                if (svgBitmap != null) {
+                    Image(
+                        bitmap = svgBitmap.asImageBitmap(),
+                        contentDescription = "Thứ tự nét viết của ${character.character}",
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(MaterialTheme.colorScheme.surface)
+                            .padding(8.dp)
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(16.dp))
+            }
+
+            // Nghĩa tiếng Việt (nếu có)
+            if (character.meaning != null) {
+                Text(
+                    text = "Nghĩa:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = character.meaning,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+
+            // Âm On (nếu có)
+            if (character.onReading != null) {
+                Text(
+                    text = "Âm On (音読み):",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = character.onReading,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
+
+            // Âm Kun (nếu có)
+            if (character.kunReading != null) {
+                Text(
+                    text = "Âm Kun (訓読み):",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = MaterialTheme.colorScheme.primary
+                )
+                Text(
+                    text = character.kunReading,
+                    fontSize = 18.sp,
+                    color = MaterialTheme.colorScheme.onSurface,
+                    modifier = Modifier.padding(bottom = 16.dp)
+                )
+            }
             
             // Image if available
             character.imageUrl?.let { url ->
@@ -228,6 +318,29 @@ fun JapaneseCharacterDetailCard(
     }
 }
 
+private fun loadSvgFromAssets(context: Context, assetPath: String): Bitmap? {
+    return try {
+        val svg = context.assets.open(assetPath).use { inputStream ->
+            SVG.getFromInputStream(inputStream)
+        }
+        
+        val width = 200
+        val height = 200
+        
+        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        
+        svg.documentWidth = width.toFloat()
+        svg.documentHeight = height.toFloat()
+        svg.renderToCanvas(canvas)
+        
+        bitmap
+    } catch (e: Exception) {
+        e.printStackTrace()
+        null
+    }
+}
+
 @Composable
 fun JapaneseAlphabetRow(
     title: String,
@@ -249,18 +362,36 @@ fun JapaneseAlphabetRow(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
         
-        // Characters in a row
+        // Characters in a row with equal spacing
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.Start
+            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             characters.forEach { character ->
-                JapaneseCharacterCard(
-                    character = character,
-                    onClick = onCharacterClick
-                )
+                Box(
+                    modifier = Modifier.weight(1f),
+                    contentAlignment = Alignment.Center
+                ) {
+                    JapaneseCharacterCard(
+                        character = character,
+                        onClick = onCharacterClick,
+                        modifier = Modifier.padding(horizontal = 2.dp)
+                    )
+                }
+            }
+            
+            // Thêm các ô trống nếu số ký tự không đủ 5 để giữ khoảng cách đều
+            val emptySpaces = 5 - characters.size
+            if (emptySpaces > 0) {
+                repeat(emptySpaces) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(horizontal = 2.dp)
+                    )
+                }
             }
         }
     }

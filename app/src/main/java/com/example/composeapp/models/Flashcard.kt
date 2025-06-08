@@ -7,7 +7,7 @@ data class Flashcard(
     val id: String = UUID.randomUUID().toString(),
     val japaneseWord: String = "", // Từ tiếng Nhật
     val vietnameseMeaning: String = "", // Nghĩa tiếng Việt
-    val furigana: String = "", // Phiên âm tiếng Nhật
+    val reading: String = "", // Phiên âm tiếng Nhật
     val level: JapaneseLevel = JapaneseLevel.N5, // Mức độ JLPT
     val category: FlashcardCategory = FlashcardCategory.MISC, // Chủ đề
     val examples: List<Example> = emptyList(), // Các ví dụ

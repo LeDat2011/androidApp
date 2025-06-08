@@ -79,9 +79,9 @@ fun QuizScreen() {
                 category = category,
                 onDismiss = { selectedCategory = null },
                 onLevelSelected = { level ->
-                    selectedLevel = level
                     showQuizDetail = true
-                    selectedCategory = null
+                    selectedLevel = level
+                    selectedCategory = selectedCategory
                 }
             )
         }
@@ -222,16 +222,34 @@ data class Level(
 
 private val levels = listOf(
     Level(
-        id = "N5",
-        name = "N5 - Sơ cấp",
-        description = "Dành cho người mới bắt đầu",
+        id = "N1",
+        name = "N1 - Cao cấp",
+        description = "Trình độ cao nhất, tương đương bản ngữ",
+        color = Color(0xFFE91E63)
+    ),
+    Level(
+        id = "N2",
+        name = "N2 - Trung cấp cao",
+        description = "Có thể giao tiếp trong hầu hết tình huống",
+        color = Color(0xFF2196F3)
+    ),
+    Level(
+        id = "N3",
+        name = "N3 - Trung cấp",
+        description = "Hiểu và sử dụng tiếng Nhật trong cuộc sống hàng ngày",
         color = Color(0xFF4CAF50)
     ),
     Level(
         id = "N4",
-        name = "N4 - Trung cấp cơ bản",
-        description = "Từ vựng và ngữ pháp cơ bản",
-        color = Color(0xFF2196F3)
+        name = "N4 - Sơ trung cấp",
+        description = "Hiểu được tiếng Nhật cơ bản",
+        color = Color(0xFFFF9800)
+    ),
+    Level(
+        id = "N5",
+        name = "N5 - Sơ cấp",
+        description = "Dành cho người mới bắt đầu học tiếng Nhật",
+        color = Color(0xFF9C27B0)
     )
 )
 

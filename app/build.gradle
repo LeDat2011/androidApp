@@ -71,6 +71,13 @@ dependencies {
     implementation 'com.google.firebase:firebase-database'
     implementation 'com.google.firebase:firebase-auth'
 
+    // Coil for image loading
+    implementation "io.coil-kt:coil:2.5.0"
+    implementation "io.coil-kt:coil-compose:2.5.0"
+
+    // AndroidSVG for SVG rendering
+    implementation 'com.caverock:androidsvg-aar:1.4'
+
     // Testing
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
