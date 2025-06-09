@@ -24,19 +24,105 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import com.example.composeapp.components.QuizItem
 import com.example.composeapp.models.FlashcardCategory
 import com.example.composeapp.models.SampleData
 import com.example.composeapp.screens.components.QuizHistoryItem
 
+data class Level(
+    val id: String,
+    val name: String,
+    val description: String,
+    val color: Color
+)
+
+val levels = listOf(
+    Level(
+        id = "N1",
+        name = "N1",
+        description = "Cấp độ cao nhất",
+        color = Color(0xFFE91E63)
+    ),
+    Level(
+        id = "N2",
+        name = "N2",
+        description = "Cấp độ cao cấp",
+        color = Color(0xFF2196F3)
+    ),
+    Level(
+        id = "N3",
+        name = "N3",
+        description = "Cấp độ trung cấp",
+        color = Color(0xFF4CAF50)
+    ),
+    Level(
+        id = "N4",
+        name = "N4",
+        description = "Cấp độ sơ trung cấp",
+        color = Color(0xFFFF9800)
+    ),
+    Level(
+        id = "N5",
+        name = "N5",
+        description = "Cấp độ sơ cấp",
+        color = Color(0xFF9C27B0)
+    )
+)
+
+data class QuizCategory(
+    val title: String,
+    val icon: ImageVector,
+    val color: Color,
+    val questionCount: Int
+)
+
+val categories = listOf(
+    QuizCategory(
+        title = "Từ vựng",
+        icon = Icons.Default.Book,
+        color = Color(0xFF2196F3),
+        questionCount = 20
+    ),
+    QuizCategory(
+        title = "Ngữ pháp",
+        icon = Icons.Default.Grammar,
+        color = Color(0xFF4CAF50),
+        questionCount = 15
+    ),
+    QuizCategory(
+        title = "Kanji",
+        icon = Icons.Default.TextFields,
+        color = Color(0xFFE91E63),
+        questionCount = 25
+    ),
+    QuizCategory(
+        title = "Nghe hiểu",
+        icon = Icons.Default.Headphones,
+        color = Color(0xFFFF9800),
+        questionCount = 10
+    )
+)
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuizScreen(
-    modifier: Modifier = Modifier,
-    onNavigateToQuiz: (FlashcardCategory) -> Unit
-) {
+fun QuizScreen() {
+    var selectedCategory by remember { mutableStateOf<QuizCategory?>(null) }
+    var showQuizDetail by remember { mutableStateOf(false) }
+    var selectedLevel by remember { mutableStateOf<String?>(null) }
+
+    if (showQuizDetail && selectedCategory != null && selectedLevel != null) {
+        QuizDetailScreen(
+            category = selectedCategory!!.title,
+            level = selectedLevel!!,
+            onBackPress = {
+                showQuizDetail = false
+                selectedLevel = null
+            }
+        )
+    } else {
     Column(
-        modifier = modifier.fillMaxSize(),
+            modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         // Header
@@ -46,7 +132,7 @@ fun QuizScreen(
             tonalElevation = 4.dp
         ) {
             Text(
-                text = "Kiểm tra kiến thức",
+                    text = "Kiểm Tra Kiến Thức",
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold,
                 color = MaterialTheme.colorScheme.onPrimary,
@@ -63,12 +149,26 @@ fun QuizScreen(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = Modifier.fillMaxSize()
         ) {
-            items(FlashcardCategory.values()) { category ->
+                items(categories) { category ->
                 QuizCategoryCard(
                     category = category,
-                    onClick = { onNavigateToQuiz(category) }
+                        onClick = { selectedCategory = category }
                 )
             }
+            }
+        }
+
+        // Level Selection Dialog
+        selectedCategory?.let { category ->
+            LevelSelectionDialog(
+                category = category,
+                onDismiss = { selectedCategory = null },
+                onLevelSelected = { level ->
+                    selectedLevel = level
+                    showQuizDetail = true
+                    selectedCategory = null
+                }
+            )
         }
     }
 }
@@ -76,106 +176,116 @@ fun QuizScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun QuizCategoryCard(
-    category: FlashcardCategory,
+    category: QuizCategory,
     onClick: () -> Unit
 ) {
-    val categoryColor = when (category) {
-        FlashcardCategory.ANIMALS -> Color(0xFF4CAF50)      // Green
-        FlashcardCategory.FOOD -> Color(0xFFE91E63)         // Pink
-        FlashcardCategory.TRANSPORTATION -> Color(0xFF2196F3) // Blue
-        FlashcardCategory.WEATHER -> Color(0xFFFFC107)      // Amber
-        FlashcardCategory.FAMILY -> Color(0xFF9C27B0)       // Purple
-        FlashcardCategory.COLORS -> Color(0xFF00BCD4)       // Cyan
-        FlashcardCategory.NUMBERS -> Color(0xFFFF5722)      // Deep Orange
-        FlashcardCategory.TIME -> Color(0xFF3F51B5)         // Indigo
-        FlashcardCategory.DAILY_LIFE -> Color(0xFF795548)   // Brown
-        else -> Color(0xFF607D8B)                           // Blue Grey
-    }
-
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .aspectRatio(0.85f),
-        shape = RoundedCornerShape(20.dp),
-        onClick = onClick,
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp
-        )
+            .aspectRatio(1f),
+        shape = RoundedCornerShape(16.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = category.color
+        ),
+        onClick = onClick
     ) {
-        Box(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(
-                    brush = Brush.verticalGradient(
-                        colors = listOf(
-                            categoryColor,
-                            categoryColor.copy(alpha = 0.8f)
-                        )
-                    )
-                )
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center
+        ) {
+            Icon(
+                imageVector = category.icon,
+                contentDescription = category.title,
+                modifier = Modifier.size(48.dp),
+                tint = Color.White
+            )
+            
+            Spacer(modifier = Modifier.height(8.dp))
+            
+            Text(
+                text = category.title,
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color.White,
+                textAlign = TextAlign.Center
+            )
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            Text(
+                text = "${category.questionCount} câu hỏi",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color.White.copy(alpha = 0.8f),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
+}
+
+@Composable
+fun LevelSelectionDialog(
+    category: QuizCategory,
+    onDismiss: () -> Unit,
+    onLevelSelected: (String) -> Unit
+) {
+    Dialog(onDismissRequest = onDismiss) {
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            shape = RoundedCornerShape(16.dp)
         ) {
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .padding(16.dp),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                    .fillMaxWidth()
+                    .padding(24.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Category Icon with background
-                Surface(
-                    modifier = Modifier
-                        .size(64.dp)
-                        .clip(RoundedCornerShape(16.dp)),
-                    color = Color.White.copy(alpha = 0.2f)
-                ) {
-                    Icon(
-                        imageVector = when (category) {
-                            FlashcardCategory.ANIMALS -> Icons.Default.Pets
-                            FlashcardCategory.FOOD -> Icons.Default.Restaurant
-                            FlashcardCategory.TRANSPORTATION -> Icons.Default.DirectionsCar
-                            FlashcardCategory.WEATHER -> Icons.Default.WbSunny
-                            FlashcardCategory.FAMILY -> Icons.Default.People
-                            FlashcardCategory.COLORS -> Icons.Default.Palette
-                            FlashcardCategory.NUMBERS -> Icons.Default.Numbers
-                            FlashcardCategory.TIME -> Icons.Default.Schedule
-                            FlashcardCategory.DAILY_LIFE -> Icons.Default.Home
-                            else -> Icons.Default.Book
-                        },
-                        contentDescription = null,
-                        modifier = Modifier
-                            .padding(16.dp)
-                            .size(32.dp),
-                        tint = Color.White
-                    )
-                }
+                Text(
+                    text = "Chọn cấp độ ${category.title}",
+                    style = MaterialTheme.typography.titleLarge,
+                    fontWeight = FontWeight.Bold
+                )
                 
                 Spacer(modifier = Modifier.height(16.dp))
                 
-                // Category Name
+                levels.forEach { level ->
+                    Button(
+                        onClick = { onLevelSelected(level.id) },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 8.dp),
+                        colors = ButtonDefaults.buttonColors(
+                            containerColor = level.color
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(vertical = 8.dp),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
                 Text(
-                    text = category.displayName,
+                                text = level.name,
                     style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
-                    textAlign = TextAlign.Center
-                )
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = level.description,
+                                style = MaterialTheme.typography.bodySmall
+                            )
+                        }
+                    }
+                }
                 
                 Spacer(modifier = Modifier.height(8.dp))
                 
-                // Question Count with background
-                Surface(
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(12.dp)),
-                    color = Color.White.copy(alpha = 0.2f)
+                TextButton(
+                    onClick = onDismiss,
+                    modifier = Modifier.align(Alignment.End)
                 ) {
-                    val questionCount = SampleData.quizQuestions.count { it.category == category }
-                    Text(
-                        text = "$questionCount câu hỏi",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = Color.White,
-                        modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp)
-                    )
+                    Text("Đóng")
                 }
             }
         }

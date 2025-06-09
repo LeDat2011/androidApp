@@ -362,36 +362,18 @@ fun JapaneseAlphabetRow(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 4.dp)
         )
         
-        // Characters in a row with equal spacing
+        // Characters in a row
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 8.dp),
-            horizontalArrangement = Arrangement.SpaceBetween
+            horizontalArrangement = Arrangement.Start
         ) {
             characters.forEach { character ->
-                Box(
-                    modifier = Modifier.weight(1f),
-                    contentAlignment = Alignment.Center
-                ) {
-                    JapaneseCharacterCard(
-                        character = character,
-                        onClick = onCharacterClick,
-                        modifier = Modifier.padding(horizontal = 2.dp)
-                    )
-                }
-            }
-            
-            // Thêm các ô trống nếu số ký tự không đủ 5 để giữ khoảng cách đều
-            val emptySpaces = 5 - characters.size
-            if (emptySpaces > 0) {
-                repeat(emptySpaces) {
-                    Box(
-                        modifier = Modifier
-                            .weight(1f)
-                            .padding(horizontal = 2.dp)
-                    )
-                }
+                JapaneseCharacterCard(
+                    character = character,
+                    onClick = onCharacterClick
+                )
             }
         }
     }

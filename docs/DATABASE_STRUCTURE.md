@@ -63,62 +63,6 @@ app_data/
         |-- name: String
         |-- description: String
         |-- iconUrl: String
-|-- quizzes/
-    |-- {quizId}/
-        |-- title: String
-        |-- description: String
-        |-- level: String (N5-N1)
-        |-- category: String
-        |-- timeLimit: Number (seconds)
-        |-- questions: {
-            {questionId}: {
-                type: String (MULTIPLE_CHOICE, TRUE_FALSE, FILL_BLANK, MATCHING, AUDIO_CHOICE)
-                question: String
-                options: {
-                    a: String
-                    b: String
-                    c: String
-                    d: String
-                }
-                correctAnswer: String
-                explanation: String
-                points: Number
-                audioUrl: String (optional)
-            }
-        }
-
-|-- user_quiz_progress/
-    |-- {userId}/
-        |-- completed_quizzes/
-            |-- {quizId}/
-                |-- score: Number
-                |-- completedAt: Timestamp
-                |-- timeTaken: Number (seconds)
-                |-- answers: {
-                    {questionId}: {
-                        selectedAnswer: String
-                        isCorrect: Boolean
-                        timeSpent: Number (seconds)
-                    }
-                }
-        |-- quiz_statistics/
-            |-- totalQuizzesTaken: Number
-            |-- averageScore: Number
-            |-- bestScore: Number
-            |-- totalTimePlayed: Number
-            |-- categoryProgress: {
-                vocabulary: Number (percentage)
-                grammar: Number (percentage)
-                kanji: Number (percentage)
-                listening: Number (percentage)
-            }
-            |-- levelProgress: {
-                N5: Number (percentage)
-                N4: Number (percentage)
-                N3: Number (percentage)
-                N2: Number (percentage)
-                N1: Number (percentage)
-            }
 ```
 
 ## Mô Hình Dữ Liệu (Kotlin)
