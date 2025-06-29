@@ -14,3 +14,13 @@ local.properties
 /app/debug
 /app/release
 *.log
+*.hprof
+.navigation/
+gen/
+out/
+# Keystore files
+*.jks
+*.keystore
+# Google Services (e.g. APIs or Firebase)
+# Uncomment the following line if you want to check in your google-services.json
+# google-services.json
