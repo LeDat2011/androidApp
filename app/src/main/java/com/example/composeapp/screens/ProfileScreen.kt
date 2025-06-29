@@ -30,6 +30,7 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.viewmodels.UserProfileViewModel
 import com.example.composeapp.viewmodels.AuthViewModel
 import com.example.composeapp.viewmodels.LoadProfileState
+import com.example.composeapp.viewmodels.FlashcardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

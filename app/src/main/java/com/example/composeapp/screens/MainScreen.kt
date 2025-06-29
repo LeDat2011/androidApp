@@ -10,6 +10,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.example.composeapp.models.AlphabetType
 import com.example.composeapp.navigation.Route
 import kotlinx.coroutines.launch
 import androidx.navigation.NavHostController
@@ -134,7 +135,18 @@ fun MainScreen(
                         selectedIndex = 4
                     }
                 )
-                1 -> LearnScreen()
+                1 -> LearnScreen(
+                    onNavigateToFlashcard = { category, level ->
+                        navController.navigate("flashcard_learning/$category/$level")
+                    },
+                    onNavigateToAlphabet = { alphabetType ->
+                        navController.navigate("alphabet/${alphabetType.name}") {
+                            popUpTo("alphabet/${alphabetType.name}") {
+                                inclusive = false
+                            }
+                        }
+                    }
+                )
                 2 -> QuizScreen()
                 3 -> StatusScreen()
                 4 -> ProfileScreen(

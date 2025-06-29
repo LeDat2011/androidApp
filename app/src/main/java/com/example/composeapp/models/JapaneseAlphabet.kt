@@ -9,7 +9,7 @@ enum class AlphabetType {
 data class JapaneseCharacter(
     val character: String,          // Ký tự (Hiragana hoặc Katakana)
     val romanization: String,       // Phiên âm La-tinh
-    val strokeOrder: String? = null, // URL hình ảnh thứ tự nét viết từ Firebase Storage (vd: gs://my-app.appspot.com/stroke-orders/hiragana/あ.gif)
+    val image: String? = null,      // Đường dẫn đến hình ảnh thứ tự nét viết (vd: asset:///stroke_order_image/hiragana/a.png)
     val imageUrl: String? = null,   // URL hình ảnh minh họa từ Firebase Storage
     val audioUrl: String? = null,   // URL file âm thanh phát âm từ Firebase Storage
     val examples: List<Example> = emptyList(), // Ví dụ sử dụng
@@ -26,54 +26,54 @@ object JapaneseAlphabet {
         JapaneseCharacter(
             character = "あ",
             romanization = "a",
-            strokeOrder = "asset:///stroke_order/hiragana/a.svg"
+            image = "asset:///stroke_order_image/hiragana/a.png"
         ),
         JapaneseCharacter(
             character = "い",
             romanization = "i",
-            strokeOrder = "asset:///stroke_order/hiragana/i.svg"
+            image = "asset:///stroke_order_image/hiragana/i.png"
         ),
         JapaneseCharacter(
             character = "う",
             romanization = "u",
-            strokeOrder = "asset:///stroke_order/hiragana/u.svg"
+            image = "asset:///stroke_order_image/hiragana/u.png"
         ),
         JapaneseCharacter(
             character = "え",
             romanization = "e",
-            strokeOrder = "asset:///stroke_order/hiragana/e.svg"
+            image = "asset:///stroke_order_image/hiragana/e.png"
         ),
         JapaneseCharacter(
             character = "お",
             romanization = "o",
-            strokeOrder = "asset:///stroke_order/hiragana/o.svg"
+            image = "asset:///stroke_order_image/hiragana/o.png"
         ),
         
         // Phụ âm K
         JapaneseCharacter(
             character = "か",
             romanization = "ka",
-            strokeOrder = "asset:///stroke_order/hiragana/ka.svg"
+            image = "asset:///stroke_order_image/hiragana/ka.png"
         ),
         JapaneseCharacter(
             character = "き",
             romanization = "ki",
-            strokeOrder = "asset:///stroke_order/hiragana/ki.svg"
+            image = "asset:///stroke_order_image/hiragana/ki.png"
         ),
         JapaneseCharacter(
             character = "く",
             romanization = "ku",
-            strokeOrder = "asset:///stroke_order/hiragana/ku.svg"
+            image = "asset:///stroke_order_image/hiragana/ku.png"
         ),
         JapaneseCharacter(
             character = "け",
             romanization = "ke",
-            strokeOrder = "asset:///stroke_order/hiragana/ke.svg"
+            image = "asset:///stroke_order_image/hiragana/ke.png"
         ),
         JapaneseCharacter(
             character = "こ",
             romanization = "ko",
-            strokeOrder = "asset:///stroke_order/hiragana/ko.svg"
+            image = "asset:///stroke_order_image/hiragana/ko.png"
         ),
         
         // Phụ âm S
@@ -207,54 +207,49 @@ object JapaneseAlphabet {
         JapaneseCharacter(
             character = "ア",
             romanization = "a",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_a.png"
+            image = "asset:///stroke_order_image/katakana/a.png"
         ),
         JapaneseCharacter(
             character = "イ",
             romanization = "i",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_i.png"
+            image = "asset:///stroke_order_image/katakana/i.png"
         ),
         JapaneseCharacter(
             character = "ウ",
             romanization = "u",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_u.png"
+            image = "asset:///stroke_order_image/katakana/u.png"
         ),
         JapaneseCharacter(
             character = "エ",
             romanization = "e",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_e.png"
+            image = "asset:///stroke_order_image/katakana/e.png"
         ),
         JapaneseCharacter(
             character = "オ",
             romanization = "o",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_o.png"
+            image = "asset:///stroke_order_image/katakana/o.png"
         ),
         
         // Phụ âm K
         JapaneseCharacter(
             character = "カ",
-            romanization = "ka",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ka.png"
+            romanization = "ka"
         ),
         JapaneseCharacter(
             character = "キ",
-            romanization = "ki",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ki.png"
+            romanization = "ki"
         ),
         JapaneseCharacter(
             character = "ク",
-            romanization = "ku",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ku.png"
+            romanization = "ku"
         ),
         JapaneseCharacter(
             character = "ケ",
-            romanization = "ke",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ke.png"
+            romanization = "ke"
         ),
         JapaneseCharacter(
             character = "コ",
-            romanization = "ko",
-            strokeOrder = "https://raw.githubusercontent.com/davidluzgouveia/kanji-data/master/images/strokes/katakana_ko.png"
+            romanization = "ko"
         ),
         
         // Phụ âm S
@@ -391,28 +386,28 @@ object JapaneseAlphabet {
             romanization = "nichi/jitsu",
             meaning = "ngày, mặt trời",
             onReading = "ニチ、ジツ",
-            kunReading = "ひ、-び、-か"
+            kunReading = "ひ、-び、-か",
         ),
         JapaneseCharacter(
             character = "月",
             romanization = "getsu/gatsu",
             meaning = "tháng, mặt trăng",
             onReading = "ゲツ、ガツ",
-            kunReading = "つき"
+            kunReading = "つき",
         ),
         JapaneseCharacter(
             character = "年",
             romanization = "nen",
             meaning = "năm",
             onReading = "ネン",
-            kunReading = "とし"
+            kunReading = "とし",
         ),
         JapaneseCharacter(
             character = "時",
             romanization = "ji",
             meaning = "giờ, thời gian",
             onReading = "ジ",
-            kunReading = "とき"
+            kunReading = "とき",
         ),
 
         // Chủ đề: Con người và gia đình
@@ -421,28 +416,28 @@ object JapaneseAlphabet {
             romanization = "jin/nin",
             meaning = "người",
             onReading = "ジン、ニン",
-            kunReading = "ひと"
+            kunReading = "ひと",
         ),
         JapaneseCharacter(
             character = "父",
             romanization = "fu",
             meaning = "bố, cha",
             onReading = "フ",
-            kunReading = "ちち、とう"
+            kunReading = "ちち、とう",
         ),
         JapaneseCharacter(
             character = "母",
             romanization = "bo",
             meaning = "mẹ",
             onReading = "ボ",
-            kunReading = "はは、かあ"
+            kunReading = "はは、かあ",
         ),
         JapaneseCharacter(
             character = "子",
             romanization = "shi/su",
             meaning = "con, trẻ em",
             onReading = "シ、ス",
-            kunReading = "こ"
+            kunReading = "こ",
         ),
 
         // Chủ đề: Số đếm
@@ -451,35 +446,35 @@ object JapaneseAlphabet {
             romanization = "ichi",
             meaning = "một",
             onReading = "イチ",
-            kunReading = "ひと-"
+            kunReading = "ひと-",
         ),
         JapaneseCharacter(
             character = "二",
             romanization = "ni",
             meaning = "hai",
             onReading = "ニ",
-            kunReading = "ふた-"
+            kunReading = "ふた-",
         ),
         JapaneseCharacter(
             character = "三",
             romanization = "san",
             meaning = "ba",
             onReading = "サン",
-            kunReading = "み-"
+            kunReading = "み-",
         ),
         JapaneseCharacter(
             character = "四",
             romanization = "shi",
             meaning = "bốn",
             onReading = "シ",
-            kunReading = "よ-"
+            kunReading = "よ-",
         ),
         JapaneseCharacter(
             character = "五",
             romanization = "go",
             meaning = "năm",
             onReading = "ゴ",
-            kunReading = "いつ-"
+            kunReading = "いつ-",
         ),
 
         // Chủ đề: Học tập
@@ -488,7 +483,7 @@ object JapaneseAlphabet {
             romanization = "hon",
             meaning = "sách, gốc, nguồn gốc",
             onReading = "ホン",
-            kunReading = "もと"
+            kunReading = "もと",
         ),
         JapaneseCharacter(
             character = "学",
@@ -848,9 +843,74 @@ object JapaneseAlphabet {
         val characters = when (type) {
             AlphabetType.HIRAGANA -> hiragana
             AlphabetType.KATAKANA -> katakana
-            AlphabetType.KANJI -> kanji // You'll need to define this list
+            AlphabetType.KANJI -> kanji
         }
         
+        // Nếu là Kanji, phân loại theo chủ đề
+        if (type == AlphabetType.KANJI) {
+            val map = mutableMapOf<String, MutableList<JapaneseCharacter>>()
+            
+            // Nhóm Kanji theo chủ đề
+            map["Thời gian cơ bản"] = characters.filter { 
+                it.character in listOf("日", "月", "年", "時") 
+            }.toMutableList()
+            
+            map["Con người và gia đình"] = characters.filter { 
+                it.character in listOf("人", "父", "母", "子") 
+            }.toMutableList()
+            
+            map["Số đếm"] = characters.filter { 
+                it.character in listOf("一", "二", "三", "四", "五") 
+            }.toMutableList()
+            
+            map["Học tập"] = characters.filter { 
+                it.character in listOf("本", "学", "校", "先") 
+            }.toMutableList()
+            
+            map["Công việc và xã hội"] = characters.filter { 
+                it.character in listOf("会", "社", "仕", "事") 
+            }.toMutableList()
+            
+            map["Địa điểm"] = characters.filter { 
+                it.character in listOf("国", "家", "駅", "店") 
+            }.toMutableList()
+            
+            map["Hoạt động"] = characters.filter { 
+                it.character in listOf("行", "来", "見", "聞") 
+            }.toMutableList()
+            
+            map["Tính chất"] = characters.filter { 
+                it.character in listOf("新", "古", "多", "少") 
+            }.toMutableList()
+            
+            map["Cảm xúc và tính cách"] = characters.filter { 
+                it.character in listOf("愛", "楽", "苦", "悲") 
+            }.toMutableList()
+            
+            map["Thiên nhiên"] = characters.filter { 
+                it.character in listOf("山", "川", "海", "空") 
+            }.toMutableList()
+            
+            map["Thời tiết"] = characters.filter { 
+                it.character in listOf("雨", "雪", "風", "雲") 
+            }.toMutableList()
+            
+            map["Hoạt động hàng ngày"] = characters.filter { 
+                it.character in listOf("食", "飲", "寝", "働") 
+            }.toMutableList()
+            
+            map["Giao thông"] = characters.filter { 
+                it.character in listOf("車", "道", "橋", "駐") 
+            }.toMutableList()
+            
+            map["Thời gian nâng cao"] = characters.filter { 
+                it.character in listOf("朝", "昼", "夜", "週") 
+            }.toMutableList()
+            
+            return map
+        }
+        
+        // Xử lý cho Hiragana và Katakana
         val map = mutableMapOf<String, MutableList<JapaneseCharacter>>()
         
         // Nhóm nguyên âm

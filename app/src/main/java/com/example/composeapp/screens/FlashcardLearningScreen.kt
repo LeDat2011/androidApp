@@ -23,11 +23,13 @@ import com.example.composeapp.components.FlashcardComponent
 import kotlin.math.roundToInt
 
 data class FlashcardData(
-    val word: String,
-    val reading: String,
-    val meaning: String,
-    val example: String,
-    val exampleMeaning: String
+    val id: String = "",
+    val word: String = "",
+    val reading: String = "",
+    val meaning: String = "",
+    val example: String = "",
+    val exampleMeaning: String = "",
+    val isLearned: Boolean = false
 )
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -35,8 +37,8 @@ data class FlashcardData(
 fun FlashcardLearningScreen(
     categoryName: String,
     level: String,
-    onBackPress: () -> Unit,
-    viewModel: FlashcardViewModel = viewModel()
+    viewModel: FlashcardViewModel = viewModel(),
+    onNavigateBack: () -> Unit
 ) {
     var currentIndex by remember { mutableStateOf(0) }
     var progress by remember { mutableStateOf(0f) }
@@ -45,6 +47,12 @@ fun FlashcardLearningScreen(
     val flashcards by viewModel.flashcards.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
+    val wordsLearned by viewModel.wordsLearned.collectAsState()
+    val totalWordsLearned by viewModel.totalWordsLearned.collectAsState()
+    val todayStudyTime by viewModel.todayStudyTime.collectAsState()
+
+    // Theo dõi từ vựng đã học trong phiên hiện tại
+    var learnedWords by remember { mutableStateOf(setOf<String>()) }
 
     // Load flashcards when the screen is first displayed
     LaunchedEffect(categoryName, level) {
@@ -58,36 +66,33 @@ fun FlashcardLearningScreen(
             // Show completion dialog when reaching the end
             if (currentIndex == flashcards.size - 1) {
                 showCompletionDialog = true
+                // Đánh dấu hoàn thành bộ flashcard và cập nhật thời gian học lên Firebase
+                viewModel.completeFlashcardSet(categoryName, level)
             }
+        }
+    }
+
+    // Cập nhật thời gian học khi rời khỏi màn hình
+    DisposableEffect(Unit) {
+        onDispose {
+            // Cập nhật thời gian học tập lên Firebase
+            viewModel.updateStudyTime()
         }
     }
 
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { 
-                    Column {
-                        Text(
-                            text = categoryName,
-                            style = MaterialTheme.typography.titleLarge,
-                            fontWeight = FontWeight.Bold
-                        )
-                        Text(
-                            text = "Level $level",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
-                    }
-                },
+                title = { Text("Học từ vựng - $categoryName") },
                 navigationIcon = {
-                    IconButton(onClick = onBackPress) {
-                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back")
+                    IconButton(onClick = {
+                        // Cập nhật thời gian học trước khi quay lại
+                        viewModel.updateStudyTime()
+                        onNavigateBack()
+                    }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, "Quay lại")
                     }
-                },
-                colors = TopAppBarDefaults.topAppBarColors(
-                    containerColor = MaterialTheme.colorScheme.surface,
-                    titleContentColor = MaterialTheme.colorScheme.onSurface
-                )
+                }
             )
         }
     ) { paddingValues ->
@@ -96,166 +101,103 @@ fun FlashcardLearningScreen(
                 .fillMaxSize()
                 .padding(paddingValues)
         ) {
-            when {
-                isLoading -> {
+            if (isLoading) {
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.Center)
+                )
+            } else {
+                if (flashcards.isNotEmpty()) {
                     Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        CircularProgressIndicator(
-                            modifier = Modifier.size(48.dp),
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Đang tải flashcards...",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                        )
-                    }
-                }
-                error != null -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Error,
-                            contentDescription = null,
-                            tint = MaterialTheme.colorScheme.error,
-                            modifier = Modifier.size(64.dp)
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = error ?: "Đã xảy ra lỗi",
-                            color = MaterialTheme.colorScheme.error,
-                            style = MaterialTheme.typography.titleMedium,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Vui lòng thử lại sau",
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                            style = MaterialTheme.typography.bodyMedium,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(24.dp))
-                        Button(
-                            onClick = {
-                                viewModel.loadFlashcards(categoryName, level)
-                            },
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = MaterialTheme.colorScheme.error
-                            )
-                        ) {
-                            Icon(
-                                Icons.Default.Refresh,
-                                contentDescription = null,
-                                modifier = Modifier.size(18.dp)
-                            )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Thử lại")
-                        }
-                    }
-                }
-                flashcards.isEmpty() -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Icon(
-                            imageVector = Icons.Default.Info,
-                            contentDescription = null,
-                            modifier = Modifier.size(64.dp),
-                            tint = MaterialTheme.colorScheme.primary
-                        )
-                        Spacer(modifier = Modifier.height(16.dp))
-                        Text(
-                            text = "Chưa có flashcard nào",
-                            style = MaterialTheme.typography.titleMedium,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            text = "Không có flashcard nào cho chủ đề và level này",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-                else -> {
-                    Column(
-                        modifier = Modifier
-                            .fillMaxSize()
-                            .padding(16.dp),
+                        modifier = Modifier.fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Progress section
-                        Column(
+                        // Hiển thị thông tin học tập
+                        Card(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .clip(MaterialTheme.shapes.medium)
                                 .padding(16.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                            elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
                         ) {
-                            // Progress text
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                            Column(
+                                modifier = Modifier.padding(16.dp)
                             ) {
-                                Text(
-                                    text = "Tiến độ học tập",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.onSurface
+                                // Hiển thị tiến độ
+                                LinearProgressIndicator(
+                                    progress = (currentIndex + 1).toFloat() / flashcards.size,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(bottom = 8.dp)
                                 )
-                                Text(
-                                    text = "${(progress * 100).roundToInt()}%",
-                                    style = MaterialTheme.typography.titleMedium,
-                                    color = MaterialTheme.colorScheme.primary,
-                                    fontWeight = FontWeight.Bold
-                                )
+                                
+                                // Hiển thị thông tin học tập
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.SpaceBetween
+                                ) {
+                                    // Từ vựng đã học trong bộ này
+                                    Column {
+                                        Text(
+                                            text = "Bộ này",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "$wordsLearned/${flashcards.size} từ",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                    
+                                    // Tổng số từ vựng đã học
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                                        Text(
+                                            text = "Tổng số từ",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "$totalWordsLearned từ",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                    
+                                    // Thời gian học hôm nay
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text(
+                                            text = "Hôm nay",
+                                            style = MaterialTheme.typography.labelMedium,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "$todayStudyTime phút",
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            fontWeight = FontWeight.Bold,
+                                            color = MaterialTheme.colorScheme.primary
+                                        )
+                                    }
+                                }
                             }
-                            
-                            Spacer(modifier = Modifier.height(8.dp))
-                            
-                            // Progress bar
-                            LinearProgressIndicator(
-                                progress = { progress },
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .height(8.dp)
-                                    .clip(MaterialTheme.shapes.small),
-                                color = MaterialTheme.colorScheme.primary,
-                                trackColor = MaterialTheme.colorScheme.primary.copy(alpha = 0.2f)
-                            )
-                            
-                            Spacer(modifier = Modifier.height(8.dp))
-                            
-                            // Card counter
-                            Text(
-                                text = "Thẻ ${currentIndex + 1} / ${flashcards.size}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                            )
                         }
-
-                        Spacer(modifier = Modifier.height(24.dp))
-
-                        // Flashcard component
+                        
+                        // Lấy thông tin từ vựng hiện tại
+                        val currentFlashcard = flashcards[currentIndex]
+                        // Kiểm tra xem từ này đã được đánh dấu là đã học chưa
+                        val isCurrentWordLearned = currentFlashcard.isLearned || learnedWords.contains(currentFlashcard.id)
+                        
                         FlashcardComponent(
-                            flashcard = flashcards[currentIndex],
+                            flashcard = currentFlashcard,
+                            onMarkLearned = { wordId ->
+                                // Đánh dấu từ vựng đã học và cập nhật lên Firebase
+                                viewModel.markWordAsLearned(wordId)
+                                // Cập nhật danh sách từ vựng đã học trong phiên hiện tại
+                                learnedWords = learnedWords + wordId
+                            },
+                            isLearned = isCurrentWordLearned,
+                            canGoNext = currentIndex < flashcards.size - 1,
+                            canGoPrevious = currentIndex > 0,
                             onNext = {
                                 if (currentIndex < flashcards.size - 1) {
                                     currentIndex++
@@ -266,11 +208,35 @@ fun FlashcardLearningScreen(
                                     currentIndex--
                                 }
                             },
-                            canGoNext = currentIndex < flashcards.size - 1,
-                            canGoPrevious = currentIndex > 0
+                            onLearn = {
+                                // Đánh dấu từ vựng hiện tại đã học
+                                val currentWordId = flashcards[currentIndex].id
+                                viewModel.markWordAsLearned(currentWordId)
+                                // Cập nhật danh sách từ vựng đã học trong phiên hiện tại
+                                learnedWords = learnedWords + currentWordId
+                            }
                         )
                     }
+                } else {
+                    Text(
+                        text = "Không có từ vựng nào",
+                        modifier = Modifier.align(Alignment.Center)
+                    )
                 }
+            }
+            
+            // Hiển thị lỗi nếu có
+            error?.let { error ->
+                AlertDialog(
+                    onDismissRequest = { viewModel.resetError() },
+                    title = { Text("Lỗi") },
+                    text = { Text(error) },
+                    confirmButton = {
+                        TextButton(onClick = { viewModel.resetError() }) {
+                            Text("Đóng")
+                        }
+                    }
+                )
             }
         }
     }
@@ -305,7 +271,46 @@ fun FlashcardLearningScreen(
                         textAlign = TextAlign.Center,
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    Spacer(modifier = Modifier.height(8.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
+                    // Hiển thị thông tin học tập
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly
+                    ) {
+                        // Từ vựng đã học trong bộ này
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "$wordsLearned/${flashcards.size}",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Từ đã học",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
+                        
+                        // Thời gian học hôm nay
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Text(
+                                text = "$todayStudyTime",
+                                style = MaterialTheme.typography.titleLarge,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Text(
+                                text = "Phút học",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                            )
+                        }
+                    }
+                    
+                    Spacer(modifier = Modifier.height(16.dp))
+                    
                     Text(
                         text = "Tiếp tục luyện tập để ghi nhớ tốt hơn",
                         textAlign = TextAlign.Center,
@@ -316,7 +321,11 @@ fun FlashcardLearningScreen(
             },
             confirmButton = {
                 Button(
-                    onClick = { showCompletionDialog = false },
+                    onClick = { 
+                        showCompletionDialog = false
+                        // Cập nhật thời gian học trước khi đóng dialog
+                        viewModel.updateStudyTime()
+                    },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
                     )
@@ -326,7 +335,11 @@ fun FlashcardLearningScreen(
             },
             dismissButton = {
                 OutlinedButton(
-                    onClick = onBackPress
+                    onClick = {
+                        // Cập nhật thời gian học trước khi quay lại
+                        viewModel.updateStudyTime()
+                        onNavigateBack()
+                    }
                 ) {
                     Text("Quay lại")
                 }

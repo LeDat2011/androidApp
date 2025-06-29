@@ -255,7 +255,8 @@ private fun DailyFlashcards(
             onNext = onNext,
             onPrevious = onPrevious,
             canGoNext = currentIndex < flashcards.size - 1,
-            canGoPrevious = currentIndex > 0
+            canGoPrevious = currentIndex > 0,
+            onMarkLearned = { /* Xử lý đánh dấu đã học */ }
         )
     }
 }

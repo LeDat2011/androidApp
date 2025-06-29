@@ -12,23 +12,37 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composeapp.models.QuizCategory
+import com.example.composeapp.viewmodels.QuizViewModel
+import androidx.compose.runtime.LaunchedEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun QuizScreen() {
-    var selectedCategory by remember { mutableStateOf<QuizCategory?>(null) }
+fun QuizScreen(
+    viewModel: QuizViewModel = viewModel()
+) {
+    var selectedCategory by remember { mutableStateOf<String?>(null) }
     var showQuizDetail by remember { mutableStateOf(false) }
     var selectedLevel by remember { mutableStateOf<String?>(null) }
+    
+    val categories by viewModel.categories.collectAsState()
+    val isLoading by viewModel.isLoading.collectAsState()
+    val error by viewModel.error.collectAsState()
+    
+    // Lấy danh sách danh mục khi màn hình được tạo
+    LaunchedEffect(key1 = Unit) {
+        viewModel.loadCategories()
+    }
 
     if (showQuizDetail && selectedCategory != null && selectedLevel != null) {
         QuizDetailScreen(
-            category = selectedCategory!!.title,
+            category = selectedCategory!!,
             level = selectedLevel!!,
             onBackPress = {
                 showQuizDetail = false
@@ -56,34 +70,65 @@ fun QuizScreen() {
                 )
             }
 
-            // Categories Grid
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(2),
-                contentPadding = PaddingValues(16.dp),
-                horizontalArrangement = Arrangement.spacedBy(16.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(categories) { category ->
-                    QuizCategoryCard(
-                        category = category,
-                        onClick = { selectedCategory = category }
-                    )
+            if (isLoading) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (error != null) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "Lỗi: $error",
+                            color = MaterialTheme.colorScheme.error
+                        )
+                        Button(
+                            onClick = { viewModel.resetError() },
+                            modifier = Modifier.padding(top = 16.dp)
+                        ) {
+                            Text("Thử lại")
+                        }
+                    }
+                }
+            } else {
+                // Categories Grid
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    contentPadding = PaddingValues(16.dp),
+                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(categories) { category ->
+                        QuizCategoryCard(
+                            category = category,
+                            onClick = { selectedCategory = category.id }
+                        )
+                    }
                 }
             }
         }
 
         // Level Selection Dialog
         selectedCategory?.let { category ->
-            LevelSelectionDialog(
-                category = category,
-                onDismiss = { selectedCategory = null },
-                onLevelSelected = { level ->
-                    showQuizDetail = true
-                    selectedLevel = level
-                    selectedCategory = selectedCategory
-                }
-            )
+            val selectedCategoryData = categories.find { it.id == category }
+            if (selectedCategoryData != null) {
+                LevelSelectionDialog(
+                    categoryTitle = selectedCategoryData.title,
+                    onDismiss = { selectedCategory = null },
+                    onLevelSelected = { level ->
+                        showQuizDetail = true
+                        selectedLevel = level
+                    }
+                )
+            }
         }
     }
 }
@@ -94,13 +139,37 @@ fun QuizCategoryCard(
     category: QuizCategory,
     onClick: () -> Unit
 ) {
+    val backgroundColor = when (category.id) {
+        "animals" -> Color(0xFF8BC34A)
+        "colors" -> Color(0xFF2196F3)
+        "family" -> Color(0xFFE91E63)
+        "food" -> Color(0xFFFF9800)
+        "numbers" -> Color(0xFF673AB7)
+        "time" -> Color(0xFF009688)
+        "transportation" -> Color(0xFF795548)
+        "weather" -> Color(0xFF607D8B)
+        else -> Color(0xFF9C27B0)
+    }
+    
+    val icon = when (category.id) {
+        "animals" -> Icons.Default.Pets
+        "colors" -> Icons.Default.Palette
+        "family" -> Icons.Default.People
+        "food" -> Icons.Default.Restaurant
+        "numbers" -> Icons.Default.Calculate
+        "time" -> Icons.Default.Schedule
+        "transportation" -> Icons.Default.DirectionsCar
+        "weather" -> Icons.Default.WbSunny
+        else -> Icons.Default.Category
+    }
+
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .aspectRatio(1f),
         shape = RoundedCornerShape(16.dp),
         colors = CardDefaults.cardColors(
-            containerColor = category.color
+            containerColor = backgroundColor
         ),
         onClick = onClick
     ) {
@@ -112,7 +181,7 @@ fun QuizCategoryCard(
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
-                imageVector = category.icon,
+                imageVector = icon,
                 contentDescription = category.title,
                 modifier = Modifier.size(48.dp),
                 tint = Color.White
@@ -131,7 +200,7 @@ fun QuizCategoryCard(
             Spacer(modifier = Modifier.height(4.dp))
             
             Text(
-                text = "${category.questionCount} câu hỏi",
+                text = category.description,
                 style = MaterialTheme.typography.bodyMedium,
                 color = Color.White.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center
@@ -142,7 +211,7 @@ fun QuizCategoryCard(
 
 @Composable
 fun LevelSelectionDialog(
-    category: QuizCategory,
+    categoryTitle: String,
     onDismiss: () -> Unit,
     onLevelSelected: (String) -> Unit
 ) {
@@ -158,7 +227,7 @@ fun LevelSelectionDialog(
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    text = "Chọn cấp độ - ${category.title}",
+                    text = "Chọn cấp độ - $categoryTitle",
                     style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
                     textAlign = TextAlign.Center
@@ -206,13 +275,6 @@ fun LevelSelectionDialog(
     }
 }
 
-data class QuizCategory(
-    val title: String,
-    val icon: ImageVector,
-    val color: Color,
-    val questionCount: Int = 10
-)
-
 data class Level(
     val id: String,
     val name: String,
@@ -248,55 +310,7 @@ private val levels = listOf(
     Level(
         id = "N5",
         name = "N5 - Sơ cấp",
-        description = "Dành cho người mới bắt đầu học tiếng Nhật",
-        color = Color(0xFF9C27B0)
-    )
-)
-
-private val categories = listOf(
-    QuizCategory(
-        title = "Động vật",
-        icon = Icons.Default.Pets,
-        color = Color(0xFF1E88E5)
-    ),
-    QuizCategory(
-        title = "Màu sắc",
-        icon = Icons.Default.Palette,
-        color = Color(0xFFD81B60)
-    ),
-    QuizCategory(
-        title = "Cuộc sống",
-        icon = Icons.Default.Home,
-        color = Color(0xFF43A047)
-    ),
-    QuizCategory(
-        title = "Gia đình",
-        icon = Icons.Default.People,
-        color = Color(0xFF7B1FA2)
-    ),
-    QuizCategory(
-        title = "Thức ăn",
-        icon = Icons.Default.Restaurant,
-        color = Color(0xFFC0CA33)
-    ),
-    QuizCategory(
-        title = "Số đếm",
-        icon = Icons.Default.Numbers,
-        color = Color(0xFF00ACC1)
-    ),
-    QuizCategory(
-        title = "Thời gian",
-        icon = Icons.Default.Schedule,
-        color = Color(0xFFFF7043)
-    ),
-    QuizCategory(
-        title = "Giao thông",
-        icon = Icons.Default.DirectionsCar,
-        color = Color(0xFF8E24AA)
-    ),
-    QuizCategory(
-        title = "Thời tiết",
-        icon = Icons.Default.WbSunny,
-        color = Color(0xFFFFB300)
+        description = "Hiểu những cấu trúc tiếng Nhật đơn giản",
+        color = Color(0xFF607D8B)
     )
 ) 

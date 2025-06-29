@@ -10,6 +10,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.composeapp.models.AlphabetType
 import com.example.composeapp.screens.*
 import com.example.composeapp.viewmodels.UserProfileViewModel
 import com.example.composeapp.viewmodels.AuthViewModel
@@ -28,7 +29,8 @@ enum class Route(val route: String) {
     EDIT_PROFILE("edit_profile"),
     CATEGORY_LEVEL("category_level/{categoryName}"),
     CATEGORY_DETAIL("category_detail/{categoryId}/{level}"),
-    FLASHCARD_LEARNING("flashcard_learning/{categoryName}/{level}")
+    FLASHCARD_LEARNING("flashcard_learning/{categoryName}/{level}"),
+    ALPHABET("alphabet/{alphabetType}")
 }
 
 @Composable
@@ -264,8 +266,34 @@ fun AppNavigation() {
             FlashcardLearningScreen(
                 categoryName = categoryName,
                 level = level,
-                onBackPress = {
+                onNavigateBack = {
                     navController.navigateUp()
+                }
+            )
+        }
+        
+        // Màn hình bảng chữ cái
+        composable(
+            route = Route.ALPHABET.route,
+            arguments = listOf(
+                navArgument("alphabetType") {
+                    type = NavType.StringType
+                }
+            )
+        ) { backStackEntry ->
+            val alphabetTypeStr = backStackEntry.arguments?.getString("alphabetType") ?: "HIRAGANA"
+            val alphabetType = when (alphabetTypeStr) {
+                "HIRAGANA" -> AlphabetType.HIRAGANA
+                "KATAKANA" -> AlphabetType.KATAKANA
+                "KANJI" -> AlphabetType.KANJI
+                else -> AlphabetType.HIRAGANA
+            }
+            
+            AlphabetScreen(
+                alphabetType = alphabetType,
+                onNavigateBack = {
+                    // Quay về màn hình LearnScreen (tab Learn)
+                    navController.popBackStack()
                 }
             )
         }

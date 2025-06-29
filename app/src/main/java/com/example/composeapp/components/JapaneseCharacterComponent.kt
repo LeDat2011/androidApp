@@ -1,13 +1,15 @@
 package com.example.composeapp.components
 
-import android.content.Context
-import android.graphics.drawable.PictureDrawable
 import androidx.compose.animation.core.*
-import androidx.compose.foundation.Image
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -16,8 +18,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -25,9 +25,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.layout.ContentScale
 import coil.compose.AsyncImage
 import com.example.composeapp.models.JapaneseCharacter
-import com.caverock.androidsvg.SVG
-import android.graphics.Bitmap
-import android.graphics.Canvas
+import com.example.composeapp.models.Example
 
 @Composable
 fun JapaneseCharacterCard(
@@ -47,30 +45,25 @@ fun JapaneseCharacterCard(
         label = "scale_animation"
     )
     
-    // Background color based on whether it's highlighted
-    val backgroundColor = when {
-        isHighlighted -> MaterialTheme.colorScheme.primaryContainer
-        else -> MaterialTheme.colorScheme.surface
-    }
-    
     // Card with character
     Card(
         modifier = modifier
-            .padding(4.dp)
             .size(64.dp)
             .shadow(
-                elevation = 2.dp,
-                shape = RoundedCornerShape(12.dp)
+                elevation = 1.dp,
+                shape = RoundedCornerShape(16.dp)
             )
-            .clip(RoundedCornerShape(12.dp))
+            .clip(RoundedCornerShape(16.dp))
             .clickable {
                 isPressed = true
                 onClick(character)
             }
             .scale(scale),
         colors = CardDefaults.cardColors(
-            containerColor = backgroundColor
-        )
+            containerColor = Color.White
+        ),
+        shape = RoundedCornerShape(16.dp),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
         LaunchedEffect(isPressed) {
             if (isPressed) {
@@ -88,13 +81,10 @@ fun JapaneseCharacterCard(
             // Japanese character
             Text(
                 text = character.character,
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Bold,
                 textAlign = TextAlign.Center,
-                color = if (isHighlighted) 
-                    MaterialTheme.colorScheme.onPrimaryContainer 
-                else 
-                    MaterialTheme.colorScheme.onSurface
+                color = Color(0xFFD50000) // Thay đổi từ xanh thành đỏ đậm
             )
             
             // Romanization
@@ -102,10 +92,7 @@ fun JapaneseCharacterCard(
                 text = character.romanization,
                 fontSize = 12.sp,
                 textAlign = TextAlign.Center,
-                color = if (isHighlighted)
-                    MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f)
-                else
-                    MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                color = Color.Gray
             )
         }
     }
@@ -115,24 +102,26 @@ fun JapaneseCharacterCard(
 fun JapaneseCharacterDetailCard(
     character: JapaneseCharacter,
     onClose: () -> Unit,
+    onLearn: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
-
+    // Trạng thái đã học
+    var isLearned by remember { mutableStateOf(false) }
+    
     Card(
         modifier = modifier
             .fillMaxWidth()
             .padding(16.dp),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(24.dp),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surface
+            containerColor = Color(0xFFFFF3E0) // Màu nền cam nhạt
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
+                .padding(24.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             // Ký tự lớn
@@ -140,204 +129,77 @@ fun JapaneseCharacterDetailCard(
                 modifier = Modifier
                     .size(120.dp)
                     .clip(RoundedCornerShape(16.dp))
-                    .background(MaterialTheme.colorScheme.primaryContainer)
+                    .background(Color(0xFFE3F2FD)) // Màu nền xanh nhạt
                     .padding(8.dp),
                 contentAlignment = Alignment.Center
             ) {
                 Text(
                     text = character.character,
-                    fontSize = 64.sp,
+                    fontSize = 72.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimaryContainer
+                    color = Color(0xFFD50000) // Thay đổi từ xanh thành đỏ đậm
                 )
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(8.dp))
             
             // Romanization
             Text(
                 text = character.romanization,
-                fontSize = 24.sp,
+                fontSize = 28.sp,
                 fontWeight = FontWeight.Medium,
-                color = MaterialTheme.colorScheme.onSurface
+                color = Color.Black
             )
             
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Thứ tự nét viết (nếu có)
-            if (character.strokeOrder != null) {
+            // Hình ảnh thứ tự nét viết (nếu có)
+            if (character.image != null && !character.character.any { it.code >= 0x4E00 && it.code <= 0x9FFF }) {
                 Text(
                     text = "Thứ tự nét viết:",
                     fontSize = 16.sp,
                     fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary,
+                    color = Color(0xFFE65100), // Màu cam đậm
                     modifier = Modifier.padding(bottom = 8.dp)
                 )
                 
-                // Load và hiển thị SVG từ assets
-                val svgBitmap = remember(character.strokeOrder) {
-                    loadSvgFromAssets(context, character.strokeOrder.removePrefix("asset:///"))
-                }
+                // Xác định đường dẫn file hình ảnh
+                val imagePath = character.image.removePrefix("asset:///")
                 
-                if (svgBitmap != null) {
-                    Image(
-                        bitmap = svgBitmap.asImageBitmap(),
-                        contentDescription = "Thứ tự nét viết của ${character.character}",
-                        modifier = Modifier
-                            .size(200.dp)
-                            .clip(RoundedCornerShape(8.dp))
-                            .background(MaterialTheme.colorScheme.surface)
-                            .padding(8.dp)
-                    )
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-
-            // Nghĩa tiếng Việt (nếu có)
-            if (character.meaning != null) {
-                Text(
-                    text = "Nghĩa:",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = character.meaning,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-
-            // Âm On (nếu có)
-            if (character.onReading != null) {
-                Text(
-                    text = "Âm On (音読み):",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = character.onReading,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-
-            // Âm Kun (nếu có)
-            if (character.kunReading != null) {
-                Text(
-                    text = "Âm Kun (訓読み):",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.primary
-                )
-                Text(
-                    text = character.kunReading,
-                    fontSize = 18.sp,
-                    color = MaterialTheme.colorScheme.onSurface,
-                    modifier = Modifier.padding(bottom = 16.dp)
-                )
-            }
-            
-            // Image if available
-            character.imageUrl?.let { url ->
-                // Placeholder for image (to be replaced with network image)
-                Box(
+                // Sử dụng AsyncImage để hiển thị hình ảnh tĩnh
+                AsyncImage(
+                    model = "file:///android_asset/$imagePath",
+                    contentDescription = "Thứ tự nét viết của ${character.character}",
+                    contentScale = ContentScale.Fit,
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .height(160.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.secondaryContainer),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = "Hình ảnh\n[Sẽ được tải từ Firebase]",
-                        textAlign = TextAlign.Center,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer
-                    )
-                }
-                
-                Spacer(modifier = Modifier.height(16.dp))
-            }
-            
-            // Examples if available
-            if (character.examples.isNotEmpty()) {
-                Text(
-                    text = "Ví dụ:",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 8.dp),
-                    color = MaterialTheme.colorScheme.onSurface
+                        .size(200.dp)
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color.White)
+                        .padding(8.dp)
                 )
                 
-                character.examples.forEach { example ->
-                    Card(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(bottom = 8.dp),
-                        colors = CardDefaults.cardColors(
-                            containerColor = MaterialTheme.colorScheme.surfaceVariant
-                        )
-                    ) {
-                        Column(
-                            modifier = Modifier.padding(12.dp)
-                        ) {
-                            Text(
-                                text = example.japanese,
-                                fontSize = 16.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
-                            
-                            Spacer(modifier = Modifier.height(4.dp))
-                            
-                            Text(
-                                text = example.vietnamese,
-                                fontSize = 14.sp,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant.copy(alpha = 0.8f)
-                            )
-                        }
-                    }
-                }
+                Spacer(modifier = Modifier.height(24.dp))
             }
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            // Close button
-            Button(
-                onClick = onClose,
-                modifier = Modifier.fillMaxWidth()
+
+            // Chỉ hiển thị nút đóng
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
             ) {
-                Text("Đóng")
+                // Nút đóng
+                OutlinedButton(
+                    onClick = onClose,
+                    colors = ButtonDefaults.outlinedButtonColors(
+                        contentColor = Color.Gray
+                    ),
+                    border = BorderStroke(1.dp, Color.Gray),
+                    shape = RoundedCornerShape(8.dp),
+                    modifier = Modifier.width(120.dp)
+                ) {
+                    Text("Đóng")
+                }
             }
         }
-    }
-}
-
-private fun loadSvgFromAssets(context: Context, assetPath: String): Bitmap? {
-    return try {
-        val svg = context.assets.open(assetPath).use { inputStream ->
-            SVG.getFromInputStream(inputStream)
-        }
-        
-        val width = 200
-        val height = 200
-        
-        val bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
-        val canvas = Canvas(bitmap)
-        
-        svg.documentWidth = width.toFloat()
-        svg.documentHeight = height.toFloat()
-        svg.renderToCanvas(canvas)
-        
-        bitmap
-    } catch (e: Exception) {
-        e.printStackTrace()
-        null
     }
 }
 

@@ -75,10 +75,18 @@ dependencies {
     
     // Coil for image loading
     implementation("io.coil-kt:coil-compose:2.5.0")
+    // implementation("io.coil-kt:coil-gif:2.5.0") // Hỗ trợ GIF
+
+    // Glide for GIF support
+    // implementation("com.github.bumptech.glide:glide:4.16.0")
+    // implementation("com.github.bumptech.glide:compose:1.0.0-beta01")
     
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.3")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-play-services:1.7.3")
+    
+    // SVG support
+    implementation("com.caverock:androidsvg:1.4")
     
     // Testing
     testImplementation("junit:junit:4.13.2")

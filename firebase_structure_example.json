@@ -1,0 +1,93 @@
+{
+  "app_data": {
+    "vocabulary": {
+      "ANIMALS": {
+        "N4": {
+          "vocab1": {
+            "example": "さるは木に登ります。 - Con khỉ trèo lên cây.",
+            "japanese": "さる",
+            "reading": "saru",
+            "vietnamese": "Con khỉ"
+          },
+          "vocab2": {
+            "example": "ぞうは大きな動物です。 - Voi là động vật lớn.",
+            "japanese": "ぞう",
+            "reading": "zou",
+            "vietnamese": "Con voi"
+          }
+        }
+      }
+    }
+  },
+  "users": {
+    "USER_ID_1": {
+      "profile": {
+        "age": 22,
+        "currentLevel": "N5",
+        "name": "Người dùng 1",
+        "targetLevel": "N3",
+        "registrationDate": 1748797808119,
+        "avatarUrl": "https://example.com/avatar.jpg"
+      },
+      "progress": {
+        "streak": 5,
+        "wordsLearned": 120,
+        "lessonsCompleted": 10,
+        "daysActive": 15,
+        "lastActiveDate": 1750995097969,
+        "lastStreakUpdate": 1750995097969,
+        "learningProgress": 0.45,
+        "readyForLevelUp": false
+      },
+      "settings": {
+        "studyTimeMinutes": 30
+      },
+      "learning": {
+        "vocabulary": {
+          "vocab1": true,
+          "vocab2": true,
+          "vocab3": true
+        },
+        "completedLessons": {
+          "lesson1": 1748797808119,
+          "lesson2": 1749373253946
+        }
+      },
+      "learning_stats": {
+        "study_time": {
+          "2023-5-20": 45,
+          "2023-5-21": 30
+        }
+      },
+      "progress": {
+        "completed_quizzes": {
+          "quiz1": {
+            "score": 80,
+            "completedAt": "2023-05-21T10:30:00Z",
+            "timeTaken": 250
+          }
+        }
+      }
+    },
+    "USER_ID_2": {
+      "profile": {
+        "age": 25,
+        "currentLevel": "N4",
+        "name": "Người dùng 2",
+        "targetLevel": "N2"
+      },
+      "progress": {
+        "streak": 10,
+        "wordsLearned": 250,
+        "lessonsCompleted": 25
+      },
+      "learning": {
+        "vocabulary": {
+          "vocab10": true,
+          "vocab11": true,
+          "vocab12": true
+        }
+      }
+    }
+  }
+} 

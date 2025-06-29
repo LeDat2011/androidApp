@@ -9,6 +9,9 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -33,8 +36,12 @@ fun FlashcardComponent(
     flashcard: FlashcardData,
     onNext: () -> Unit,
     onPrevious: () -> Unit,
+    onLearn: () -> Unit = {},
+    isLearned: Boolean = false,
     canGoNext: Boolean,
-    canGoPrevious: Boolean
+    canGoPrevious: Boolean,
+    onMarkLearned: (String) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     var isFlipped by remember { mutableStateOf(false) }
     var offsetX by remember { mutableStateOf(0f) }
@@ -75,7 +82,7 @@ fun FlashcardComponent(
         Color(0xFFFFEA00), // Bright Yellow
         Color(0xFF7C4DFF), // Bright Purple
         Color(0xFF00E676), // Bright Green
-        Color(0xFFFF4081), // Bright Pink
+        Color(0xFF4CAF50), // Green
         Color(0xFF2979FF), // Bright Blue
         Color(0xFFFF9100), // Bright Orange
         Color(0xFF00BFA5), // Bright Teal
@@ -90,7 +97,7 @@ fun FlashcardComponent(
         Color(0xFFFF1744), // Bright Crimson
         Color(0xFF00E676), // Bright Mint
         Color(0xFF7C4DFF), // Bright Indigo
-        Color(0xFFFF4081), // Bright Rose
+        Color(0xFF4CAF50), // Green
         Color(0xFF00BFA5), // Bright Turquoise
         Color(0xFFFF9100), // Bright Amber
         Color(0xFF2979FF), // Bright Azure
@@ -118,10 +125,9 @@ fun FlashcardComponent(
     val backColor2 = remember(flashcard.word) { color2.copy(alpha = 0.8f) }
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        horizontalAlignment = Alignment.CenterHorizontally
+            .padding(16.dp)
     ) {
         Box(
             modifier = Modifier
@@ -270,87 +276,138 @@ fun FlashcardComponent(
                     }
                 }
             }
+            
+            // Learned badge
+            if (isLearned) {
+                Box(
+                    modifier = Modifier
+                        .align(Alignment.TopEnd)
+                        .padding(8.dp)
+                        .size(40.dp)
+                        .clip(CircleShape)
+                        .background(MaterialTheme.colorScheme.primaryContainer)
+                        .padding(8.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Check,
+                        contentDescription = "Learned",
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+            }
         }
 
         Spacer(modifier = Modifier.height(24.dp))
 
-        // Navigation and flip buttons in one row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically
+        // Navigation and buttons in two rows
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Previous button
-            FilledTonalIconButton(
-                onClick = {
-                    if (canGoPrevious) {
-                        onPrevious()
-                        isFlipped = false
-                    }
-                },
-                enabled = canGoPrevious,
-                modifier = Modifier.size(56.dp),
-                colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+            // Learn button
+            Button(
+                onClick = onLearn,
+                enabled = !isLearned,
+                modifier = Modifier.fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (!isLearned) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.surfaceVariant,
+                    disabledContainerColor = MaterialTheme.colorScheme.surfaceVariant
                 )
             ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowBack,
-                    contentDescription = "Previous",
-                    tint = if (canGoPrevious) 
-                        MaterialTheme.colorScheme.onSecondaryContainer 
-                    else 
-                        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Icon(
+                        imageVector = if (isLearned) Icons.Default.Check else Icons.Default.School,
+                        contentDescription = null,
+                        modifier = Modifier.size(20.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text(if (isLearned) "Đã học" else "Đánh dấu đã học")
+                }
             }
-
-            // Flip button
-            FilledTonalButton(
-                onClick = { isFlipped = !isFlipped },
-                modifier = Modifier.size(64.dp),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.filledTonalButtonColors(
-                    containerColor = MaterialTheme.colorScheme.primaryContainer
-                ),
-                elevation = ButtonDefaults.filledTonalButtonElevation(
-                    defaultElevation = 4.dp,
-                    pressedElevation = 8.dp,
-                    hoveredElevation = 6.dp,
-                    focusedElevation = 6.dp
-                )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
+            // Navigation buttons
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Icon(
-                    imageVector = if (!isFlipped) Icons.Default.Flip else Icons.Default.Flip,
-                    contentDescription = "Flip card",
-                    modifier = Modifier.size(32.dp),
-                    tint = MaterialTheme.colorScheme.onPrimaryContainer
-                )
-            }
+                // Previous button
+                FilledTonalIconButton(
+                    onClick = {
+                        if (canGoPrevious) {
+                            onPrevious()
+                            isFlipped = false
+                        }
+                    },
+                    enabled = canGoPrevious,
+                    modifier = Modifier.size(56.dp),
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
+                        contentDescription = "Previous",
+                        tint = if (canGoPrevious) 
+                            MaterialTheme.colorScheme.onSecondaryContainer 
+                        else 
+                            MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)
+                    )
+                }
 
-            // Next button
-            FilledTonalIconButton(
-                onClick = {
-                    if (canGoNext) {
-                        onNext()
-                        isFlipped = false
-                    }
-                },
-                enabled = canGoNext,
-                modifier = Modifier.size(56.dp),
-                colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                    disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
-                )
-            ) {
-                Icon(
-                    imageVector = Icons.Default.ArrowForward,
-                    contentDescription = "Next",
-                    tint = if (canGoNext) 
-                        MaterialTheme.colorScheme.onSecondaryContainer 
-                    else 
-                        MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)
-                )
+                // Flip button
+                FilledTonalButton(
+                    onClick = { isFlipped = !isFlipped },
+                    modifier = Modifier.size(64.dp),
+                    shape = RoundedCornerShape(20.dp),
+                    colors = ButtonDefaults.filledTonalButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primaryContainer
+                    ),
+                    elevation = ButtonDefaults.filledTonalButtonElevation(
+                        defaultElevation = 4.dp,
+                        pressedElevation = 8.dp,
+                        hoveredElevation = 6.dp,
+                        focusedElevation = 6.dp
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Flip,
+                        contentDescription = "Flip card",
+                        modifier = Modifier.size(32.dp),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer
+                    )
+                }
+
+                // Next button
+                FilledTonalIconButton(
+                    onClick = {
+                        if (canGoNext) {
+                            onNext()
+                            isFlipped = false
+                        }
+                    },
+                    enabled = canGoNext,
+                    modifier = Modifier.size(56.dp),
+                    colors = IconButtonDefaults.filledTonalIconButtonColors(
+                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                        disabledContainerColor = MaterialTheme.colorScheme.secondaryContainer.copy(alpha = 0.3f)
+                    )
+                ) {
+                    Icon(
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
+                        contentDescription = "Next",
+                        tint = if (canGoNext) 
+                            MaterialTheme.colorScheme.onSecondaryContainer 
+                        else 
+                            MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.3f)
+                    )
+                }
             }
         }
     }

@@ -30,7 +30,9 @@ enum class QuestionType {
 data class QuizResult(
     val score: Int = 0,
     val completedAt: String = "",
-    val timeTaken: Int = 0
+    val timeTaken: Int = 0,
+    val correctAnswers: Int = 0,
+    val totalQuestions: Int = 0
 )
 
 data class UserProgress(
@@ -50,4 +52,20 @@ data class LeaderboardEntry(
     val name: String = "",
     val points: Int = 0,
     val rank: Int = 0
+)
+
+// Thêm các model mới cho cấu trúc quiz từ Firebase
+data class QuizCategory(
+    val id: String = "",
+    val title: String = "",
+    val description: String = "",
+    val icon: String = "",
+    val levels: Map<String, QuizLevel> = emptyMap()
+)
+
+data class QuizLevel(
+    val id: String = "",
+    val name: String = "",
+    val description: String = "",
+    val quizzes: List<Quiz> = emptyList()
 ) 
