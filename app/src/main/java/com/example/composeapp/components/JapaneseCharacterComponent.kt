@@ -31,8 +31,7 @@ import com.example.composeapp.models.Example
 fun JapaneseCharacterCard(
     character: JapaneseCharacter,
     onClick: (JapaneseCharacter) -> Unit,
-    modifier: Modifier = Modifier,
-    isHighlighted: Boolean = false
+    modifier: Modifier = Modifier
 ) {
     // Animation for click
     var isPressed by remember { mutableStateOf(false) }
@@ -102,12 +101,8 @@ fun JapaneseCharacterCard(
 fun JapaneseCharacterDetailCard(
     character: JapaneseCharacter,
     onClose: () -> Unit,
-    onLearn: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
-    // Trạng thái đã học
-    var isLearned by remember { mutableStateOf(false) }
-    
     Card(
         modifier = modifier
             .fillMaxWidth()
@@ -153,32 +148,142 @@ fun JapaneseCharacterDetailCard(
             
             Spacer(modifier = Modifier.height(16.dp))
 
-            // Hình ảnh thứ tự nét viết (nếu có)
-            if (character.image != null && !character.character.any { it.code >= 0x4E00 && it.code <= 0x9FFF }) {
-                Text(
-                    text = "Thứ tự nét viết:",
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFFE65100), // Màu cam đậm
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-                
-                // Xác định đường dẫn file hình ảnh
-                val imagePath = character.image.removePrefix("asset:///")
-                
-                // Sử dụng AsyncImage để hiển thị hình ảnh tĩnh
-                AsyncImage(
-                    model = "file:///android_asset/$imagePath",
-                    contentDescription = "Thứ tự nét viết của ${character.character}",
-                    contentScale = ContentScale.Fit,
+            // Kiểm tra xem có phải là chữ kanji không
+            val isKanji = character.character.any { it.code >= 0x4E00 && it.code <= 0x9FFF }
+            
+            if (isKanji) {
+                // Hiển thị thông tin kanji
+                Column(
                     modifier = Modifier
-                        .size(200.dp)
-                        .clip(RoundedCornerShape(8.dp))
-                        .background(Color.White)
+                        .fillMaxWidth()
                         .padding(8.dp)
-                )
+                        .clip(RoundedCornerShape(8.dp))
+                        .background(Color(0xFFECEFF1))
+                        .padding(16.dp),
+                    horizontalAlignment = Alignment.Start
+                ) {
+                    // Nghĩa của kanji
+                    character.meaning?.let { meaning ->
+                        Text(
+                            text = "Nghĩa:",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4E342E)
+                        )
+                        Text(
+                            text = meaning,
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    
+                    // Âm On
+                    character.onReading?.let { onReading ->
+                        Text(
+                            text = "Âm On (音読み):",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4E342E)
+                        )
+                        Text(
+                            text = onReading,
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                    
+                    // Âm Kun
+                    character.kunReading?.let { kunReading ->
+                        Text(
+                            text = "Âm Kun (訓読み):",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF4E342E)
+                        )
+                        Text(
+                            text = kunReading,
+                            fontSize = 16.sp,
+                            color = Color.Black,
+                            modifier = Modifier.padding(bottom = 8.dp)
+                        )
+                    }
+                }
                 
-                Spacer(modifier = Modifier.height(24.dp))
+                // Ví dụ sử dụng
+                if (character.examples.isNotEmpty()) {
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Text(
+                        text = "Ví dụ:",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFE65100),
+                        modifier = Modifier.align(Alignment.Start)
+                    )
+                    
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(top = 8.dp)
+                    ) {
+                        character.examples.forEach { example ->
+                            Card(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(vertical = 4.dp),
+                                colors = CardDefaults.cardColors(
+                                    containerColor = Color(0xFFFFECB3)
+                                )
+                            ) {
+                                Column(
+                                    modifier = Modifier.padding(12.dp)
+                                ) {
+                                    Text(
+                                        text = example.japanese,
+                                        fontSize = 16.sp,
+                                        fontWeight = FontWeight.Medium,
+                                        color = Color.Black
+                                    )
+                                    Text(
+                                        text = example.vietnamese,
+                                        fontSize = 14.sp,
+                                        color = Color.Gray,
+                                        modifier = Modifier.padding(top = 4.dp)
+                                    )
+                                }
+                            }
+                        }
+                    }
+                }
+            } else {
+                // Hình ảnh thứ tự nét viết (nếu có)
+                if (character.image != null) {
+                    Text(
+                        text = "Thứ tự nét viết:",
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFFE65100), // Màu cam đậm
+                        modifier = Modifier.padding(bottom = 8.dp)
+                    )
+                    
+                    // Xác định đường dẫn file hình ảnh
+                    val imagePath = character.image.removePrefix("asset:///")
+                    
+                    // Sử dụng AsyncImage để hiển thị hình ảnh tĩnh
+                    AsyncImage(
+                        model = "file:///android_asset/$imagePath",
+                        contentDescription = "Thứ tự nét viết của ${character.character}",
+                        contentScale = ContentScale.Fit,
+                        modifier = Modifier
+                            .size(200.dp)
+                            .clip(RoundedCornerShape(8.dp))
+                            .background(Color.White)
+                            .padding(8.dp)
+                    )
+                    
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
 
             // Chỉ hiển thị nút đóng

@@ -23,8 +23,7 @@ import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.ArrowForward
 import androidx.compose.material.icons.filled.Book
 import androidx.compose.material.icons.filled.CalendarToday
-import androidx.compose.material.icons.filled.MenuBook
-import androidx.compose.material.icons.filled.School
+import androidx.compose.material.icons.automirrored.filled.MenuBook
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -255,8 +254,7 @@ private fun DailyFlashcards(
             onNext = onNext,
             onPrevious = onPrevious,
             canGoNext = currentIndex < flashcards.size - 1,
-            canGoPrevious = currentIndex > 0,
-            onMarkLearned = { /* Xử lý đánh dấu đã học */ }
+            canGoPrevious = currentIndex > 0
         )
     }
 }
@@ -510,7 +508,7 @@ fun DailyProgressSection(
             Spacer(modifier = Modifier.height(8.dp))
             
             LinearProgressIndicator(
-                progress = progress,
+                progress = { progress },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
@@ -536,7 +534,7 @@ fun DailyProgressSection(
                     label = "Ngày liên tiếp"
                 )
                 ProgressStatItem(
-                    icon = Icons.Default.MenuBook,
+                    icon = Icons.AutoMirrored.Filled.MenuBook,
                     value = "3",
                     label = "Bài học"
                 )

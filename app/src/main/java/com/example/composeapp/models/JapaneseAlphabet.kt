@@ -387,6 +387,10 @@ object JapaneseAlphabet {
             meaning = "ngày, mặt trời",
             onReading = "ニチ、ジツ",
             kunReading = "ひ、-び、-か",
+            examples = listOf(
+                Example("今日は良い日です。", "Hôm nay là một ngày đẹp."),
+                Example("日本語を勉強しています。", "Tôi đang học tiếng Nhật.")
+            )
         ),
         JapaneseCharacter(
             character = "月",
@@ -394,6 +398,10 @@ object JapaneseAlphabet {
             meaning = "tháng, mặt trăng",
             onReading = "ゲツ、ガツ",
             kunReading = "つき",
+            examples = listOf(
+                Example("今月は忙しいです。", "Tháng này tôi rất bận."),
+                Example("月がきれいですね。", "Mặt trăng đẹp quá nhỉ.")
+            )
         ),
         JapaneseCharacter(
             character = "年",
@@ -401,6 +409,10 @@ object JapaneseAlphabet {
             meaning = "năm",
             onReading = "ネン",
             kunReading = "とし",
+            examples = listOf(
+                Example("今年は2023年です。", "Năm nay là năm 2023."),
+                Example("新年おめでとうございます。", "Chúc mừng năm mới.")
+            )
         ),
         JapaneseCharacter(
             character = "時",
@@ -408,6 +420,10 @@ object JapaneseAlphabet {
             meaning = "giờ, thời gian",
             onReading = "ジ",
             kunReading = "とき",
+            examples = listOf(
+                Example("今何時ですか？", "Bây giờ là mấy giờ?"),
+                Example("時間がありません。", "Tôi không có thời gian.")
+            )
         ),
 
         // Chủ đề: Con người và gia đình
@@ -417,6 +433,10 @@ object JapaneseAlphabet {
             meaning = "người",
             onReading = "ジン、ニン",
             kunReading = "ひと",
+            examples = listOf(
+                Example("日本人です。", "Tôi là người Nhật."),
+                Example("あの人は先生です。", "Người kia là giáo viên.")
+            )
         ),
         JapaneseCharacter(
             character = "父",
@@ -424,6 +444,10 @@ object JapaneseAlphabet {
             meaning = "bố, cha",
             onReading = "フ",
             kunReading = "ちち、とう",
+            examples = listOf(
+                Example("父は医者です。", "Bố tôi là bác sĩ."),
+                Example("お父さんはどこですか？", "Bố bạn đâu rồi?")
+            )
         ),
         JapaneseCharacter(
             character = "母",
@@ -431,6 +455,10 @@ object JapaneseAlphabet {
             meaning = "mẹ",
             onReading = "ボ",
             kunReading = "はは、かあ",
+            examples = listOf(
+                Example("母は料理が上手です。", "Mẹ tôi nấu ăn rất giỏi."),
+                Example("お母さんに電話しました。", "Tôi đã gọi điện cho mẹ.")
+            )
         ),
         JapaneseCharacter(
             character = "子",
@@ -438,6 +466,10 @@ object JapaneseAlphabet {
             meaning = "con, trẻ em",
             onReading = "シ、ス",
             kunReading = "こ",
+            examples = listOf(
+                Example("子供が公園で遊んでいます。", "Trẻ em đang chơi ở công viên."),
+                Example("彼女は三人の子供がいます。", "Cô ấy có ba đứa con.")
+            )
         ),
 
         // Chủ đề: Số đếm
@@ -447,6 +479,10 @@ object JapaneseAlphabet {
             meaning = "một",
             onReading = "イチ",
             kunReading = "ひと-",
+            examples = listOf(
+                Example("一人で行きます。", "Tôi sẽ đi một mình."),
+                Example("第一課を勉強しています。", "Tôi đang học bài 1.")
+            )
         ),
         JapaneseCharacter(
             character = "二",

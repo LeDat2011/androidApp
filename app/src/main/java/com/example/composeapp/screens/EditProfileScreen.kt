@@ -40,7 +40,6 @@ import kotlinx.coroutines.launch
 fun EditProfileScreen(
     onNavigateBack: () -> Unit
 ) {
-    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
     val scrollState = rememberScrollState()
@@ -57,7 +56,7 @@ fun EditProfileScreen(
     var age by remember { mutableStateOf(profileData?.age?.toString() ?: "") }
     var currentLevelIndex by remember { mutableStateOf(JapaneseLevel.values().indexOf(profileData?.currentLevel ?: JapaneseLevel.N5)) }
     var targetLevelIndex by remember { mutableStateOf(JapaneseLevel.values().indexOf(profileData?.targetLevel ?: JapaneseLevel.N4)) }
-    var studyTimeIndex by remember { mutableStateOf(StudyTimeOptions.options.indexOfFirst { it.first == profileData?.studyTimeMinutes } .coerceAtLeast(0)) }
+    var studyTimeIndex by remember { mutableStateOf(StudyTimeOptions.options.indexOfFirst { it.first == profileData?.studyTimeMinutes }.coerceAtLeast(0)) }
     var isLoading by remember { mutableStateOf(false) }
     
     // Dropdown states
@@ -73,13 +72,12 @@ fun EditProfileScreen(
     // Update local state when profile data changes
     LaunchedEffect(profileData) {
         profileData?.let { data ->
-            name = data.name ?: ""
-            age = data.age?.toString() ?: ""
-            currentLevelIndex = JapaneseLevel.values().indexOf(data.currentLevel ?: JapaneseLevel.N5).coerceAtLeast(0)
-            targetLevelIndex = JapaneseLevel.values().indexOf(data.targetLevel ?: JapaneseLevel.N4).coerceAtLeast(0)
-            studyTimeIndex = data.studyTimeMinutes?.let { minutes ->
-                StudyTimeOptions.options.indexOfFirst { it.first == minutes }
-            }?.coerceAtLeast(0) ?: 0
+            name = data.name
+            age = data.age.toString()
+            currentLevelIndex = JapaneseLevel.values().indexOf(data.currentLevel).coerceAtLeast(0)
+            targetLevelIndex = JapaneseLevel.values().indexOf(data.targetLevel).coerceAtLeast(0)
+            studyTimeIndex = StudyTimeOptions.options.indexOfFirst { it.first == data.studyTimeMinutes }
+                .coerceAtLeast(0)
         }
     }
     
@@ -118,7 +116,7 @@ fun EditProfileScreen(
             return false
         }
         
-        if (age.isBlank() || age.toIntOrNull() == null || age.toIntOrNull()!! <= 0) {
+        if (age.isBlank() || age.toIntOrNull() == null || age.toInt() <= 0) {
             scope.launch {
                 snackbarHostState.showSnackbar("Vui lòng nhập tuổi hợp lệ")
             }
@@ -145,7 +143,7 @@ fun EditProfileScreen(
                             if (validateForm()) {
                                 val profile = UserProfileData(
                                     name = name,
-                                    age = age.toIntOrNull() ?: 0,
+                                    age = age.toInt(),
                                     currentLevel = JapaneseLevel.values()[currentLevelIndex],
                                     targetLevel = JapaneseLevel.values()[targetLevelIndex],
                                     studyTimeMinutes = StudyTimeOptions.options[studyTimeIndex].first,

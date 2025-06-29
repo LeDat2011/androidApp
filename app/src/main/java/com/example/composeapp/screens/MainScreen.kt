@@ -136,9 +136,6 @@ fun MainScreen(
                     }
                 )
                 1 -> LearnScreen(
-                    onNavigateToFlashcard = { category, level ->
-                        navController.navigate("flashcard_learning/$category/$level")
-                    },
                     onNavigateToAlphabet = { alphabetType ->
                         navController.navigate("alphabet/${alphabetType.name}") {
                             popUpTo("alphabet/${alphabetType.name}") {

@@ -123,7 +123,7 @@ fun FlashcardLearningScreen(
                             ) {
                                 // Hiển thị tiến độ
                                 LinearProgressIndicator(
-                                    progress = (currentIndex + 1).toFloat() / flashcards.size,
+                                    progress = { (currentIndex + 1).toFloat() / flashcards.size },
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(bottom = 8.dp)
@@ -189,12 +189,6 @@ fun FlashcardLearningScreen(
                         
                         FlashcardComponent(
                             flashcard = currentFlashcard,
-                            onMarkLearned = { wordId ->
-                                // Đánh dấu từ vựng đã học và cập nhật lên Firebase
-                                viewModel.markWordAsLearned(wordId)
-                                // Cập nhật danh sách từ vựng đã học trong phiên hiện tại
-                                learnedWords = learnedWords + wordId
-                            },
                             isLearned = isCurrentWordLearned,
                             canGoNext = currentIndex < flashcards.size - 1,
                             canGoPrevious = currentIndex > 0,

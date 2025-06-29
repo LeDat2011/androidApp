@@ -40,7 +40,6 @@ fun FlashcardComponent(
     isLearned: Boolean = false,
     canGoNext: Boolean,
     canGoPrevious: Boolean,
-    onMarkLearned: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isFlipped by remember { mutableStateOf(false) }
@@ -57,23 +56,6 @@ fun FlashcardComponent(
         targetValue = if (abs(offsetX) > 0) 0.9f else 1f,
         animationSpec = spring(stiffness = Spring.StiffnessLow)
     )
-
-    // Danh sách màu đẹp cho flashcard
-    val cardColors = listOf(
-        Color(0xFFE3F2FD), // Light Blue
-        Color(0xFFE8F5E9), // Light Green
-        Color(0xFFFFF3E0), // Light Orange
-        Color(0xFFF3E5F5), // Light Purple
-        Color(0xFFE0F7FA), // Light Cyan
-        Color(0xFFFCE4EC), // Light Pink
-        Color(0xFFF1F8E9), // Light Lime
-        Color(0xFFE8EAF6), // Light Indigo
-        Color(0xFFFFEBEE), // Light Red
-        Color(0xFFEFEBE9)  // Light Brown
-    )
-
-    // Chọn màu ngẫu nhiên và lưu trữ nó
-    val cardColor = remember { cardColors[Random.nextInt(cardColors.size)] }
 
     // Danh sách màu sắc nổi bật
     val vibrantColors = listOf(
@@ -102,18 +84,6 @@ fun FlashcardComponent(
         Color(0xFFFF9100), // Bright Amber
         Color(0xFF2979FF), // Bright Azure
         Color(0xFF00E676)  // Bright Jade
-    )
-
-    // Animation cho gradient
-    val infiniteTransition = rememberInfiniteTransition(label = "gradient")
-    val angle by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 360f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(10000, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "angle"
     )
 
     // Chọn 2 màu ngẫu nhiên cho gradient và cập nhật khi flashcard thay đổi

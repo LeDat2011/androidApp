@@ -47,9 +47,7 @@ import coil.compose.AsyncImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LearnScreen(
-    onNavigateToFlashcard: (String, String) -> Unit,
-    onNavigateToAlphabet: (AlphabetType) -> Unit,
-    japaneseAlphabetViewModel: JapaneseAlphabetViewModel = viewModel()
+    onNavigateToAlphabet: (AlphabetType) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -245,7 +243,7 @@ fun AlphabetCard(
             }
             
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Đi đến bảng chữ cái",
                 tint = MaterialTheme.colorScheme.primary
             )
@@ -305,7 +303,7 @@ fun VocabularyCard(
             }
             
             Icon(
-                imageVector = Icons.Default.ArrowForward,
+                imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                 contentDescription = "Xem chi tiết",
                 tint = MaterialTheme.colorScheme.primary
             )

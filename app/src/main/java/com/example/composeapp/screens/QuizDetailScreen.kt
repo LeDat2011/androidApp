@@ -35,7 +35,6 @@ fun QuizDetailScreen(
     val score by viewModel.score.collectAsState()
     val isLoading by viewModel.isLoading.collectAsState()
     val error by viewModel.error.collectAsState()
-    val userAnswers by viewModel.userAnswers.collectAsState()
     val correctAnswersCount by viewModel.correctAnswersCount.collectAsState()
     val showResults by viewModel.showResults.collectAsState()
     val answerResults by viewModel.answerResults.collectAsState()
@@ -116,7 +115,7 @@ fun QuizDetailScreen(
             ) {
                 // Progress
                 LinearProgressIndicator(
-                    progress = (questionIndex + 1).toFloat() / (currentQuiz?.questions?.size ?: 1),
+                    progress = { (questionIndex + 1).toFloat() / (currentQuiz?.questions?.size ?: 1) },
                     modifier = Modifier.fillMaxWidth()
                 )
                 
@@ -150,7 +149,6 @@ fun QuizDetailScreen(
                     }
                     QuestionType.TRUE_FALSE -> {
                         TrueFalseQuestion(
-                            question = currentQuestion!!,
                             onAnswerSelected = { answer ->
                                 viewModel.submitAnswer(answer)
                             }
@@ -158,7 +156,6 @@ fun QuizDetailScreen(
                     }
                     QuestionType.FILL_BLANK -> {
                         FillBlankQuestion(
-                            question = currentQuestion!!,
                             onAnswerSubmitted = { answer ->
                                 viewModel.submitAnswer(answer)
                             }
@@ -379,7 +376,6 @@ fun MultipleChoiceQuestion(
 
 @Composable
 fun TrueFalseQuestion(
-    question: Question,
     onAnswerSelected: (String) -> Unit
 ) {
     Row(
@@ -408,7 +404,6 @@ fun TrueFalseQuestion(
 
 @Composable
 fun FillBlankQuestion(
-    question: Question,
     onAnswerSubmitted: (String) -> Unit
 ) {
     var answer by remember { mutableStateOf("") }
