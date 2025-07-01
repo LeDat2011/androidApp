@@ -937,11 +937,11 @@ function loadUsersData() {
         .then((snapshot) => {
             const usersData = [];
             snapshot.forEach((userSnapshot) => {
-                const userId = userSnapshot.key;
+                    const userId = userSnapshot.key;
                 const profile = userSnapshot.child('profile').val() || {};
                 const progress = userSnapshot.child('progress').val() || {};
                 const settings = userSnapshot.child('settings').val() || {};
-                
+                    
                 // Lấy thông tin từ profile
                 const name = profile.name || 'Không có tên';
                 const email = profile.email || 'Không có email'; // Add email field
@@ -966,7 +966,7 @@ function loadUsersData() {
                 
                 // Thêm người dùng vào danh sách
                 usersData.push({
-                    id: userId,
+                        id: userId,
                     name,
                     email, // Include email in userData
                     age,
@@ -981,8 +981,8 @@ function loadUsersData() {
                     lastActiveDate,
                     studyTimeMinutes,
                     status
+                    });
                 });
-            });
             
             // Hiển thị danh sách người dùng
             currentUsersData = usersData;
@@ -1034,8 +1034,8 @@ function renderUsersList(data) {
                 <td class="${statusClass}">${statusName}</td>
                 <td>
                     <button class="btn btn-sm btn-primary view-user" data-id="${user.id}">
-                        <i class="fas fa-eye"></i>
-                    </button>
+                            <i class="fas fa-eye"></i>
+                        </button>
                 </td>
             </tr>
         `;
@@ -1064,7 +1064,7 @@ function viewUserDetail(userId) {
     // Lưu trữ thông tin người dùng đang xem
     currentUserForDeletion = userId;
     currentUserStatus = user.status || 'active';
-    
+                
     // Cập nhật nút chuyển đổi trạng thái
     toggleUserStatusBtn.textContent = currentUserStatus === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt';
     toggleUserStatusBtn.classList.toggle('btn-warning', currentUserStatus === 'active');
@@ -1073,7 +1073,7 @@ function viewUserDetail(userId) {
     // Định dạng thời gian
     const lastActiveDate = new Date(user.lastActiveDate).toLocaleDateString('vi-VN');
     const registrationDate = new Date(user.registrationDate).toLocaleDateString('vi-VN');
-    
+                
     // Tạo HTML chi tiết người dùng
     const detailContent = `
         <div class="user-detail">
@@ -1121,8 +1121,8 @@ function viewUserDetail(userId) {
                         <span class="text-muted">${user.studyTimeMinutes}</span>
                     </div>
                 </div>
-            </div>
-            
+                    </div>
+                    
             <div class="row mt-3">
                 <div class="col-md-12">
                     <div class="progress-stats">
@@ -1132,36 +1132,36 @@ function viewUserDetail(userId) {
                             <div class="d-flex justify-content-between">
                                 <span>Streak ngày học liên tiếp:</span>
                                 <span class="text-primary">${user.streak}</span>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                         
                         <div class="mb-2">
                             <div class="d-flex justify-content-between">
                                 <span>Số ngày học tích cực:</span>
                                 <span class="text-primary">${user.daysActive}</span>
-                            </div>
-                        </div>
+                    </div>
+                    </div>
                         
                         <div class="mb-2">
                             <div class="d-flex justify-content-between">
                                 <span>Số từ vựng đã học:</span>
                                 <span class="text-primary">${user.wordsLearned}</span>
                             </div>
-                        </div>
-                        
+                    </div>
+                    
                         <div class="mb-2">
                             <div class="d-flex justify-content-between">
                                 <span>Số bài học đã hoàn thành:</span>
                                 <span class="text-primary">${user.lessonsCompleted}</span>
-                            </div>
+                        </div>
+                        </div>
+                        </div>
+                </div>
                         </div>
                     </div>
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Hiển thị modal
+                `;
+                
+                // Hiển thị modal
     document.getElementById('user-detail-content').innerHTML = detailContent;
     const userDetailModal = new bootstrap.Modal(document.getElementById('user-detail-modal'));
     userDetailModal.show();
