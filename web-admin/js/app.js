@@ -33,6 +33,12 @@ let currentUserStatus = 'active'; // Trạng thái người dùng hiện tại
 
 // Khởi tạo ứng dụng
 document.addEventListener('DOMContentLoaded', () => {
+    // Kiểm tra các phần tử DOM có tồn tại
+    if (!connectionStatus || !userStatus) {
+        console.error('Không tìm thấy phần tử DOM cần thiết!');
+        return;
+    }
+    
     // Kiểm tra kết nối Firebase
     checkFirebaseConnection();
     
@@ -45,13 +51,13 @@ document.addEventListener('DOMContentLoaded', () => {
     // Thiết lập sự kiện form
     setupForms();
     
+    // Thiết lập bộ lọc
+    setupFilters();
+    
     // Tải dữ liệu ban đầu
     loadVocabularyData();
     loadQuizData();
     loadUsersData();
-    
-    // Thiết lập bộ lọc
-    setupFilters();
     
     // Thiết lập sự kiện xóa người dùng
     setupUserDeletion();
@@ -86,8 +92,11 @@ function checkAuthStatus() {
             }
             userStatus.className = 'authenticated';
             
-            // Nếu chưa đăng nhập, đăng nhập ẩn danh
-            // Trong môi trường thực tế, bạn nên sử dụng đăng nhập bằng email/mật khẩu
+            // Khi đã đăng nhập thành công, tải dữ liệu
+            loadVocabularyData();
+            loadQuizData();
+            loadUsersData();
+            
         } else {
             auth.signInAnonymously()
                 .catch((error) => {
@@ -112,6 +121,10 @@ function setupNavigation() {
     navUsers.addEventListener('click', (e) => {
         e.preventDefault();
         showSection('users');
+        // Load dữ liệu người dùng khi chuyển đến tab users
+        if (isAuthenticated) {
+            loadUsersData();
+        }
     });
 }
 
@@ -126,6 +139,15 @@ function showSection(section) {
     vocabularySection.style.display = section === 'vocabulary' ? 'block' : 'none';
     quizSection.style.display = section === 'quiz' ? 'block' : 'none';
     usersSection.style.display = section === 'users' ? 'block' : 'none';
+    
+    // Load dữ liệu tương ứng
+    if (section === 'vocabulary' && isAuthenticated) {
+        loadVocabularyData();
+    } else if (section === 'quiz' && isAuthenticated) {
+        loadQuizData();
+    } else if (section === 'users' && isAuthenticated) {
+        loadUsersData();
+    }
 }
 
 // Thiết lập sự kiện form
@@ -900,221 +922,249 @@ function truncateText(text, maxLength) {
 
 // Tải dữ liệu người dùng
 function loadUsersData() {
-    usersList.innerHTML = '<tr><td colspan="7" class="text-center">Đang tải dữ liệu...</td></tr>';
+    // Kiểm tra trạng thái đăng nhập
+    if (!isAuthenticated) {
+        console.error('Chưa đăng nhập');
+        return;
+    }
     
-    // Lấy danh sách người dùng từ Realtime Database
-    database.ref(DB_PATHS.USERS).once('value')
-        .then(snapshot => {
-            currentUsersData = [];
-            
-            if (snapshot.exists()) {
-                snapshot.forEach(userSnapshot => {
-                    const userId = userSnapshot.key;
-                    const userData = userSnapshot.val();
-                    const profileData = userData.profile || {};
-                    
-                    // Chuyển đổi timestamp thành định dạng ngày
-                    const createdAt = userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('vi-VN') : 'N/A';
-                    
-                    // Đối với người dùng có email, lấy từ userId hoặc email
-                    let email = 'Không có email';
-                    
-                    // Nếu userId là một email (chứa @), sử dụng nó làm email
-                    if (userId.includes('@')) {
-                        email = userId;
-                    }
-                    // Nếu userId có định dạng như "user1", "user2" tạo email tương ứng
-                    else if (userId.match(/^user\d+$/)) {
-                        const userNumber = userId.replace('user', '');
-                        email = `user${userNumber}@gmail.com`;
-                    }
-                    // Các user có ID dài như hình chụp trên Firebase Auth console
-                    else if (userId.length > 20) {
-                        // Tìm xem có user nào khớp với ID này không (từ Auth console)
-                        if (userId === '6LeUBY9LnVMESRzEL5okduZdfU62') {
-                            email = 'user1@gmail.com';
-                        } else if (userId === 'Y5Mc85VS1aVrfYJkEgM8JooL0jM2') {
-                            email = 'admin@mail.com';
-                        } else if (userId === 'jmBr1nBfsRbWv9phNxw7lEQ3nhC2') {
-                            email = 'user3@gmail.com';
-                        } else if (userId === 'vGy978Aq0vb1GyhoMW5J3khVWnb2') {
-                            email = 'user2@gmail.com';
-                        }
-                    }
-                    
-                    currentUsersData.push({
-                        id: userId,
-                        email: email,
-                        displayName: profileData.name || 'Chưa đặt tên',
-                        photoURL: userData.photoURL || '',
-                        createdAt: createdAt,
-                        level: profileData.currentLevel || profileData.targetLevel || 'N5',
-                        status: userData.status || 'active',
-                        lastLogin: userData.lastLogin ? new Date(userData.lastLogin).toLocaleDateString('vi-VN') : 'N/A',
-                        progress: userData.progress || {},
-                        stats: {
-                            quizCompleted: profileData.lessonsCompleted || 0,
-                            flashcardsLearned: profileData.wordsLearned || 0,
-                            totalPoints: 0,
-                            streak: profileData.streak || 0
-                        }
-                    });
+    // Hiển thị trạng thái đang tải
+    usersList.innerHTML = `<tr><td colspan="7" class="text-center">Đang tải dữ liệu người dùng...</td></tr>`;
+    
+    // Lấy danh sách người dùng từ Firebase
+    const usersRef = database.ref(DB_PATHS.USERS);
+    usersRef.once('value')
+        .then((snapshot) => {
+            const usersData = [];
+            snapshot.forEach((userSnapshot) => {
+                const userId = userSnapshot.key;
+                const profile = userSnapshot.child('profile').val() || {};
+                const progress = userSnapshot.child('progress').val() || {};
+                const settings = userSnapshot.child('settings').val() || {};
+                
+                // Lấy thông tin từ profile
+                const name = profile.name || 'Không có tên';
+                const email = profile.email || 'Không có email'; // Add email field
+                const age = profile.age || 0;
+                const currentLevel = profile.currentLevel || 'N5';
+                const targetLevel = profile.targetLevel || 'N5';
+                const avatarUrl = profile.avatarUrl || '';
+                const registrationDate = profile.registrationDate || 0;
+                
+                // Lấy thông tin từ progress
+                const streak = progress.streak || 0;
+                const wordsLearned = progress.wordsLearned || 0;
+                const lessonsCompleted = progress.lessonsCompleted || 0;
+                const daysActive = progress.daysActive || 0;
+                const lastActiveDate = progress.lastActiveDate || 0;
+                
+                // Lấy thông tin từ settings
+                const studyTimeMinutes = settings.studyTimeMinutes || 30;
+                const status = settings.status || 'active';
+                
+                console.log("Loaded user:", { id: userId, name, email }); // Thêm log để debug
+                
+                // Thêm người dùng vào danh sách
+                usersData.push({
+                    id: userId,
+                    name,
+                    email, // Include email in userData
+                    age,
+                    currentLevel,
+                    targetLevel,
+                    avatarUrl,
+                    registrationDate,
+                    streak,
+                    wordsLearned,
+                    lessonsCompleted,
+                    daysActive,
+                    lastActiveDate,
+                    studyTimeMinutes,
+                    status
                 });
-            }
+            });
             
-            renderUsersList(currentUsersData);
+            // Hiển thị danh sách người dùng
+            currentUsersData = usersData;
+            console.log("Total users loaded:", usersData.length); // Log số lượng user đã load
+            renderUsersList(usersData);
         })
-        .catch(error => {
+        .catch((error) => {
             console.error('Lỗi khi tải dữ liệu người dùng:', error);
-            usersList.innerHTML = '<tr><td colspan="7" class="text-center text-danger">Lỗi khi tải dữ liệu</td></tr>';
+            usersList.innerHTML = `<tr><td colspan="7" class="text-danger text-center">Lỗi khi tải dữ liệu người dùng</td></tr>`;
         });
 }
 
 // Hiển thị danh sách người dùng
 function renderUsersList(data) {
-    if (data.length === 0) {
-        usersList.innerHTML = '<tr><td colspan="7" class="text-center">Không có dữ liệu</td></tr>';
+    if (!data || data.length === 0) {
+        usersList.innerHTML = `<tr><td colspan="7" class="text-center">Không có dữ liệu người dùng</td></tr>`;
         return;
     }
     
-    usersList.innerHTML = data.map(user => {
-        // Xác định badge trạng thái
-        let statusBadge = '';
-        switch (user.status) {
-            case 'active':
-                statusBadge = '<span class="badge bg-success">Hoạt động</span>';
-                break;
-            case 'inactive':
-                statusBadge = '<span class="badge bg-warning text-dark">Không hoạt động</span>';
-                break;
-            case 'blocked':
-                statusBadge = '<span class="badge bg-danger">Đã khóa</span>';
-                break;
-            default:
-                statusBadge = '<span class="badge bg-info">Không xác định</span>';
+    console.log("Rendering user list with data:", data);
+    
+    let html = '';
+    data.forEach((user) => {
+        // Xử lý dữ liệu ngày tháng an toàn
+        let registrationDateStr = 'N/A';
+        let lastActiveDateStr = 'N/A';
+        
+        try {
+            if (user.registrationDate) {
+                registrationDateStr = new Date(user.registrationDate).toLocaleDateString('vi-VN');
+            }
+            if (user.lastActiveDate) {
+                lastActiveDateStr = new Date(user.lastActiveDate).toLocaleDateString('vi-VN');
+            }
+        } catch (e) {
+            console.error("Date conversion error:", e);
         }
         
-        return `
+        const statusClass = user.status === 'active' ? 'text-success' : 'text-danger';
+        const statusName = getStatusName(user.status);
+        
+        html += `
             <tr>
-                <td>${user.id.substring(0, 8)}...</td>
-                <td>${user.email}</td>
-                <td>${user.displayName}</td>
-                <td>${user.createdAt}</td>
-                <td>${user.level}</td>
-                <td>${statusBadge}</td>
+                <td class="user-id">${user.id ? user.id.substring(0, 10) : 'N/A'}...</td>
+                <td>${user.email || 'N/A'}</td>
+                <td>${user.name || 'N/A'}</td>
+                <td>${registrationDateStr}</td>
+                <td>${user.currentLevel || 'N/A'}</td>
+                <td class="${statusClass}">${statusName}</td>
                 <td>
-                    <div class="d-flex justify-content-center gap-1">
-                        <button class="btn btn-sm btn-outline-info btn-action" onclick="viewUserDetail('${user.id}')">
-                            <i class="fas fa-eye"></i>
-                        </button>
-                        <button class="btn btn-sm btn-outline-danger btn-action" onclick="prepareDeleteUser('${user.id}')">
-                            <i class="fas fa-trash"></i>
-                        </button>
-                    </div>
+                    <button class="btn btn-sm btn-primary view-user" data-id="${user.id}">
+                        <i class="fas fa-eye"></i>
+                    </button>
                 </td>
             </tr>
         `;
-    }).join('');
+    });
+    
+    usersList.innerHTML = html;
+    
+    // Thêm sự kiện cho nút xem chi tiết
+    document.querySelectorAll('.view-user').forEach((btn) => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-id');
+            viewUserDetail(userId);
+        });
+    });
 }
 
 // Xem chi tiết người dùng
 function viewUserDetail(userId) {
-    const user = currentUsersData.find(u => u.id === userId);
+    // Tìm dữ liệu người dùng
+    const user = currentUsersData.find((u) => u.id === userId);
     
-    if (user) {
-        const userDetailContent = document.getElementById('user-detail-content');
-        
-        // Lấy dữ liệu chi tiết từ Firebase để đảm bảo thông tin mới nhất
-        database.ref(`${DB_PATHS.USERS}/${userId}`).once('value')
-            .then(snapshot => {
-                const userData = snapshot.val() || {};
-                const profileData = userData.profile || {};
-                
-                // Lưu trạng thái người dùng hiện tại
-                currentUserStatus = userData.status || 'active';
-                
-                // Cập nhật nội dung nút vô hiệu hóa/kích hoạt dựa vào trạng thái hiện tại
-                if (currentUserStatus === 'active') {
-                    toggleUserStatusBtn.textContent = 'Vô hiệu hóa';
-                    toggleUserStatusBtn.className = 'btn btn-sm btn-warning';
-                } else {
-                    toggleUserStatusBtn.textContent = 'Kích hoạt';
-                    toggleUserStatusBtn.className = 'btn btn-sm btn-success';
-                }
-                
-                // Lấy email từ userId hoặc từ dữ liệu đã xử lý
-                let email = user.email;
-                
-                // Tạo nội dung chi tiết người dùng
-                let content = `
-                    <div class="text-center mb-3">
-                        ${user.photoURL ? 
-                            `<img src="${user.photoURL}" alt="${user.displayName}" class="user-avatar">` : 
-                            `<div class="user-avatar d-flex align-items-center justify-content-center bg-light">
-                                <i class="fas fa-user fa-3x text-secondary"></i>
-                            </div>`
-                        }
-                        <h4>${profileData.name || 'Chưa đặt tên'}</h4>
-                        <p class="text-muted">${email}</p>
-                    </div>
-                    
-                    <div class="detail-item">
-                        <div class="detail-label">ID:</div>
-                        <div class="detail-value">${userId}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Ngày tạo:</div>
-                        <div class="detail-value">${userData.createdAt ? new Date(userData.createdAt).toLocaleDateString('vi-VN') : 'N/A'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Đăng nhập cuối:</div>
-                        <div class="detail-value">${userData.lastLogin ? new Date(userData.lastLogin).toLocaleDateString('vi-VN') : 'N/A'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Cấp độ:</div>
-                        <div class="detail-value">${profileData.targetLevel || profileData.currentLevel || 'N5'}</div>
-                    </div>
-                    <div class="detail-item">
-                        <div class="detail-label">Trạng thái:</div>
-                        <div class="detail-value">${getStatusName(currentUserStatus)}</div>
-                    </div>
-                    
-                    <div class="user-stats">
-                        <div class="stat-item">
-                            <div class="stat-value">${profileData.lessonsCompleted || 0}</div>
-                            <div class="stat-label">Quiz hoàn thành</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">${profileData.wordsLearned || 0}</div>
-                            <div class="stat-label">Flashcard đã học</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">${profileData.studyTimeMinutes || 0}</div>
-                            <div class="stat-label">Tổng phút học</div>
-                        </div>
-                        <div class="stat-item">
-                            <div class="stat-value">${profileData.streak || 0}</div>
-                            <div class="stat-label">Chuỗi ngày</div>
-                        </div>
-                    </div>
-                `;
-                
-                userDetailContent.innerHTML = content;
-                
-                // Lưu ID người dùng hiện tại để xóa nếu cần
-                currentUserForDeletion = userId;
-                
-                // Hiển thị modal
-                const modal = new bootstrap.Modal(document.getElementById('user-detail-modal'));
-                modal.show();
-            })
-            .catch(error => {
-                console.error('Lỗi khi tải dữ liệu chi tiết người dùng:', error);
-                alert('Không thể tải thông tin chi tiết người dùng. Vui lòng thử lại!');
-            });
-    } else {
-        alert('Không tìm thấy thông tin người dùng!');
+    if (!user) {
+        return;
     }
+    
+    // Lưu trữ thông tin người dùng đang xem
+    currentUserForDeletion = userId;
+    currentUserStatus = user.status || 'active';
+    
+    // Cập nhật nút chuyển đổi trạng thái
+    toggleUserStatusBtn.textContent = currentUserStatus === 'active' ? 'Vô hiệu hóa' : 'Kích hoạt';
+    toggleUserStatusBtn.classList.toggle('btn-warning', currentUserStatus === 'active');
+    toggleUserStatusBtn.classList.toggle('btn-success', currentUserStatus !== 'active');
+    
+    // Định dạng thời gian
+    const lastActiveDate = new Date(user.lastActiveDate).toLocaleDateString('vi-VN');
+    const registrationDate = new Date(user.registrationDate).toLocaleDateString('vi-VN');
+    
+    // Tạo HTML chi tiết người dùng
+    const detailContent = `
+        <div class="user-detail">
+            <div class="user-avatar text-center mb-3">
+                <img src="${user.avatarUrl || 'https://via.placeholder.com/100'}" alt="Avatar" class="rounded-circle" width="100">
+            </div>
+            
+            <h4 class="text-center mb-3">${user.name}</h4>
+            <p class="text-muted text-center">${user.email}</p>
+            
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <strong>ID:</strong>
+                        <span class="text-muted">${user.id}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Tuổi:</strong>
+                        <span class="text-muted">${user.age}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Ngày đăng ký:</strong>
+                        <span class="text-muted">${registrationDate}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Trạng thái:</strong>
+                        <span class="text-muted">${getStatusName(user.status)}</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="mb-3">
+                        <strong>Trình độ hiện tại:</strong>
+                        <span class="text-muted">${user.currentLevel}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Trình độ mục tiêu:</strong>
+                        <span class="text-muted">${user.targetLevel}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Hoạt động cuối:</strong>
+                        <span class="text-muted">${lastActiveDate}</span>
+                    </div>
+                    <div class="mb-3">
+                        <strong>Thời gian học (phút/ngày):</strong>
+                        <span class="text-muted">${user.studyTimeMinutes}</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="row mt-3">
+                <div class="col-md-12">
+                    <div class="progress-stats">
+                        <h5 class="mb-3">Thống kê học tập</h5>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Streak ngày học liên tiếp:</span>
+                                <span class="text-primary">${user.streak}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Số ngày học tích cực:</span>
+                                <span class="text-primary">${user.daysActive}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Số từ vựng đã học:</span>
+                                <span class="text-primary">${user.wordsLearned}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Số bài học đã hoàn thành:</span>
+                                <span class="text-primary">${user.lessonsCompleted}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Hiển thị modal
+    document.getElementById('user-detail-content').innerHTML = detailContent;
+    const userDetailModal = new bootstrap.Modal(document.getElementById('user-detail-modal'));
+    userDetailModal.show();
 }
 
 // Thiết lập sự kiện xóa người dùng
@@ -1191,13 +1241,16 @@ function deleteUser(userId) {
         });
 }
 
-// Lấy tên trạng thái
+// Chuyển đổi trạng thái thành tên hiển thị
 function getStatusName(status) {
-    const statusNames = {
-        'active': 'Hoạt động',
-        'inactive': 'Không hoạt động',
-        'blocked': 'Đã khóa'
-    };
-    
-    return statusNames[status] || status;
+    switch (status) {
+        case 'active':
+            return 'Hoạt động';
+        case 'inactive':
+            return 'Không hoạt động';
+        case 'banned':
+            return 'Bị khóa';
+        default:
+            return 'Không xác định';
+    }
 } 

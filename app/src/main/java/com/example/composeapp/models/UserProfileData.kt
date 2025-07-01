@@ -3,6 +3,7 @@ package com.example.composeapp.models
 data class UserProfileData(
     val userId: String = "",
     val name: String = "",
+    val email: String = "",
     val age: Int = 0,
     val currentLevel: JapaneseLevel = JapaneseLevel.BEGINNER,
     val targetLevel: JapaneseLevel = JapaneseLevel.N5,

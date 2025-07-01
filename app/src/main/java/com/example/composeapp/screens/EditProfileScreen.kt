@@ -154,7 +154,8 @@ fun EditProfileScreen(
                                     registrationDate = profileData?.registrationDate ?: System.currentTimeMillis(),
                                     lastActiveDate = System.currentTimeMillis(),
                                     avatarUrl = profileData?.avatarUrl,
-                                    userId = profileData?.userId ?: ""
+                                    userId = profileData?.userId ?: "",
+                                    email = profileData?.email ?: ""
                                 )
                                 viewModel.saveUserProfile(profile)
                             }
@@ -202,35 +203,41 @@ fun EditProfileScreen(
             Spacer(modifier = Modifier.height(24.dp))
             
             // Name field
-            OutlinedTextField(
+            ProfileFormField(
                 value = name,
                 onValueChange = { name = it },
-                label = { Text("Họ tên") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                leadingIcon = {
-                    Icon(Icons.Default.Person, contentDescription = null)
-                },
+                label = "Họ tên",
+                icon = Icons.Default.Person,
                 keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Text,
                     imeAction = ImeAction.Next
                 ),
                 keyboardActions = KeyboardActions(
-                    onNext = { focusManager.moveFocus(FocusDirection.Down) }
+                    onNext = {
+                        focusManager.moveFocus(FocusDirection.Down)
+                    }
                 )
             )
             
             Spacer(modifier = Modifier.height(16.dp))
             
+            // Email field (non-editable)
+            ProfileFormField(
+                value = profileData?.email ?: "",
+                onValueChange = { /* No changes allowed */ },
+                label = "Email",
+                icon = Icons.Default.Email,
+                isEnabled = false
+            )
+            
+            Spacer(modifier = Modifier.height(16.dp))
+            
             // Age field
-            OutlinedTextField(
+            ProfileFormField(
                 value = age,
                 onValueChange = { if (it.isEmpty() || it.toIntOrNull() != null) age = it },
-                label = { Text("Tuổi") },
-                modifier = Modifier.fillMaxWidth(),
-                singleLine = true,
-                leadingIcon = {
-                    Icon(Icons.Default.Cake, contentDescription = null)
-                },
+                label = "Tuổi",
+                icon = Icons.Default.Cake,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next

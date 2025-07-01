@@ -32,6 +32,7 @@ import com.example.composeapp.models.JapaneseLevel
 import com.example.composeapp.models.StudyTimeOptions
 import com.example.composeapp.models.UserProfileData
 import com.example.composeapp.viewmodels.UserProfileViewModel
+import com.example.composeapp.viewmodels.AuthViewModel
 import com.example.composeapp.viewmodels.SaveProfileState
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
@@ -40,12 +41,17 @@ fun UserProfileSetupScreen(
     onSetupComplete: () -> Unit = {}
 ) {
     val profileViewModel: UserProfileViewModel = viewModel()
+    val authViewModel: AuthViewModel = viewModel()
     
     var name by remember { mutableStateOf("") }
     var age by remember { mutableStateOf("") }
     var currentLevel by remember { mutableStateOf(JapaneseLevel.BEGINNER) }
     var targetLevel by remember { mutableStateOf(JapaneseLevel.N5) }
     var studyTimeIndex by remember { mutableStateOf(1) } // Mặc định 30 phút
+    
+    // Get current user email if available
+    val currentUser by authViewModel.currentUser.collectAsState()
+    val userEmail = currentUser?.email ?: ""
     
     var errorMessage by remember { mutableStateOf<String?>(null) }
     var isLoading by remember { mutableStateOf(false) }
@@ -404,7 +410,9 @@ fun UserProfileSetupScreen(
                             studyTimeMinutes = StudyTimeOptions.options[studyTimeIndex].first,
                             onError = { errorMessage = it },
                             onSuccess = { userProfileData ->
-                                profileViewModel.saveUserProfile(userProfileData)
+                                // Include user email in profile data
+                                val profileWithEmail = userProfileData.copy(email = userEmail)
+                                profileViewModel.saveUserProfile(profileWithEmail)
                             }
                         )
                     },

@@ -215,6 +215,7 @@ class UserProfileViewModel : ViewModel() {
                 // Save profile data
                 val profileData = mutableMapOf<String, Any>()
                 profileData["name"] = profile.name
+                profileData["email"] = profile.email
                 profileData["age"] = profile.age
                 profileData["currentLevel"] = profile.currentLevel.name
                 profileData["targetLevel"] = profile.targetLevel.name
