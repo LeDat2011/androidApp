@@ -212,7 +212,7 @@ class QuizViewModel : ViewModel() {
     fun resetError() {
         _error.value = null
     }
-}
+} 
 
 // Lớp mới để lưu kết quả từng câu trả lời
 data class AnswerResult(

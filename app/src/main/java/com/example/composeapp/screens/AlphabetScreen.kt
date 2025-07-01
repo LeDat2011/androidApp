@@ -170,20 +170,20 @@ fun AlphabetScreen(
                             // Tính toán chiều cao dựa trên số lượng ký tự và số cột (5)
                             val rows = (characters.size / 5) + if (characters.size % 5 > 0) 1 else 0
                             val gridHeight = (rows * 80).dp // 64dp cho card + 16dp cho padding
-                            
-                            LazyVerticalGrid(
-                                columns = GridCells.Fixed(5),
+                        
+                        LazyVerticalGrid(
+                            columns = GridCells.Fixed(5),
                                 contentPadding = PaddingValues(4.dp),
-                                modifier = Modifier
-                                    .fillMaxWidth()
+                            modifier = Modifier
+                                .fillMaxWidth()
                                     .height(gridHeight.coerceAtMost(300.dp)) // Giới hạn chiều cao tối đa
-                            ) {
-                                items(characters) { character ->
-                                    JapaneseCharacterCard(
-                                        character = character,
+                        ) {
+                            items(characters) { character ->
+                                JapaneseCharacterCard(
+                                    character = character,
                                         onClick = { viewModel.selectCharacter(it) },
                                         modifier = Modifier.padding(4.dp)
-                                    )
+                                )
                                 }
                             }
                         }

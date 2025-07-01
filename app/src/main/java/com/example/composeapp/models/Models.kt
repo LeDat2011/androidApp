@@ -1,6 +1,6 @@
 package com.example.composeapp.models
 
-// Flashcard đã được định nghĩa trong Flashcard.kt 
+// Flashcard đã được định nghĩa trong Flashcard.kt
 
 data class QuizQuestion(
     val question: String,

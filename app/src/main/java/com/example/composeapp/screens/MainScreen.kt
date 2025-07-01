@@ -133,6 +133,9 @@ fun MainScreen(
                     },
                     navigateToProfile = {
                         selectedIndex = 4
+                    },
+                    navigateToFlashcardLearning = {
+                        navController.navigate("flashcard_learning")
                     }
                 )
                 1 -> LearnScreen(

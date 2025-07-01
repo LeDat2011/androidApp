@@ -14,7 +14,12 @@ data class Flashcard(
     val imageUrl: String? = null, // URL hình ảnh minh họa (nếu có)
     val dateAdded: Date = Date(), // Ngày thêm vào
     val viewCount: Int = 0, // Số lần xem
-    val masteryLevel: MasteryLevel = MasteryLevel.NEW // Mức độ thành thạo
+    val masteryLevel: MasteryLevel = MasteryLevel.NEW, // Mức độ thành thạo
+    val lastReviewDate: Date? = null, // Ngày xem lại gần nhất
+    val nextReviewDate: Date? = null, // Ngày nên xem lại tiếp theo
+    val difficulty: Float = 0.3f, // Độ khó (0.0 - 1.0), mặc định trung bình thấp
+    val correctCount: Int = 0, // Số lần trả lời đúng
+    val incorrectCount: Int = 0 // Số lần trả lời sai
 )
 
 // Enum cho chủ đề

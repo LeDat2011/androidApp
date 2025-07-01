@@ -40,8 +40,9 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.composeapp.components.CategoryCard
-import com.example.composeapp.components.FlashcardComponent
+import com.example.composeapp.components.RecommendedFlashcardComponent
 import com.example.composeapp.models.*
+import com.example.composeapp.viewmodels.FlashcardRecommendationViewModel
 import com.example.composeapp.viewmodels.UserProfileViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -50,8 +51,6 @@ import java.util.*
 // Data class for managing HomeScreen state
 data class HomeScreenState(
     val userName: String = "",
-    val dailyProgress: Float = 0f,
-    val flashcards: List<Flashcard> = emptyList(),
     val categories: List<FlashcardCategory> = emptyList(),
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
@@ -63,10 +62,17 @@ data class HomeScreenState(
 @Composable
 fun HomeScreen(
     navigateToCategory: (String) -> Unit,
-    navigateToProfile: () -> Unit
+    navigateToProfile: () -> Unit,
+    navigateToFlashcardLearning: () -> Unit
 ) {
     val userProfileViewModel: UserProfileViewModel = viewModel()
+    val recommendationViewModel: FlashcardRecommendationViewModel = viewModel()
+    
     val profileData by userProfileViewModel.profileData.collectAsState()
+    val recommendedFlashcard by recommendationViewModel.currentRecommendedFlashcard.collectAsState()
+    val recommendedFlashcards by recommendationViewModel.recommendedFlashcards.collectAsState()
+    val isLoading by recommendationViewModel.isLoading.collectAsState()
+    val error by recommendationViewModel.error.collectAsState()
     
     // Load user profile data
     LaunchedEffect(Unit) {
@@ -78,8 +84,6 @@ fun HomeScreen(
         mutableStateOf(
             HomeScreenState(
                 userName = profileData?.name ?: "Người dùng",
-                dailyProgress = 0.7f,
-                flashcards = SampleData.flashcards,
                 categories = FlashcardCategory.values().toList(),
                 isLoading = false,
                 categoryProgress = FlashcardCategory.values().associateWith { 
@@ -120,10 +124,19 @@ fun HomeScreen(
                 )
             }
             
-            // Daily progress section
+            // Recommended Flashcard section (thay thế cho Daily progress section)
             item {
-                DailyProgressSection(
-                    progress = state.dailyProgress,
+                RecommendedFlashcardSection(
+                    flashcard = recommendedFlashcard,
+                    isLoading = isLoading,
+                    onNext = { recommendationViewModel.moveToNextRecommendedFlashcard() },
+                    onPrevious = { recommendationViewModel.moveToPreviousRecommendedFlashcard() },
+                    onMarkLearned = { recommendationViewModel.markCurrentFlashcardAsLearned() },
+                    onMarkDifficult = { recommendationViewModel.markCurrentFlashcardAsDifficult() },
+                    onMarkEasy = { recommendationViewModel.markCurrentFlashcardAsEasy() },
+                    canGoNext = recommendedFlashcards.indexOf(recommendedFlashcard) < recommendedFlashcards.size - 1,
+                    canGoPrevious = recommendedFlashcards.indexOf(recommendedFlashcard) > 0,
+                    onSeeAll = navigateToFlashcardLearning,
                     modifier = Modifier.padding(horizontal = 16.dp)
                 )
             }
@@ -154,6 +167,102 @@ fun HomeScreen(
                         onCategoryClick = { category ->
                             navigateToCategory(category.name)
                         }
+                    )
+                }
+            }
+        }
+    }
+    
+    // Hiển thị lỗi nếu có
+    error?.let { errorMessage ->
+        AlertDialog(
+            onDismissRequest = { recommendationViewModel.resetError() },
+            title = { Text("Lỗi") },
+            text = { Text(errorMessage) },
+            confirmButton = {
+                TextButton(onClick = { recommendationViewModel.resetError() }) {
+                    Text("Đóng")
+                }
+            }
+        )
+    }
+}
+
+@Composable
+fun RecommendedFlashcardSection(
+    flashcard: Flashcard?,
+    isLoading: Boolean,
+    onNext: () -> Unit,
+    onPrevious: () -> Unit,
+    onMarkLearned: () -> Unit,
+    onMarkDifficult: () -> Unit,
+    onMarkEasy: () -> Unit,
+    canGoNext: Boolean,
+    canGoPrevious: Boolean,
+    onSeeAll: () -> Unit,
+    modifier: Modifier = Modifier
+) {
+    Card(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        colors = CardDefaults.cardColors(
+            containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+        ),
+        shape = RoundedCornerShape(16.dp)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(12.dp)
+        ) {
+            // Header
+            Column {
+                Text(
+                    text = "Thẻ ghi nhớ đề xuất",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold
+                )
+                Text(
+                    text = "Dựa trên thuật toán học tăng cường",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                )
+            }
+            
+            Spacer(modifier = Modifier.height(4.dp))
+            
+            if (isLoading) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(175.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator()
+                }
+            } else if (flashcard != null) {
+                RecommendedFlashcardComponent(
+                    flashcard = flashcard,
+                    onNext = onNext,
+                    onPrevious = onPrevious,
+                    onMarkLearned = onMarkLearned,
+                    onMarkDifficult = onMarkDifficult,
+                    onMarkEasy = onMarkEasy,
+                    canGoNext = canGoNext,
+                    canGoPrevious = canGoPrevious
+                )
+            } else {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(100.dp),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = "Không có thẻ ghi nhớ nào được đề xuất",
+                        style = MaterialTheme.typography.bodyLarge,
+                        textAlign = TextAlign.Center
                     )
                 }
             }
@@ -220,42 +329,6 @@ fun JapaneseGreetingHeader(
                 )
             }
         }
-    }
-}
-
-@Composable
-private fun DailyFlashcards(
-    flashcards: List<Flashcard>,
-    currentIndex: Int,
-    onPrevious: () -> Unit,
-    onNext: () -> Unit,
-    modifier: Modifier = Modifier
-) {
-    if (flashcards.isEmpty()) return
-    
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        // Convert Flashcard to FlashcardData
-        val flashcardData = FlashcardData(
-            word = flashcards[currentIndex].japaneseWord,
-            reading = flashcards[currentIndex].reading,
-            meaning = flashcards[currentIndex].vietnameseMeaning,
-            example = if (flashcards[currentIndex].examples.isNotEmpty()) 
-                flashcards[currentIndex].examples[0].japanese else "",
-            exampleMeaning = if (flashcards[currentIndex].examples.isNotEmpty()) 
-                flashcards[currentIndex].examples[0].vietnamese else ""
-        )
-        
-        FlashcardComponent(
-            flashcard = flashcardData,
-            onNext = onNext,
-            onPrevious = onPrevious,
-            canGoNext = currentIndex < flashcards.size - 1,
-            canGoPrevious = currentIndex > 0
-        )
     }
 }
 
@@ -462,110 +535,6 @@ fun ProgressStat(
             fontWeight = FontWeight.Bold
         )
         
-        Text(
-            text = label,
-            style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
-        )
-    }
-}
-
-@Composable
-fun DailyProgressSection(
-    progress: Float,
-    modifier: Modifier = Modifier
-) {
-    Card(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 8.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceVariant
-        )
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = "Tiến độ hôm nay",
-                    style = MaterialTheme.typography.titleMedium,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text = "${(progress * 100).toInt()}%",
-                    style = MaterialTheme.typography.titleMedium,
-                    color = MaterialTheme.colorScheme.primary
-                )
-            }
-            
-            Spacer(modifier = Modifier.height(8.dp))
-            
-            LinearProgressIndicator(
-                progress = { progress },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(8.dp)
-                    .clip(RoundedCornerShape(4.dp)),
-                color = MaterialTheme.colorScheme.primary,
-                trackColor = MaterialTheme.colorScheme.surfaceVariant
-            )
-            
-            Spacer(modifier = Modifier.height(16.dp))
-            
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                ProgressStatItem(
-                    icon = Icons.Default.School,
-                    value = "10",
-                    label = "Từ mới"
-                )
-                ProgressStatItem(
-                    icon = Icons.Default.CalendarToday,
-                    value = "5",
-                    label = "Ngày liên tiếp"
-                )
-                ProgressStatItem(
-                    icon = Icons.AutoMirrored.Filled.MenuBook,
-                    value = "3",
-                    label = "Bài học"
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun ProgressStatItem(
-    icon: ImageVector,
-    value: String,
-    label: String,
-    modifier: Modifier = Modifier
-) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-    ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            tint = MaterialTheme.colorScheme.primary,
-            modifier = Modifier.size(24.dp)
-        )
-        Text(
-            text = value,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = MaterialTheme.colorScheme.onSurface
-        )
         Text(
             text = label,
             style = MaterialTheme.typography.bodySmall,

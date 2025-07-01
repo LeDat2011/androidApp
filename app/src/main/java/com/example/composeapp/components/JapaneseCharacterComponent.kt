@@ -164,60 +164,60 @@ fun JapaneseCharacterDetailCard(
                 ) {
                     // Nghĩa của kanji
                     character.meaning?.let { meaning ->
-                        Text(
-                            text = "Nghĩa:",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                Text(
+                    text = "Nghĩa:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                             color = Color(0xFF4E342E)
-                        )
-                        Text(
+                )
+                Text(
                             text = meaning,
                             fontSize = 16.sp,
                             color = Color.Black,
                             modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    
+                )
+            }
+
                     // Âm On
                     character.onReading?.let { onReading ->
-                        Text(
-                            text = "Âm On (音読み):",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                Text(
+                    text = "Âm On (音読み):",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                             color = Color(0xFF4E342E)
-                        )
-                        Text(
+                )
+                Text(
                             text = onReading,
                             fontSize = 16.sp,
                             color = Color.Black,
                             modifier = Modifier.padding(bottom = 8.dp)
-                        )
-                    }
-                    
+                )
+            }
+
                     // Âm Kun
                     character.kunReading?.let { kunReading ->
-                        Text(
-                            text = "Âm Kun (訓読み):",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
+                Text(
+                    text = "Âm Kun (訓読み):",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                             color = Color(0xFF4E342E)
-                        )
-                        Text(
+                )
+                Text(
                             text = kunReading,
                             fontSize = 16.sp,
                             color = Color.Black,
                             modifier = Modifier.padding(bottom = 8.dp)
-                        )
+                )
                     }
-                }
-                
+            }
+
                 // Ví dụ sử dụng
-                if (character.examples.isNotEmpty()) {
+            if (character.examples.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(16.dp))
-                    Text(
-                        text = "Ví dụ:",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.Bold,
+                Text(
+                    text = "Ví dụ:",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
                         color = Color(0xFFE65100),
                         modifier = Modifier.align(Alignment.Start)
                     )
@@ -232,22 +232,22 @@ fun JapaneseCharacterDetailCard(
                                 modifier = Modifier
                                     .fillMaxWidth()
                                     .padding(vertical = 4.dp),
-                                colors = CardDefaults.cardColors(
+                        colors = CardDefaults.cardColors(
                                     containerColor = Color(0xFFFFECB3)
-                                )
-                            ) {
-                                Column(
-                                    modifier = Modifier.padding(12.dp)
-                                ) {
-                                    Text(
-                                        text = example.japanese,
-                                        fontSize = 16.sp,
+                        )
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(12.dp)
+                        ) {
+                            Text(
+                                text = example.japanese,
+                                fontSize = 16.sp,
                                         fontWeight = FontWeight.Medium,
                                         color = Color.Black
-                                    )
-                                    Text(
-                                        text = example.vietnamese,
-                                        fontSize = 14.sp,
+                            )
+                            Text(
+                                text = example.vietnamese,
+                                fontSize = 14.sp,
                                         color = Color.Gray,
                                         modifier = Modifier.padding(top = 4.dp)
                                     )
@@ -281,11 +281,11 @@ fun JapaneseCharacterDetailCard(
                             .background(Color.White)
                             .padding(8.dp)
                     )
-                    
+            
                     Spacer(modifier = Modifier.height(24.dp))
                 }
             }
-
+            
             // Chỉ hiển thị nút đóng
             Box(
                 modifier = Modifier.fillMaxWidth(),

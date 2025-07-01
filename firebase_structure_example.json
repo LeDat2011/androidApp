@@ -9,85 +9,856 @@
             "reading": "saru",
             "vietnamese": "Con khỉ"
           },
+          "vocab10": {
+            "example": "リスが木の実を集めます。 - Sóc thu thập hạt.",
+            "japanese": "りす",
+            "reading": "risu",
+            "vietnamese": "Con sóc"
+          },
           "vocab2": {
             "example": "ぞうは大きな動物です。 - Voi là động vật lớn.",
             "japanese": "ぞう",
             "reading": "zou",
             "vietnamese": "Con voi"
+          },
+          "vocab3": {
+            "example": "きりんは首が長いです。 - Hươu cao cổ có cổ dài.",
+            "japanese": "きりん",
+            "reading": "kirin",
+            "vietnamese": "Con hươu cao cổ"
+          },
+          "vocab4": {
+            "example": "とらは強い動物です。 - Hổ là động vật mạnh mẽ.",
+            "japanese": "とら",
+            "reading": "tora",
+            "vietnamese": "Con hổ"
+          },
+          "vocab5": {
+            "example": "パンダは竹を食べます。 - Gấu trúc ăn tre.",
+            "japanese": "パンダ",
+            "reading": "panda",
+            "vietnamese": "Con gấu trúc"
+          },
+          "vocab6": {
+            "example": "ライオンは百獣の王です。 - Sư tử là chúa tể muôn loài.",
+            "japanese": "ライオン",
+            "reading": "raion",
+            "vietnamese": "Con sư tử"
+          },
+          "vocab7": {
+            "example": "カンガルーが跳びます。 - Kangaroo nhảy.",
+            "japanese": "かんがるー",
+            "reading": "kangaruu",
+            "vietnamese": "Con kangaroo"
+          },
+          "vocab8": {
+            "example": "ワニは危険な動物です。 - Cá sấu là động vật nguy hiểm.",
+            "japanese": "わに",
+            "reading": "wani",
+            "vietnamese": "Con cá sấu"
+          },
+          "vocab9": {
+            "example": "くじらは海の哺乳類です。 - Cá voi là động vật có vú ở biển.",
+            "japanese": "くじら",
+            "reading": "kujira",
+            "vietnamese": "Con cá voi"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "かわいい いぬ です。 - Là một con chó dễ thương.",
+            "japanese": "いぬ",
+            "reading": "inu",
+            "vietnamese": "Con chó"
+          },
+          "vocab10": {
+            "example": "ねずみがチーズを食べます。 - Chuột ăn phô mai.",
+            "japanese": "ねずみ",
+            "reading": "nezumi",
+            "vietnamese": "Con chuột"
+          },
+          "vocab2": {
+            "example": "ねこが 魚を 食べます。 - Con mèo ăn cá.",
+            "japanese": "ねこ",
+            "reading": "neko",
+            "vietnamese": "Con mèo"
+          },
+          "vocab3": {
+            "example": "とりが空を飛びます。 - Chim bay trên bầu trời.",
+            "japanese": "とり",
+            "reading": "tori",
+            "vietnamese": "Con chim"
+          },
+          "vocab4": {
+            "example": "うさぎは人参が好きです。 - Thỏ thích cà rốt.",
+            "japanese": "うさぎ",
+            "reading": "usagi",
+            "vietnamese": "Con thỏ"
+          },
+          "vocab5": {
+            "example": "さかなが泳いでいます。 - Cá đang bơi.",
+            "japanese": "さかな",
+            "reading": "sakana",
+            "vietnamese": "Con cá"
+          },
+          "vocab6": {
+            "example": "ぶたは太っています。 - Con lợn rất mập.",
+            "japanese": "ぶた",
+            "reading": "buta",
+            "vietnamese": "Con lợn"
+          },
+          "vocab7": {
+            "example": "にわとりが卵を産みます。 - Gà đẻ trứng.",
+            "japanese": "にわとり",
+            "reading": "niwatori",
+            "vietnamese": "Con gà"
+          },
+          "vocab8": {
+            "example": "うまが走ります。 - Ngựa đang chạy.",
+            "japanese": "うま",
+            "reading": "uma",
+            "vietnamese": "Con ngựa"
+          },
+          "vocab9": {
+            "example": "かえるが池にいます。 - Có con ếch ở trong hồ.",
+            "japanese": "かえる",
+            "reading": "kaeru",
+            "vietnamese": "Con ếch"
+          }
+        }
+      },
+      "COLORS": {
+        "N4": {
+          "vocab1": {
+            "example": "紫の花が咲いています。 - Hoa màu tím đang nở.",
+            "japanese": "むらさき",
+            "reading": "murasaki",
+            "vietnamese": "Màu tím"
+          },
+          "vocab2": {
+            "example": "灰色の雲です。 - Là đám mây xám.",
+            "japanese": "はいいろ",
+            "reading": "haiiro",
+            "vietnamese": "Màu xám"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "赤いりんごです。 - Là quả táo đỏ.",
+            "japanese": "あか",
+            "reading": "aka",
+            "vietnamese": "Màu đỏ"
+          },
+          "vocab2": {
+            "example": "空は青いです。 - Bầu trời màu xanh.",
+            "japanese": "あお",
+            "reading": "ao",
+            "vietnamese": "Màu xanh dương"
+          }
+        }
+      },
+      "DAILY_LIFE": {
+        "N4": {
+          "vocab1": {
+            "example": "部屋を掃除します。 - Dọn dẹp phòng.",
+            "japanese": "そうじ",
+            "reading": "souji",
+            "vietnamese": "Dọn dẹp"
+          },
+          "vocab2": {
+            "example": "服を洗濯します。 - Giặt quần áo.",
+            "japanese": "せんたく",
+            "reading": "sentaku",
+            "vietnamese": "Giặt giũ"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "日本語を勉強します。 - Học tiếng Nhật.",
+            "japanese": "べんきょう",
+            "reading": "benkyou",
+            "vietnamese": "Học tập"
+          },
+          "vocab2": {
+            "example": "早く寝ましょう。 - Hãy đi ngủ sớm.",
+            "japanese": "ねる",
+            "reading": "neru",
+            "vietnamese": "Đi ngủ"
+          }
+        }
+      },
+      "FAMILY": {
+        "N4": {
+          "vocab1": {
+            "example": "両親と住んでいます。 - Sống cùng bố mẹ.",
+            "japanese": "りょうしん",
+            "reading": "ryoushin",
+            "vietnamese": "Bố mẹ"
+          },
+          "vocab2": {
+            "example": "祖父は庭で本を読みます。 - Ông nội đọc sách trong vườn.",
+            "japanese": "そふ",
+            "reading": "sofu",
+            "vietnamese": "Ông nội"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "私の家族です。 - Đây là gia đình tôi.",
+            "japanese": "かぞく",
+            "reading": "kazoku",
+            "vietnamese": "Gia đình"
+          },
+          "vocab2": {
+            "example": "おかあさんは料理が上手です。 - Mẹ nấu ăn rất giỏi.",
+            "japanese": "おかあさん",
+            "reading": "okaasan",
+            "vietnamese": "Mẹ"
+          }
+        }
+      },
+      "FOOD": {
+        "N4": {
+          "vocab1": {
+            "example": "てりやきチキンが好きです。 - Tôi thích gà teriyaki.",
+            "japanese": "てりやき",
+            "reading": "teriyaki",
+            "vietnamese": "Teriyaki"
+          },
+          "vocab2": {
+            "example": "野菜を食べましょう。 - Hãy ăn rau củ.",
+            "japanese": "やさい",
+            "reading": "yasai",
+            "vietnamese": "Rau củ"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "ごはんを食べます。 - Ăn cơm.",
+            "japanese": "ごはん",
+            "reading": "gohan",
+            "vietnamese": "Cơm"
+          },
+          "vocab2": {
+            "example": "水を飲みます。 - Uống nước.",
+            "japanese": "みず",
+            "reading": "mizu",
+            "vietnamese": "Nước"
+          }
+        }
+      },
+      "NUMBERS": {
+        "N4": {
+          "vocab1": {
+            "example": "百万円です。 - Một triệu yên.",
+            "japanese": "ひゃくまん",
+            "reading": "hyakuman",
+            "vietnamese": "Một triệu"
+          },
+          "vocab2": {
+            "example": "千円を払いました。 - Tôi đã trả một nghìn yên.",
+            "japanese": "せん",
+            "reading": "sen",
+            "vietnamese": "Một nghìn"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "一つください。 - Cho tôi một cái.",
+            "japanese": "いち",
+            "reading": "ichi",
+            "vietnamese": "Một"
+          },
+          "vocab2": {
+            "example": "二人の子供がいます。 - Có hai đứa trẻ.",
+            "japanese": "に",
+            "reading": "ni",
+            "vietnamese": "Hai"
+          }
+        }
+      },
+      "TIME": {
+        "N4": {
+          "vocab1": {
+            "example": "週末は何をしますか。 - Cuối tuần bạn làm gì?",
+            "japanese": "しゅうまつ",
+            "reading": "shuumatsu",
+            "vietnamese": "Cuối tuần"
+          },
+          "vocab2": {
+            "example": "月末に給料が出ます。 - Cuối tháng được phát lương.",
+            "japanese": "げつまつ",
+            "reading": "getsumatsu",
+            "vietnamese": "Cuối tháng"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "時間がありません。 - Không có thời gian.",
+            "japanese": "じかん",
+            "reading": "jikan",
+            "vietnamese": "Thời gian"
+          },
+          "vocab2": {
+            "example": "日曜日は休みです。 - Chủ nhật được nghỉ.",
+            "japanese": "にちようび",
+            "reading": "nichiyoubi",
+            "vietnamese": "Chủ nhật"
+          }
+        }
+      },
+      "TRANSPORTATION": {
+        "N4": {
+          "vocab1": {
+            "example": "飛行機で旅行します。 - Du lịch bằng máy bay.",
+            "japanese": "ひこうき",
+            "reading": "hikouki",
+            "vietnamese": "Máy bay"
+          },
+          "vocab2": {
+            "example": "地下鉄を使います。 - Sử dụng tàu điện ngầm.",
+            "japanese": "ちかてつ",
+            "reading": "chikatetsu",
+            "vietnamese": "Tàu điện ngầm"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "でんしゃに乗ります。 - Đi tàu điện.",
+            "japanese": "でんしゃ",
+            "reading": "densha",
+            "vietnamese": "Tàu điện"
+          },
+          "vocab2": {
+            "example": "バスで学校に行きます。 - Đi học bằng xe buýt.",
+            "japanese": "バス",
+            "reading": "basu",
+            "vietnamese": "Xe buýt"
+          }
+        }
+      },
+      "WEATHER": {
+        "N4": {
+          "vocab1": {
+            "example": "明日は曇りです。 - Ngày mai trời nhiều mây.",
+            "japanese": "くもり",
+            "reading": "kumori",
+            "vietnamese": "Mây, trời âm u"
+          },
+          "vocab2": {
+            "example": "気温が高いです。 - Nhiệt độ cao.",
+            "japanese": "きおん",
+            "reading": "kion",
+            "vietnamese": "Nhiệt độ"
+          }
+        },
+        "N5": {
+          "vocab1": {
+            "example": "あめが降っています。 - Trời đang mưa.",
+            "japanese": "あめ",
+            "reading": "ame",
+            "vietnamese": "Mưa"
+          },
+          "vocab2": {
+            "example": "今日は晴れです。 - Hôm nay trời nắng.",
+            "japanese": "はれ",
+            "reading": "hare",
+            "vietnamese": "Nắng"
+          }
+        }
+      }
+    }
+  },
+  "quizzes": {
+    "animals": {
+      "description": "Từ vựng về động vật",
+      "icon": "🐾",
+      "levels": {
+        "N4": {
+          "quiz_1": {
+            "description": "Từ vựng về động vật hoang dã và đặc biệt",
+            "id": "animals_n4_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "a",
+                "explanation": "狼 (おおかみ) có nghĩa là sói",
+                "options": {
+                  "a": "Sói",
+                  "b": "Hổ",
+                  "c": "Sư tử",
+                  "d": "Báo"
+                },
+                "points": 10,
+                "question": "「狼」(おおかみ) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 600,
+            "title": "Động vật nâng cao"
+          }
+        },
+        "N5": {
+          "quiz_1": {
+            "description": "Học từ vựng về các loài động vật thường gặp",
+            "id": "animals_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "犬 (いぬ) có nghĩa là chó",
+                "options": {
+                  "a": "Mèo",
+                  "b": "Chó",
+                  "c": "Chuột",
+                  "d": "Thỏ"
+                },
+                "points": 10,
+                "question": "「犬」(いぬ) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q10": {
+                "correctAnswer": "c",
+                "explanation": "とり và 鳥 là cặp hiragana-kanji đúng, có nghĩa là chim",
+                "options": {
+                  "a": "いぬ - 猫",
+                  "b": "ねこ - 犬",
+                  "c": "とり - 鳥",
+                  "d": "さかな - 猫"
+                },
+                "points": 15,
+                "question": "次の中で、正しい組み合わせはどれですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q2": {
+                "correctAnswer": "b",
+                "explanation": "猫 (ねこ) có nghĩa là mèo",
+                "options": {
+                  "a": "Chó",
+                  "b": "Mèo",
+                  "c": "Chuột",
+                  "d": "Chim"
+                },
+                "points": 10,
+                "question": "「猫」(ねこ) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q3": {
+                "correctAnswer": "c",
+                "explanation": "鳥 (とり) có nghĩa là chim",
+                "options": {
+                  "a": "Cá",
+                  "b": "Thỏ",
+                  "c": "Chim",
+                  "d": "Bướm"
+                },
+                "points": 10,
+                "question": "「鳥」(とり) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q4": {
+                "correctAnswer": "a",
+                "explanation": "魚 (さかな) có nghĩa là cá",
+                "options": {
+                  "a": "Cá",
+                  "b": "Tôm",
+                  "c": "Cua",
+                  "d": "Mực"
+                },
+                "points": 10,
+                "question": "「魚」(さかな) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q5": {
+                "correctAnswer": "a",
+                "explanation": "うさぎ có nghĩa là thỏ",
+                "options": {
+                  "a": "🐰 Thỏ",
+                  "b": "🐭 Chuột",
+                  "c": "🐸 Ếch",
+                  "d": "🐦 Chim"
+                },
+                "points": 10,
+                "question": "「うさぎ」はどの動物ですか。",
+                "type": "MATCHING"
+              },
+              "q6": {
+                "correctAnswer": "c",
+                "explanation": "ねずみ có nghĩa là chuột",
+                "options": {
+                  "a": "Thỏ",
+                  "b": "Mèo",
+                  "c": "Chuột",
+                  "d": "Chó"
+                },
+                "points": 10,
+                "question": "「ねずみ」の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              },
+              "q7": {
+                "correctAnswer": "a",
+                "explanation": "ぞう được viết bằng kanji là 象, có nghĩa là con voi",
+                "options": {
+                  "a": "Đúng",
+                  "b": "Sai"
+                },
+                "points": 10,
+                "question": "「ぞう」は「象」と書きます。",
+                "type": "TRUE_FALSE"
+              },
+              "q8": {
+                "correctAnswer": "える",
+                "explanation": "かえる (カエル) có nghĩa là con ếch",
+                "points": 15,
+                "question": "「か＿＿」(カエル) は日本語で「ếch」という意味です。",
+                "type": "FILL_BLANK"
+              },
+              "q9": {
+                "correctAnswer": "a",
+                "explanation": "パンダ là từ katakana chỉ con gấu trúc",
+                "options": {
+                  "a": "Gấu trúc",
+                  "b": "Gấu nâu",
+                  "c": "Gấu bắc cực",
+                  "d": "Gấu túi"
+                },
+                "points": 10,
+                "question": "「パンダ」の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 600,
+            "title": "Động vật cơ bản"
+          }
+        }
+      }
+    },
+    "colors": {
+      "description": "Từ vựng về màu sắc",
+      "icon": "🎨",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học các màu sắc cơ bản",
+            "id": "colors_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "赤 (あか) có nghĩa là màu đỏ",
+                "options": {
+                  "a": "Xanh lá",
+                  "b": "Đỏ",
+                  "c": "Vàng",
+                  "d": "Trắng"
+                },
+                "points": 10,
+                "question": "「赤」(あか) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Màu sắc cơ bản"
+          }
+        }
+      }
+    },
+    "family": {
+      "description": "Từ vựng về gia đình",
+      "icon": "👨‍👩‍👧‍👦",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học từ vựng về các thành viên trong gia đình",
+            "id": "family_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "父 (ちち) có nghĩa là bố/cha (cách gọi khiêm tốn)",
+                "options": {
+                  "a": "Mẹ",
+                  "b": "Bố",
+                  "c": "Anh trai",
+                  "d": "Em gái"
+                },
+                "points": 10,
+                "question": "「父」(ちち) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Gia đình cơ bản"
+          }
+        }
+      }
+    },
+    "food": {
+      "description": "Từ vựng về đồ ăn",
+      "icon": "🍱",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học từ vựng về các món ăn Nhật Bản phổ biến",
+            "id": "food_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "寿司 (すし) có nghĩa là sushi",
+                "options": {
+                  "a": "Mì ramen",
+                  "b": "Sushi",
+                  "c": "Cơm",
+                  "d": "Bánh mì"
+                },
+                "points": 10,
+                "question": "「寿司」(すし) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Đồ ăn cơ bản"
+          }
+        }
+      }
+    },
+    "numbers": {
+      "description": "Từ vựng về số đếm",
+      "icon": "🔢",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học cách đếm số trong tiếng Nhật",
+            "id": "numbers_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "a",
+                "explanation": "一 (いち) có nghĩa là số một",
+                "options": {
+                  "a": "Một",
+                  "b": "Hai",
+                  "c": "Ba",
+                  "d": "Bốn"
+                },
+                "points": 10,
+                "question": "「一」(いち) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Số đếm cơ bản"
+          }
+        }
+      }
+    },
+    "time": {
+      "description": "Từ vựng về thời gian",
+      "icon": "⏰",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học cách nói giờ và các mốc thời gian",
+            "id": "time_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "今日 (きょう) có nghĩa là hôm nay",
+                "options": {
+                  "a": "Ngày mai",
+                  "b": "Hôm nay",
+                  "c": "Hôm qua",
+                  "d": "Ngày kia"
+                },
+                "points": 10,
+                "question": "「今日」(きょう) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Thời gian cơ bản"
+          }
+        }
+      }
+    },
+    "transportation": {
+      "description": "Từ vựng về phương tiện giao thông",
+      "icon": "🚆",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học từ vựng về các phương tiện đi lại",
+            "id": "transport_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "電車 (でんしゃ) có nghĩa là tàu điện",
+                "options": {
+                  "a": "Xe buýt",
+                  "b": "Tàu điện",
+                  "c": "Taxi",
+                  "d": "Xe đạp"
+                },
+                "points": 10,
+                "question": "「電車」(でんしゃ) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Phương tiện giao thông cơ bản"
+          }
+        }
+      }
+    },
+    "weather": {
+      "description": "Từ vựng về thời tiết",
+      "icon": "🌤",
+      "levels": {
+        "N5": {
+          "quiz_1": {
+            "description": "Học từ vựng về các hiện tượng thời tiết",
+            "id": "weather_n5_1",
+            "questions": {
+              "q1": {
+                "correctAnswer": "b",
+                "explanation": "雨 (あめ) có nghĩa là mưa",
+                "options": {
+                  "a": "Nắng",
+                  "b": "Mưa",
+                  "c": "Gió",
+                  "d": "Mây"
+                },
+                "points": 10,
+                "question": "「雨」(あめ) の意味は何ですか。",
+                "type": "MULTIPLE_CHOICE"
+              }
+            },
+            "timeLimit": 300,
+            "title": "Thời tiết cơ bản"
           }
         }
       }
     }
   },
   "users": {
-    "USER_ID_1": {
+    "6LeUBY9LnVMESDzEL5okduZdfU62": {
+      "profile": {
+        "age": 22,
+        "currentLevel": "BEGINNER",
+        "daysActive": 0,
+        "lessonsCompleted": 0,
+        "name": "user1",
+        "streak": 0,
+        "studyTimeMinutes": 30,
+        "targetLevel": "N5",
+        "userId": "",
+        "wordsLearned": 0
+      },
+      "learning": {
+        "vocabulary": {},
+        "completedLessons": {}
+      },
+      "learning_stats": {
+        "study_time": {}
+      },
+      "progress": {
+        "completed_quizzes": {}
+      }
+    },
+    "HxG9zGAhe2NlftmHswtPC9aiLmU2": {
+      "profile": {
+        "age": 21,
+        "currentLevel": "N4",
+        "daysActive": 0,
+        "lastActiveDate": 1750995097969,
+        "lessonsCompleted": 0,
+        "name": "khach",
+        "registrationDate": 1750995097969,
+        "streak": 0,
+        "studyTimeMinutes": 45,
+        "targetLevel": "N1",
+        "userId": "",
+        "wordsLearned": 0
+      },
+      "learning": {
+        "vocabulary": {},
+        "completedLessons": {}
+      },
+      "learning_stats": {
+        "study_time": {}
+      },
+      "progress": {
+        "completed_quizzes": {}
+      }
+    },
+    "JptyN2U9z6cpgbR0lA4WdG1jtKj1": {
       "profile": {
         "age": 22,
         "currentLevel": "N5",
-        "name": "Người dùng 1",
+        "daysActive": 0,
+        "lessonsCompleted": 0,
+        "name": "dat",
+        "streak": 0,
+        "studyTimeMinutes": 30,
         "targetLevel": "N3",
-        "registrationDate": 1748797808119,
-        "avatarUrl": "https://example.com/avatar.jpg"
-      },
-      "progress": {
-        "streak": 5,
-        "wordsLearned": 120,
-        "lessonsCompleted": 10,
-        "daysActive": 15,
-        "lastActiveDate": 1750995097969,
-        "lastStreakUpdate": 1750995097969,
-        "learningProgress": 0.45,
-        "readyForLevelUp": false
-      },
-      "settings": {
-        "studyTimeMinutes": 30
+        "userId": "",
+        "wordsLearned": 0
       },
       "learning": {
-        "vocabulary": {
-          "vocab1": true,
-          "vocab2": true,
-          "vocab3": true
-        },
-        "completedLessons": {
-          "lesson1": 1748797808119,
-          "lesson2": 1749373253946
-        }
+        "vocabulary": {},
+        "completedLessons": {}
       },
       "learning_stats": {
-        "study_time": {
-          "2023-5-20": 45,
-          "2023-5-21": 30
-        }
+        "study_time": {}
       },
       "progress": {
-        "completed_quizzes": {
-          "quiz1": {
-            "score": 80,
-            "completedAt": "2023-05-21T10:30:00Z",
-            "timeTaken": 250
-          }
-        }
+        "completed_quizzes": {}
       }
     },
-    "USER_ID_2": {
+    "SmfisvPDsVeOFlqzzGZFamXOa4x1": {
       "profile": {
-        "age": 25,
-        "currentLevel": "N4",
-        "name": "Người dùng 2",
-        "targetLevel": "N2"
-      },
-      "progress": {
-        "streak": 10,
-        "wordsLearned": 250,
-        "lessonsCompleted": 25
+        "age": 22,
+        "currentLevel": "BEGINNER",
+        "daysActive": 0,
+        "lessonsCompleted": 0,
+        "name": "ledat",
+        "streak": 0,
+        "studyTimeMinutes": 30,
+        "targetLevel": "N5",
+        "userId": "",
+        "wordsLearned": 0
       },
       "learning": {
-        "vocabulary": {
-          "vocab10": true,
-          "vocab11": true,
-          "vocab12": true
-        }
+        "vocabulary": {},
+        "completedLessons": {}
+      },
+      "learning_stats": {
+        "study_time": {}
+      },
+      "progress": {
+        "completed_quizzes": {}
+      }
+    },
+    "Y5Mc85VS1aVrIYJkEgM8Joo91Ea2": {
+      "profile": {
+        "age": 22,
+        "currentLevel": "N5",
+        "daysActive": 0,
+        "lastActiveDate": 1749373253946,
+        "lessonsCompleted": 0,
+        "name": "adminhehe",
+        "registrationDate": 1748797808119,
+        "streak": 0,
+        "studyTimeMinutes": 15,
+        "targetLevel": "N1",
+        "userId": "",
+        "wordsLearned": 0
+      },
+      "learning": {
+        "vocabulary": {},
+        "completedLessons": {}
+      },
+      "learning_stats": {
+        "study_time": {}
+      },
+      "progress": {
+        "completed_quizzes": {}
       }
     }
   }
-} 
+}
