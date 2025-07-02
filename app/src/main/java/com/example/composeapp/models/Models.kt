@@ -31,30 +31,6 @@ object SampleData {
             vietnameseMeaning = "Xin chào",
             examples = listOf(Example("こんにちは、元気ですか？", "Xin chào, bạn khỏe không?"))
         ),
-        Flashcard(
-            japaneseWord = "ありがとう",
-            vietnameseMeaning = "Cảm ơn",
-            examples = listOf(Example("ありがとうございます。", "Cảm ơn rất nhiều."))
-        ),
-        Flashcard(
-            japaneseWord = "さようなら",
-            vietnameseMeaning = "Tạm biệt",
-            examples = listOf(Example("さようなら、また明日。", "Tạm biệt, hẹn gặp lại ngày mai."))
-        ),
-        Flashcard(
-            japaneseWord = "食べ物",
-            vietnameseMeaning = "Thức ăn",
-            examples = listOf(Example("私は日本の食べ物が好きです。", "Tôi thích đồ ăn Nhật Bản."))
-        ),
-        Flashcard(
-            japaneseWord = "飲み物",
-            vietnameseMeaning = "Đồ uống",
-            examples = listOf(Example("何か飲み物はいかがですか？", "Bạn muốn uống gì không?"))
-        ),
-        Flashcard(
-            japaneseWord = "水",
-            vietnameseMeaning = "Nước",
-            examples = listOf(Example("水をください。", "Vui lòng cho tôi nước."))
-        )
+
     )
-} 
+}
