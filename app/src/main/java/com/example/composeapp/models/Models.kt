@@ -22,15 +22,4 @@ data class StudyCategory(
     val emoji: String
 )
 
-// Sample Data
-object SampleData {
-    val flashcards = listOf(
-        // Cập nhật để sử dụng Flashcard từ Flashcard.kt
-        Flashcard(
-            japaneseWord = "こんにちは",
-            vietnameseMeaning = "Xin chào",
-            examples = listOf(Example("こんにちは、元気ですか？", "Xin chào, bạn khỏe không?"))
-        ),
-
-    )
-}
+// Sample Data - Đã được thay thế bằng data từ Firebase

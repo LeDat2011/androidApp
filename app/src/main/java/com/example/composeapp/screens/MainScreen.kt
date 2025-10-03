@@ -19,7 +19,7 @@ sealed class Screen(val title: String, val icon: ImageVector) {
     object Home : Screen("Home", Icons.Default.Home)
     object Learn : Screen("Learn", Icons.AutoMirrored.Filled.MenuBook)
     object Quiz : Screen("Quiz", Icons.Default.Quiz)
-    object Status : Screen("Progress", Icons.Default.Analytics)
+    object Status : Screen("Games", Icons.Default.Games)
     object Profile : Screen("Profile", Icons.Default.Person)
 }
 
@@ -91,14 +91,14 @@ fun MainScreen(
                 NavigationBarItem(
                     icon = { 
                         Icon(
-                            Icons.Default.Analytics,
-                            contentDescription = "Progress",
+                            Icons.Default.Edit,
+                            contentDescription = "Writing",
                             modifier = Modifier.size(20.dp)
                         )
                     },
                     label = { 
                         Text(
-                            "Progress",
+                            "Games",
                             style = MaterialTheme.typography.labelSmall
                         )
                     },
@@ -148,7 +148,7 @@ fun MainScreen(
                     }
                 )
                 2 -> QuizScreen()
-                3 -> StatusScreen()
+                3 -> GameScreen()
                 4 -> ProfileScreen(
                     onNavigateBack = { selectedIndex = 0 },
                     onEditProfile = { isShowingEditProfile = true },

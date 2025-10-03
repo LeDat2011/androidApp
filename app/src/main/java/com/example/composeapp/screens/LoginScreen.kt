@@ -43,6 +43,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.R
+import com.example.composeapp.ui.design.spacing
+import com.example.composeapp.ui.design.shapes
+import com.example.composeapp.ui.design.elevation
+import com.example.composeapp.ui.design.components
+import com.example.composeapp.ui.design.ButtonStyles
+import com.example.composeapp.ui.design.CardStyles
+import com.example.composeapp.ui.design.AppGradients
 import com.example.composeapp.viewmodels.AuthViewModel
 
 @OptIn(ExperimentalComposeUiApi::class, ExperimentalMaterial3Api::class)
@@ -61,6 +68,12 @@ fun LoginScreen(
     
     val focusManager = LocalFocusManager.current
     val keyboardController = LocalSoftwareKeyboardController.current
+    
+    // Design System
+    val spacing = spacing()
+    val shapes = shapes()
+    val elevation = elevation()
+    val components = components()
     
     // Observe auth state
     val authState by authViewModel.authState.collectAsState()
@@ -119,7 +132,7 @@ fun LoginScreen(
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(24.dp),
+                .padding(spacing.lg),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
@@ -127,14 +140,11 @@ fun LoginScreen(
             Box(
                 modifier = Modifier
                     .scale(scale)
-                    .size(120.dp)
-                    .clip(CircleShape)
+                    .size(components.avatarSize)
+                    .clip(shapes.circular)
                     .background(
                         brush = Brush.linearGradient(
-                            colors = listOf(
-                                MaterialTheme.colorScheme.primary,
-                                MaterialTheme.colorScheme.tertiary
-                            )
+                            colors = AppGradients.primaryGradient
                         )
                     ),
                 contentAlignment = Alignment.Center
@@ -148,7 +158,7 @@ fun LoginScreen(
                 )
             }
             
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(spacing.lg))
             
             Text(
                 text = "Ứng dụng học tiếng Nhật",
@@ -163,7 +173,7 @@ fun LoginScreen(
                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.7f)
             )
             
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(spacing.xxl))
             
             // Error message
             AnimatedVisibility(
@@ -178,21 +188,24 @@ fun LoginScreen(
                         ),
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(bottom = 16.dp)
+                            .padding(bottom = spacing.md),
+                        shape = shapes.medium,
+                        elevation = CardDefaults.cardElevation(defaultElevation = elevation.low)
                     ) {
                         Row(
                             modifier = Modifier
-                                .padding(16.dp)
+                                .padding(spacing.md)
                                 .fillMaxWidth(),
                             verticalAlignment = Alignment.CenterVertically
                         ) {
                             Icon(
                                 imageVector = Icons.Default.Error,
                                 contentDescription = "Error",
-                                tint = MaterialTheme.colorScheme.error
+                                tint = MaterialTheme.colorScheme.error,
+                                modifier = Modifier.size(components.iconSize)
                             )
                             
-                            Spacer(modifier = Modifier.width(16.dp))
+                            Spacer(modifier = Modifier.width(spacing.md))
                             
                             Text(
                                 text = it,
@@ -208,12 +221,15 @@ fun LoginScreen(
                 value = email,
                 onValueChange = { email = it },
                 label = { Text("Email") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(components.textFieldHeight),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Email,
                         contentDescription = "Email Icon",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(components.iconSize)
                     )
                 },
                 singleLine = true,
@@ -226,33 +242,37 @@ fun LoginScreen(
                         focusManager.moveFocus(FocusDirection.Down)
                     }
                 ),
-                shape = RoundedCornerShape(12.dp),
+                shape = shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline
                 )
             )
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(spacing.md))
             
             // Password field
             OutlinedTextField(
                 value = password,
                 onValueChange = { password = it },
                 label = { Text("Mật khẩu") },
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(components.textFieldHeight),
                 leadingIcon = {
                     Icon(
                         imageVector = Icons.Default.Lock,
                         contentDescription = "Password Icon",
-                        tint = MaterialTheme.colorScheme.primary
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(components.iconSize)
                     )
                 },
                 trailingIcon = {
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
                         Icon(
                             imageVector = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff,
-                            contentDescription = if (isPasswordVisible) "Hide password" else "Show password"
+                            contentDescription = if (isPasswordVisible) "Hide password" else "Show password",
+                            modifier = Modifier.size(components.iconSize)
                         )
                     }
                 },
@@ -272,14 +292,14 @@ fun LoginScreen(
                         }
                     }
                 ),
-                shape = RoundedCornerShape(12.dp),
+                shape = shapes.medium,
                 colors = OutlinedTextFieldDefaults.colors(
                     focusedBorderColor = MaterialTheme.colorScheme.primary,
                     unfocusedBorderColor = MaterialTheme.colorScheme.outline
                 )
             )
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(spacing.sm))
             
             // "Quên mật khẩu" Text Button
             Box(
@@ -294,7 +314,7 @@ fun LoginScreen(
                 }
             }
             
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(spacing.lg))
             
             // Login button
             Button(
@@ -304,13 +324,16 @@ fun LoginScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(components.buttonHeight),
                 enabled = !isLoading && email.isNotBlank() && password.isNotBlank(),
-                shape = RoundedCornerShape(12.dp)
+                shape = shapes.medium,
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.primary
+                )
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(components.iconSize),
                         color = MaterialTheme.colorScheme.onPrimary,
                         strokeWidth = 2.dp
                     )
@@ -319,7 +342,7 @@ fun LoginScreen(
                 }
             }
             
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(spacing.md))
             
             // Anonymous login button
             OutlinedButton(
@@ -329,13 +352,14 @@ fun LoginScreen(
                 },
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp),
+                    .height(components.buttonHeight),
                 enabled = !isLoading,
-                shape = RoundedCornerShape(12.dp)
+                shape = shapes.medium,
+                colors = ButtonDefaults.outlinedButtonColors()
             ) {
                 if (isLoading) {
                     CircularProgressIndicator(
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(components.iconSize),
                         color = MaterialTheme.colorScheme.primary,
                         strokeWidth = 2.dp
                     )
@@ -344,7 +368,7 @@ fun LoginScreen(
                 }
             }
             
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(spacing.lg))
             
             // Register link
             Row(

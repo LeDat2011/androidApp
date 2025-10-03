@@ -20,6 +20,10 @@ const database = firebase.database();
 // Đường dẫn đến các node trong Realtime Database
 const DB_PATHS = {
     VOCABULARY: 'app_data/vocabulary',
+    CATEGORIES: 'app_data/categories',
+    LESSONS: 'app_data/lessons',
+    ACHIEVEMENTS: 'app_data/achievements',
     QUIZ: 'quizzes',
-    USERS: 'users'
+    USERS: 'users',
+    SYSTEM_SETTINGS: 'app_data/system_settings'
 }; 

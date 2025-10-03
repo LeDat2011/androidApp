@@ -470,8 +470,8 @@ private fun validateAndRegister(
             val userProfile = UserProfileData(
                 name = name,
                 age = age,
-                currentLevel = currentLevel,
-                targetLevel = targetLevel,
+                currentLevel = currentLevel.name,
+                targetLevel = targetLevel.name,
                 studyTimeMinutes = studyTimeMinutes
             )
             

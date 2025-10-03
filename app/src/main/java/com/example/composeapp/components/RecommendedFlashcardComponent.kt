@@ -11,6 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material.icons.rounded.*
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -20,6 +22,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -45,6 +48,7 @@ fun RecommendedFlashcardComponent(
     var isFlipped by remember { mutableStateOf(false) }
     var offsetX by remember { mutableStateOf(0f) }
     val coroutineScope = rememberCoroutineScope()
+    val cameraDistancePx = with(LocalDensity.current) { 12f * density }
     
     // Animation values
     val rotation by animateFloatAsState(
@@ -104,7 +108,7 @@ fun RecommendedFlashcardComponent(
                         scaleX = scale
                         scaleY = scale
                         translationX = offsetX
-                        cameraDistance = 12f * density
+                        cameraDistance = cameraDistancePx
                     }
                     .pointerInput(Unit) {
                         detectTapGestures(
@@ -422,7 +426,7 @@ fun RecommendedFlashcardComponent(
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowBack,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                         contentDescription = "Trước",
                         tint = if (canGoPrevious) 
                             MaterialTheme.colorScheme.onSecondaryContainer 
@@ -468,7 +472,7 @@ fun RecommendedFlashcardComponent(
                     modifier = Modifier.size(36.dp)
                 ) {
                     Icon(
-                        imageVector = Icons.Default.ArrowForward,
+                        imageVector = Icons.AutoMirrored.Filled.ArrowForward,
                         contentDescription = "Tiếp theo",
                         tint = if (canGoNext) 
                             MaterialTheme.colorScheme.onSecondaryContainer 

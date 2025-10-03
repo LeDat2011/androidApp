@@ -3,11 +3,16 @@ package com.example.composeapp.viewmodels
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.composeapp.models.AlphabetType
-import com.example.composeapp.models.JapaneseAlphabet
 import com.example.composeapp.models.JapaneseCharacter
+import com.example.composeapp.repository.JapaneseAlphabetRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 
 class JapaneseAlphabetViewModel : ViewModel() {
+    private val repository = JapaneseAlphabetRepository()
     
     // State cho loại bảng chữ cái đang hiển thị
     private val _currentAlphabetType = mutableStateOf(AlphabetType.HIRAGANA)
@@ -17,28 +22,192 @@ class JapaneseAlphabetViewModel : ViewModel() {
     private val _selectedCharacter = mutableStateOf<JapaneseCharacter?>(null)
     val selectedCharacter: State<JapaneseCharacter?> = _selectedCharacter
     
+    // State cho danh sách ký tự hiện tại
+    private val _characters = MutableStateFlow<List<JapaneseCharacter>>(emptyList())
+    val characters: StateFlow<List<JapaneseCharacter>> = _characters
+    
     // State cho trạng thái tải
-    private val _isLoading = mutableStateOf(false)
-    val isLoading: State<Boolean> = _isLoading
+    val isLoading: StateFlow<Boolean> = repository.isLoading
     
     // State cho thông báo lỗi
-    private val _errorMessage = mutableStateOf<String?>(null)
-    val errorMessage: State<String?> = _errorMessage
+    val errorMessage: StateFlow<String?> = repository.error
     
     // Đổi loại bảng chữ cái
     fun switchAlphabetType(type: AlphabetType) {
         _currentAlphabetType.value = type
         // Xóa ký tự đang chọn khi chuyển đổi
         _selectedCharacter.value = null
+        // Tải dữ liệu mới
+        loadCharacters(type)
+    }
+    
+    // Tải dữ liệu ký tự từ Firebase
+    private fun loadCharacters(type: AlphabetType) {
+        viewModelScope.launch {
+            when (type) {
+                AlphabetType.HIRAGANA -> {
+                    repository.loadHiragana()
+                    _characters.value = repository.hiragana.value
+                }
+                AlphabetType.KATAKANA -> {
+                    repository.loadKatakana()
+                    _characters.value = repository.katakana.value
+                }
+                AlphabetType.KANJI -> {
+                    repository.loadKanji()
+                    _characters.value = repository.kanji.value
+                }
+            }
+        }
     }
     
     // Lấy danh sách ký tự theo hàng
     fun getCharacterRows(): Map<String, List<JapaneseCharacter>> {
         return when (_currentAlphabetType.value) {
-            AlphabetType.HIRAGANA -> JapaneseAlphabet.getRows(AlphabetType.HIRAGANA)
-            AlphabetType.KATAKANA -> JapaneseAlphabet.getRows(AlphabetType.KATAKANA)
+            AlphabetType.HIRAGANA -> getHiraganaRows()
+            AlphabetType.KATAKANA -> getKatakanaRows()
             AlphabetType.KANJI -> getKanjiByLevel()
         }
+    }
+    
+    // Nhóm Hiragana theo hàng
+    private fun getHiraganaRows(): Map<String, List<JapaneseCharacter>> {
+        val characters = _characters.value
+        val map = mutableMapOf<String, MutableList<JapaneseCharacter>>()
+        
+        // Nhóm nguyên âm
+        map["Nguyên âm"] = characters.filter { it.romanization in listOf("a", "i", "u", "e", "o") }.toMutableList()
+        
+        // Nhóm phụ âm K
+        map["Phụ âm K"] = characters.filter { it.romanization.startsWith("k") && it.romanization.length == 2 }.toMutableList()
+        
+        // Nhóm phụ âm S
+        map["Phụ âm S"] = characters.filter { 
+            (it.romanization.startsWith("s") || it.romanization == "shi") && it.romanization.length <= 3 
+        }.toMutableList()
+        
+        // Nhóm phụ âm T
+        map["Phụ âm T"] = characters.filter { 
+            (it.romanization.startsWith("t") || it.romanization == "chi" || it.romanization == "tsu") && it.romanization.length <= 3 
+        }.toMutableList()
+        
+        // Nhóm phụ âm N
+        map["Phụ âm N"] = characters.filter { 
+            it.romanization.startsWith("n") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm H
+        map["Phụ âm H"] = characters.filter { 
+            (it.romanization.startsWith("h") || it.romanization == "fu") && it.romanization.length <= 2 
+        }.toMutableList()
+        
+        // Phụ âm M
+        map["Phụ âm M"] = characters.filter { 
+            it.romanization.startsWith("m") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm Y
+        map["Phụ âm Y"] = characters.filter { 
+            it.romanization.startsWith("y") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm R
+        map["Phụ âm R"] = characters.filter { 
+            it.romanization.startsWith("r") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm W
+        map["Phụ âm W"] = characters.filter { 
+            it.romanization.startsWith("w") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm N độc lập
+        map["Phụ âm N độc lập"] = characters.filter { 
+            it.romanization == "n" 
+        }.toMutableList()
+        
+        // Các phụ âm biến âm và mở rộng
+        map["Các phụ âm biến âm"] = characters.filter { 
+            val r = it.romanization
+            (r.startsWith("g") || r.startsWith("z") || r.startsWith("d") || r.startsWith("b") || r.startsWith("p")) && r.length == 2 
+        }.toMutableList()
+        
+        // Các phụ âm kép
+        map["Các phụ âm kép"] = characters.filter { 
+            it.romanization.length >= 3 && it.romanization != "shi" && it.romanization != "chi" && it.romanization != "tsu"
+        }.toMutableList()
+        
+        return map
+    }
+    
+    // Nhóm Katakana theo hàng
+    private fun getKatakanaRows(): Map<String, List<JapaneseCharacter>> {
+        val characters = _characters.value
+        val map = mutableMapOf<String, MutableList<JapaneseCharacter>>()
+        
+        // Nhóm nguyên âm
+        map["Nguyên âm"] = characters.filter { it.romanization in listOf("a", "i", "u", "e", "o") }.toMutableList()
+        
+        // Nhóm phụ âm K
+        map["Phụ âm K"] = characters.filter { it.romanization.startsWith("k") && it.romanization.length == 2 }.toMutableList()
+        
+        // Nhóm phụ âm S
+        map["Phụ âm S"] = characters.filter { 
+            (it.romanization.startsWith("s") || it.romanization == "shi") && it.romanization.length <= 3 
+        }.toMutableList()
+        
+        // Nhóm phụ âm T
+        map["Phụ âm T"] = characters.filter { 
+            (it.romanization.startsWith("t") || it.romanization == "chi" || it.romanization == "tsu") && it.romanization.length <= 3 
+        }.toMutableList()
+        
+        // Nhóm phụ âm N
+        map["Phụ âm N"] = characters.filter { 
+            it.romanization.startsWith("n") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm H
+        map["Phụ âm H"] = characters.filter { 
+            (it.romanization.startsWith("h") || it.romanization == "fu") && it.romanization.length <= 2 
+        }.toMutableList()
+        
+        // Phụ âm M
+        map["Phụ âm M"] = characters.filter { 
+            it.romanization.startsWith("m") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm Y
+        map["Phụ âm Y"] = characters.filter { 
+            it.romanization.startsWith("y") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm R
+        map["Phụ âm R"] = characters.filter { 
+            it.romanization.startsWith("r") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm W
+        map["Phụ âm W"] = characters.filter { 
+            it.romanization.startsWith("w") && it.romanization.length == 2 
+        }.toMutableList()
+        
+        // Phụ âm N độc lập
+        map["Phụ âm N độc lập"] = characters.filter { 
+            it.romanization == "n" 
+        }.toMutableList()
+        
+        // Các phụ âm biến âm và mở rộng
+        map["Các phụ âm biến âm"] = characters.filter { 
+            val r = it.romanization
+            (r.startsWith("g") || r.startsWith("z") || r.startsWith("d") || r.startsWith("b") || r.startsWith("p")) && r.length == 2 
+        }.toMutableList()
+        
+        // Các phụ âm kép
+        map["Các phụ âm kép"] = characters.filter { 
+            it.romanization.length >= 3 && it.romanization != "shi" && it.romanization != "chi" && it.romanization != "tsu"
+        }.toMutableList()
+        
+        return map
     }
     
     // Lấy tên của bảng chữ cái hiện tại
@@ -66,14 +235,15 @@ class JapaneseAlphabetViewModel : ViewModel() {
     fun searchCharacters(query: String): List<JapaneseCharacter> {
         if (query.isBlank()) return emptyList()
         
-        return JapaneseAlphabet.findByRomanization(
-            romanization = query.trim().lowercase(),
-            type = _currentAlphabetType.value
-        )
+        val characters = _characters.value
+        return characters.filter { 
+            it.romanization.contains(query.trim().lowercase()) || 
+            query.trim().lowercase().contains(it.romanization)
+        }
     }
 
     private fun getKanjiByLevel(): Map<String, List<JapaneseCharacter>> {
-        val allKanji = JapaneseAlphabet.getCharacters(AlphabetType.KANJI)
+        val allKanji = _characters.value
         val kanjiByTheme = mutableMapOf<String, MutableList<JapaneseCharacter>>()
 
         // Nhóm Kanji theo chủ đề

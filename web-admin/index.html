@@ -6,82 +6,142 @@
     <title>Japanese Learning App - Admin Panel</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&display=swap">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <header class="text-center">
-        <h1>Japanese Learning App - Admin Panel</h1>
-        <p class="text-muted mb-0">Quản lý từ vựng và câu hỏi</p>
-    </header>
-
-    <div class="container">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="sidebar">
-                <div class="card mb-4">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-bars me-2"></i>Chức năng</h5>
-                    </div>
-                    <div class="list-group list-group-flush">
-                        <a href="#" class="list-group-item list-group-item-action active" id="nav-vocabulary">
-                            <i class="fas fa-book me-2"></i> Quản lý từ vựng
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action" id="nav-quiz">
-                            <i class="fas fa-question-circle me-2"></i> Quản lý câu hỏi
-                        </a>
-                        <a href="#" class="list-group-item list-group-item-action" id="nav-users">
-                            <i class="fas fa-users me-2"></i> Quản lý người dùng
-                        </a>
-                    </div>
+    <!-- Modern Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-graduation-cap me-2"></i>
+                Japanese Learning Admin
+            </a>
+            <div class="navbar-nav ms-auto">
+                <div class="nav-item">
+                    <span class="navbar-text">
+                        <i class="fas fa-circle text-success me-1" id="connection-icon"></i>
+                        <span id="connection-status">Đang kết nối...</span>
+                    </span>
                 </div>
-
-                <div class="card">
-                    <div class="card-header">
-                        <h5 class="mb-0"><i class="fas fa-info-circle me-2"></i>Trạng thái</h5>
-                    </div>
-                    <div class="card-body">
-                        <div id="connection-status">Đang kết nối...</div>
-                        <div id="user-status">Chưa đăng nhập</div>
-                    </div>
+                <div class="nav-item ms-3">
+                    <span class="navbar-text">
+                        <i class="fas fa-user me-1"></i>
+                        <span id="user-status">Chưa đăng nhập</span>
+                    </span>
                 </div>
             </div>
+        </div>
+    </nav>
 
-            <!-- Main content -->
-            <div class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Enhanced Sidebar -->
+            <nav class="sidebar">
+                <div class="sidebar-brand">
+                    <h4>
+                        <i class="fas fa-graduation-cap me-2"></i>
+                        Japanese Learning
+                    </h4>
+                    </div>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" id="nav-vocabulary">
+                            <i class="fas fa-book"></i>
+                            <span>Từ vựng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-quiz">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Câu hỏi</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-lessons">
+                            <i class="fas fa-chalkboard-teacher"></i>
+                            <span>Bài học</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-categories">
+                            <i class="fas fa-tags"></i>
+                            <span>Danh mục</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-users">
+                            <i class="fas fa-users"></i>
+                            <span>Người dùng</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-achievements">
+                            <i class="fas fa-trophy"></i>
+                            <span>Thành tích</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" id="nav-analytics">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Thống kê</span>
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <!-- Enhanced Main content -->
+            <main>
+                <div class="page-header">
+                    <h1 id="page-title">
+                        <i class="fas fa-book me-2"></i>
+                        Quản lý từ vựng
+                    </h1>
+                    <p class="subtitle" id="page-subtitle">Quản lý và chỉnh sửa từ vựng tiếng Nhật</p>
+                    <div class="d-flex justify-content-end mt-3">
+                        <button type="button" class="btn btn-primary" id="refresh-data">
+                            <i class="fas fa-sync-alt me-2"></i> Làm mới dữ liệu
+                        </button>
+                    </div>
+                    </div>
                 <!-- Vocabulary Management Section -->
                 <div id="vocabulary-section">
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fas fa-plus-circle me-2"></i>Thêm từ vựng mới</h5>
-                            <button class="btn btn-sm btn-outline-secondary" id="clear-vocabulary-form">
-                                <i class="fas fa-eraser me-1"></i> Xóa form
-                            </button>
+                    <!-- Add Vocabulary Card -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Thêm từ vựng mới
+                            </h5>
                         </div>
                         <div class="card-body">
                             <form id="vocabulary-form">
-                                <div class="row mb-3">
+                                <div class="row g-3">
                                     <div class="col-md-6">
-                                        <label for="category" class="form-label">Danh mục</label>
+                                        <label for="category" class="form-label fw-semibold">
+                                            <i class="fas fa-tags me-1"></i>Danh mục
+                                        </label>
                                         <select class="form-select" id="category" required>
                                             <option value="" selected disabled>Chọn danh mục</option>
-                                            <option value="ANIMALS">Animals (Động vật)</option>
-                                            <option value="FOOD">Food (Đồ ăn)</option>
-                                            <option value="TRANSPORTATION">Transportation (Phương tiện)</option>
-                                            <option value="WEATHER">Weather (Thời tiết)</option>
-                                            <option value="FAMILY">Family (Gia đình)</option>
-                                            <option value="COLORS">Colors (Màu sắc)</option>
-                                            <option value="NUMBERS">Numbers (Số)</option>
-                                            <option value="TIME">Time (Thời gian)</option>
-                                            <option value="VERBS">Verbs (Động từ)</option>
-                                            <option value="ADJECTIVES">Adjectives (Tính từ)</option>
-                                            <option value="PLACES">Places (Địa điểm)</option>
-                                            <option value="DAILY_LIFE">Daily Life (Cuộc sống hàng ngày)</option>
-                                            <option value="MISC">Miscellaneous (Khác)</option>
+                                            <option value="ANIMALS">🐾 Animals (Động vật)</option>
+                                            <option value="FOOD">🍱 Food (Đồ ăn)</option>
+                                            <option value="TRANSPORTATION">🚆 Transportation (Phương tiện)</option>
+                                            <option value="WEATHER">🌤 Weather (Thời tiết)</option>
+                                            <option value="FAMILY">👨‍👩‍👧‍👦 Family (Gia đình)</option>
+                                            <option value="COLORS">🎨 Colors (Màu sắc)</option>
+                                            <option value="NUMBERS">🔢 Numbers (Số)</option>
+                                            <option value="TIME">⏰ Time (Thời gian)</option>
+                                            <option value="VERBS">🏃 Verbs (Động từ)</option>
+                                            <option value="ADJECTIVES">✨ Adjectives (Tính từ)</option>
+                                            <option value="PLACES">🏙️ Places (Địa điểm)</option>
+                                            <option value="DAILY_LIFE">🏠 Daily Life (Cuộc sống hàng ngày)</option>
+                                            <option value="MISC">📚 Miscellaneous (Khác)</option>
                                         </select>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="level" class="form-label">Cấp độ</label>
+                                        <label for="level" class="form-label fw-semibold">
+                                            <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                        </label>
                                         <select class="form-select" id="level" required>
                                             <option value="" selected disabled>Chọn cấp độ</option>
                                             <option value="N5">N5 (Cơ bản)</option>
@@ -93,60 +153,98 @@
                                     </div>
                                 </div>
 
-                                <div class="row mb-3">
+                                <div class="row g-3 mt-2">
                                     <div class="col-md-6">
-                                        <label for="japanese-word" class="form-label">Từ tiếng Nhật</label>
+                                        <label for="japanese-word" class="form-label fw-semibold">
+                                            <i class="fas fa-language me-1"></i>Từ tiếng Nhật
+                                        </label>
                                         <input type="text" class="form-control" id="japanese-word" placeholder="例: 猫" required>
                                     </div>
                                     <div class="col-md-6">
-                                        <label for="reading" class="form-label">Cách đọc</label>
+                                        <label for="reading" class="form-label fw-semibold">
+                                            <i class="fas fa-volume-up me-1"></i>Cách đọc
+                                        </label>
                                         <input type="text" class="form-control" id="reading" placeholder="例: ねこ" required>
                                     </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="vietnamese-meaning" class="form-label">Nghĩa tiếng Việt</label>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label for="vietnamese-meaning" class="form-label fw-semibold">
+                                            <i class="fas fa-flag me-1"></i>Nghĩa tiếng Việt
+                                        </label>
                                     <input type="text" class="form-control" id="vietnamese-meaning" placeholder="Ví dụ: Con mèo" required>
+                                    </div>
                                 </div>
 
-                                <div class="mb-3">
-                                    <label for="example-japanese" class="form-label">Ví dụ tiếng Nhật</label>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="example-japanese" class="form-label fw-semibold">
+                                            <i class="fas fa-quote-left me-1"></i>Ví dụ tiếng Nhật
+                                        </label>
                                     <input type="text" class="form-control" id="example-japanese" placeholder="例: これは私の猫です。">
                                 </div>
-
-                                <div class="mb-3">
-                                    <label for="example-vietnamese" class="form-label">Nghĩa ví dụ</label>
+                                    <div class="col-md-6">
+                                        <label for="example-vietnamese" class="form-label fw-semibold">
+                                            <i class="fas fa-quote-right me-1"></i>Nghĩa ví dụ
+                                        </label>
                                     <input type="text" class="form-control" id="example-vietnamese" placeholder="Ví dụ: Đây là con mèo của tôi.">
+                                    </div>
                                 </div>
 
-                                <button type="submit" class="btn btn-sm btn-primary">
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="difficulty" class="form-label fw-semibold">
+                                            <i class="fas fa-signal me-1"></i>Độ khó (0.0 - 1.0)
+                                        </label>
+                                        <input type="number" class="form-control" id="difficulty" min="0" max="1" step="0.1" value="0.3">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="image-url" class="form-label fw-semibold">
+                                            <i class="fas fa-image me-1"></i>URL hình ảnh (tùy chọn)
+                                        </label>
+                                        <input type="url" class="form-control" id="image-url" placeholder="https://example.com/image.jpg">
+                                    </div>
+                                </div>
+
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
                                     <i class="fas fa-save me-1"></i> Thêm từ vựng
                                 </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clear-vocabulary-form">
+                                        <i class="fas fa-eraser me-1"></i> Xóa form
+                                    </button>
+                                </div>
                             </form>
                         </div>
                     </div>
 
-                    <div class="card">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fas fa-list me-2"></i>Danh sách từ vựng</h5>
-                            <div>
-                                <select class="form-select form-select-sm d-inline-block w-auto me-2" id="filter-category">
+                    <!-- Vocabulary List Card -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-list me-2"></i>
+                                    Danh sách từ vựng
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select form-select-sm" id="filter-category" style="width: auto;">
                                     <option value="all" selected>Tất cả danh mục</option>
-                                    <option value="ANIMALS">Animals</option>
-                                    <option value="FOOD">Food</option>
-                                    <option value="TRANSPORTATION">Transportation</option>
-                                    <option value="WEATHER">Weather</option>
-                                    <option value="FAMILY">Family</option>
-                                    <option value="COLORS">Colors</option>
-                                    <option value="NUMBERS">Numbers</option>
-                                    <option value="TIME">Time</option>
-                                    <option value="VERBS">Verbs</option>
-                                    <option value="ADJECTIVES">Adjectives</option>
-                                    <option value="PLACES">Places</option>
-                                    <option value="DAILY_LIFE">Daily Life</option>
-                                    <option value="MISC">Miscellaneous</option>
+                                        <option value="ANIMALS">🐾 Animals</option>
+                                        <option value="FOOD">🍱 Food</option>
+                                        <option value="TRANSPORTATION">🚆 Transportation</option>
+                                        <option value="WEATHER">🌤 Weather</option>
+                                        <option value="FAMILY">👨‍👩‍👧‍👦 Family</option>
+                                        <option value="COLORS">🎨 Colors</option>
+                                        <option value="NUMBERS">🔢 Numbers</option>
+                                        <option value="TIME">⏰ Time</option>
+                                        <option value="VERBS">🏃 Verbs</option>
+                                        <option value="ADJECTIVES">✨ Adjectives</option>
+                                        <option value="PLACES">🏙️ Places</option>
+                                        <option value="DAILY_LIFE">🏠 Daily Life</option>
+                                        <option value="MISC">📚 Miscellaneous</option>
                                 </select>
-                                <select class="form-select form-select-sm d-inline-block w-auto" id="filter-level">
+                                    <select class="form-select form-select-sm" id="filter-level" style="width: auto;">
                                     <option value="all" selected>Tất cả cấp độ</option>
                                     <option value="N5">N5</option>
                                     <option value="N4">N4</option>
@@ -156,24 +254,47 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="card-body">
+                        </div>
+                        <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover vocabulary-table">
-                                    <thead>
+                                <table class="table table-hover mb-0 vocabulary-table">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Từ tiếng Nhật</th>
-                                            <th>Cách đọc</th>
-                                            <th>Nghĩa tiếng Việt</th>
-                                            <th>Danh mục</th>
-                                            <th>Cấp độ</th>
-                                            <th>Thao tác</th>
+                                            <th class="border-0">
+                                                <i class="fas fa-hashtag me-1"></i>ID
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-language me-1"></i>Từ tiếng Nhật
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-volume-up me-1"></i>Cách đọc
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-flag me-1"></i>Nghĩa tiếng Việt
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-tags me-1"></i>Danh mục
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-signal me-1"></i>Độ khó
+                                            </th>
+                                            <th class="border-0">
+                                                <i class="fas fa-cogs me-1"></i>Thao tác
+                                            </th>
                                         </tr>
                                     </thead>
                                     <tbody id="vocabulary-list">
                                         <!-- Vocabulary items will be loaded here -->
                                         <tr>
-                                            <td colspan="7" class="text-center">Đang tải dữ liệu...</td>
+                                            <td colspan="8" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Đang tải...</span>
+                                                </div>
+                                                <div class="mt-2">Đang tải dữ liệu...</div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -377,33 +498,516 @@
                     </div>
                 </div>
 
+                <!-- Lessons Management Section -->
+                <div id="lessons-section" style="display: none;">
+                    <!-- Add Lesson Card -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Thêm bài học mới
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="lesson-form">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="lesson-title" class="form-label fw-semibold">
+                                            <i class="fas fa-heading me-1"></i>Tiêu đề bài học
+                                        </label>
+                                        <input type="text" class="form-control" id="lesson-title" placeholder="Ví dụ: Động vật cơ bản" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lesson-category" class="form-label fw-semibold">
+                                            <i class="fas fa-tags me-1"></i>Danh mục
+                                        </label>
+                                        <select class="form-select" id="lesson-category" required>
+                                            <option value="" selected disabled>Chọn danh mục</option>
+                                            <option value="ANIMALS">🐾 Animals</option>
+                                            <option value="FOOD">🍱 Food</option>
+                                            <option value="COLORS">🎨 Colors</option>
+                                            <option value="FAMILY">👨‍👩‍👧‍👦 Family</option>
+                                            <option value="NUMBERS">🔢 Numbers</option>
+                                            <option value="TIME">⏰ Time</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="lesson-level" class="form-label fw-semibold">
+                                            <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                        </label>
+                                        <select class="form-select" id="lesson-level" required>
+                                            <option value="" selected disabled>Chọn cấp độ</option>
+                                            <option value="N5">N5 (Cơ bản)</option>
+                                            <option value="N4">N4</option>
+                                            <option value="N3">N3 (Trung cấp)</option>
+                                            <option value="N2">N2</option>
+                                            <option value="N1">N1 (Cao cấp)</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lesson-time" class="form-label fw-semibold">
+                                            <i class="fas fa-clock me-1"></i>Thời gian ước tính (phút)
+                                        </label>
+                                        <input type="number" class="form-control" id="lesson-time" min="5" max="120" value="15">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label for="lesson-description" class="form-label fw-semibold">
+                                            <i class="fas fa-align-left me-1"></i>Mô tả bài học
+                                        </label>
+                                        <textarea class="form-control" id="lesson-description" rows="3" placeholder="Mô tả nội dung bài học..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Thêm bài học
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clear-lesson-form">
+                                        <i class="fas fa-eraser me-1"></i> Xóa form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Lessons List Card -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-list me-2"></i>
+                                    Danh sách bài học
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select form-select-sm" id="filter-lesson-category" style="width: auto;">
+                                        <option value="all" selected>Tất cả danh mục</option>
+                                        <option value="ANIMALS">🐾 Animals</option>
+                                        <option value="FOOD">🍱 Food</option>
+                                        <option value="COLORS">🎨 Colors</option>
+                                        <option value="FAMILY">👨‍👩‍👧‍👦 Family</option>
+                                        <option value="NUMBERS">🔢 Numbers</option>
+                                        <option value="TIME">⏰ Time</option>
+                                    </select>
+                                    <select class="form-select form-select-sm" id="filter-lesson-level" style="width: auto;">
+                                        <option value="all" selected>Tất cả cấp độ</option>
+                                        <option value="N5">N5</option>
+                                        <option value="N4">N4</option>
+                                        <option value="N3">N3</option>
+                                        <option value="N2">N2</option>
+                                        <option value="N1">N1</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
+                            <div class="table-responsive">
+                                <table class="table table-hover mb-0 lessons-table">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th class="border-0"><i class="fas fa-hashtag me-1"></i>ID</th>
+                                            <th class="border-0"><i class="fas fa-heading me-1"></i>Tiêu đề</th>
+                                            <th class="border-0"><i class="fas fa-tags me-1"></i>Danh mục</th>
+                                            <th class="border-0"><i class="fas fa-layer-group me-1"></i>Cấp độ</th>
+                                            <th class="border-0"><i class="fas fa-clock me-1"></i>Thời gian</th>
+                                            <th class="border-0"><i class="fas fa-cogs me-1"></i>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="lessons-list">
+                                        <tr>
+                                            <td colspan="6" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Đang tải...</span>
+                                                </div>
+                                                <div class="mt-2">Đang tải dữ liệu...</div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Categories Management Section -->
+                <div id="categories-section" style="display: none;">
+                    <!-- Add Category Card -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Thêm danh mục mới
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="category-form">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="category-name" class="form-label fw-semibold">
+                                            <i class="fas fa-tag me-1"></i>Tên danh mục
+                                        </label>
+                                        <input type="text" class="form-control" id="category-name" placeholder="Ví dụ: Động vật" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="category-icon" class="form-label fw-semibold">
+                                            <i class="fas fa-smile me-1"></i>Icon (emoji)
+                                        </label>
+                                        <input type="text" class="form-control" id="category-icon" placeholder="🐾" required>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="category-color" class="form-label fw-semibold">
+                                            <i class="fas fa-palette me-1"></i>Màu sắc
+                                        </label>
+                                        <input type="color" class="form-control" id="category-color" value="#8B5CF6">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="category-order" class="form-label fw-semibold">
+                                            <i class="fas fa-sort-numeric-up me-1"></i>Thứ tự
+                                        </label>
+                                        <input type="number" class="form-control" id="category-order" min="1" max="100" value="1">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label for="category-description" class="form-label fw-semibold">
+                                            <i class="fas fa-align-left me-1"></i>Mô tả
+                                        </label>
+                                        <textarea class="form-control" id="category-description" rows="2" placeholder="Mô tả danh mục..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Thêm danh mục
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clear-category-form">
+                                        <i class="fas fa-eraser me-1"></i> Xóa form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Categories Grid -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <h5 class="mb-0">
+                                <i class="fas fa-th-large me-2"></i>
+                                Danh sách danh mục
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="categories-grid">
+                                <div class="col-12 text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải...</span>
+                                    </div>
+                                    <div class="mt-2">Đang tải dữ liệu...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Management Section -->
+                <div id="achievements-section" style="display: none;">
+                    <!-- Add Achievement Card -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-plus-circle me-2"></i>
+                                Thêm thành tích mới
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="achievement-form">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="achievement-title" class="form-label fw-semibold">
+                                            <i class="fas fa-trophy me-1"></i>Tên thành tích
+                                        </label>
+                                        <input type="text" class="form-control" id="achievement-title" placeholder="Ví dụ: Bước đầu học tập" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="achievement-icon" class="form-label fw-semibold">
+                                            <i class="fas fa-star me-1"></i>Icon (emoji)
+                                        </label>
+                                        <input type="text" class="form-control" id="achievement-icon" placeholder="🎓" required>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-4">
+                                        <label for="achievement-type" class="form-label fw-semibold">
+                                            <i class="fas fa-tag me-1"></i>Loại
+                                        </label>
+                                        <select class="form-select" id="achievement-type" required>
+                                            <option value="lesson">Bài học</option>
+                                            <option value="vocabulary">Từ vựng</option>
+                                            <option value="quiz">Quiz</option>
+                                            <option value="streak">Chuỗi học tập</option>
+                                            <option value="level">Cấp độ</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="achievement-target" class="form-label fw-semibold">
+                                            <i class="fas fa-target me-1"></i>Mục tiêu
+                                        </label>
+                                        <input type="number" class="form-control" id="achievement-target" min="1" value="1">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <label for="achievement-points" class="form-label fw-semibold">
+                                            <i class="fas fa-coins me-1"></i>Điểm thưởng
+                                        </label>
+                                        <input type="number" class="form-control" id="achievement-points" min="1" value="10">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="achievement-rarity" class="form-label fw-semibold">
+                                            <i class="fas fa-gem me-1"></i>Độ hiếm
+                                        </label>
+                                        <select class="form-select" id="achievement-rarity" required>
+                                            <option value="common">Thường</option>
+                                            <option value="uncommon">Hiếm</option>
+                                            <option value="rare">Rất hiếm</option>
+                                            <option value="epic">Huyền thoại</option>
+                                            <option value="legendary">Thần thoại</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="achievement-color" class="form-label fw-semibold">
+                                            <i class="fas fa-palette me-1"></i>Màu sắc
+                                        </label>
+                                        <input type="color" class="form-control" id="achievement-color" value="#FFD700">
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-12">
+                                        <label for="achievement-description" class="form-label fw-semibold">
+                                            <i class="fas fa-align-left me-1"></i>Mô tả
+                                        </label>
+                                        <textarea class="form-control" id="achievement-description" rows="2" placeholder="Mô tả thành tích..."></textarea>
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Thêm thành tích
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clear-achievement-form">
+                                        <i class="fas fa-eraser me-1"></i> Xóa form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Achievements Grid -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-trophy me-2"></i>
+                                    Danh sách thành tích
+                                </h5>
+                                <select class="form-select form-select-sm" id="filter-achievement-rarity" style="width: auto;">
+                                    <option value="all" selected>Tất cả độ hiếm</option>
+                                    <option value="common">Thường</option>
+                                    <option value="uncommon">Hiếm</option>
+                                    <option value="rare">Rất hiếm</option>
+                                    <option value="epic">Huyền thoại</option>
+                                    <option value="legendary">Thần thoại</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="row" id="achievements-grid">
+                                <div class="col-12 text-center py-4">
+                                    <div class="spinner-border text-primary" role="status">
+                                        <span class="visually-hidden">Đang tải...</span>
+                                    </div>
+                                    <div class="mt-2">Đang tải dữ liệu...</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Analytics Section -->
+                <div id="analytics-section" style="display: none;">
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-chart-bar me-2"></i>
+                                Thống kê và phân tích
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    <div class="analytics-card">
+                                        <i class="fas fa-book text-primary"></i>
+                                        <h3 id="total-vocabulary">0</h3>
+                                        <p>Tổng từ vựng</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="analytics-card">
+                                        <i class="fas fa-users text-success"></i>
+                                        <h3 id="total-users">0</h3>
+                                        <p>Tổng người dùng</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="analytics-card">
+                                        <i class="fas fa-question-circle text-warning"></i>
+                                        <h3 id="total-quizzes">0</h3>
+                                        <p>Tổng câu hỏi</p>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="analytics-card">
+                                        <i class="fas fa-chalkboard-teacher text-info"></i>
+                                        <h3 id="total-lessons">0</h3>
+                                        <p>Tổng bài học</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- User Management Section -->
                 <div id="users-section" style="display: none;">
-                    <div class="card mb-4">
-                        <div class="card-header d-flex justify-content-between align-items-center">
-                            <h5 class="mb-0"><i class="fas fa-users me-2"></i>Quản lý người dùng</h5>
-                            <button class="btn btn-sm btn-primary" onclick="loadUsersData(); console.log('Reload users data');">
+                    <!-- Add User Card -->
+                    <div class="card shadow-sm mb-4">
+                        <div class="card-header bg-primary text-white">
+                            <h5 class="mb-0">
+                                <i class="fas fa-user-plus me-2"></i>
+                                Thêm người dùng mới
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <form id="user-form">
+                                <div class="row g-3">
+                                    <div class="col-md-6">
+                                        <label for="user-email" class="form-label fw-semibold">
+                                            <i class="fas fa-envelope me-1"></i>Email
+                                        </label>
+                                        <input type="email" class="form-control" id="user-email" placeholder="user@example.com" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="user-display-name" class="form-label fw-semibold">
+                                            <i class="fas fa-user me-1"></i>Tên hiển thị
+                                        </label>
+                                        <input type="text" class="form-control" id="user-display-name" placeholder="Tên người dùng" required>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="user-password" class="form-label fw-semibold">
+                                            <i class="fas fa-lock me-1"></i>Mật khẩu
+                                        </label>
+                                        <input type="password" class="form-control" id="user-password" placeholder="Mật khẩu" required>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="user-level" class="form-label fw-semibold">
+                                            <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                        </label>
+                                        <select class="form-select" id="user-level" required>
+                                            <option value="N5">N5 (Cơ bản)</option>
+                                            <option value="N4">N4</option>
+                                            <option value="N3">N3 (Trung cấp)</option>
+                                            <option value="N2">N2</option>
+                                            <option value="N1">N1 (Cao cấp)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="row g-3 mt-2">
+                                    <div class="col-md-6">
+                                        <label for="user-status" class="form-label fw-semibold">
+                                            <i class="fas fa-toggle-on me-1"></i>Trạng thái
+                                        </label>
+                                        <select class="form-select" id="user-status" required>
+                                            <option value="active">Hoạt động</option>
+                                            <option value="inactive">Không hoạt động</option>
+                                            <option value="suspended">Bị đình chỉ</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="user-avatar" class="form-label fw-semibold">
+                                            <i class="fas fa-image me-1"></i>Avatar URL (tùy chọn)
+                                        </label>
+                                        <input type="url" class="form-control" id="user-avatar" placeholder="https://example.com/avatar.jpg">
+                                    </div>
+                                </div>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button type="submit" class="btn btn-primary">
+                                        <i class="fas fa-save me-1"></i> Thêm người dùng
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary" id="clear-user-form">
+                                        <i class="fas fa-eraser me-1"></i> Xóa form
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- Users List Card -->
+                    <div class="card shadow-sm">
+                        <div class="card-header bg-light">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="fas fa-list me-2"></i>
+                                    Danh sách người dùng
+                                </h5>
+                                <div class="d-flex gap-2">
+                                    <select class="form-select form-select-sm" id="filter-user-status" style="width: auto;">
+                                        <option value="all" selected>Tất cả trạng thái</option>
+                                        <option value="active">Hoạt động</option>
+                                        <option value="inactive">Không hoạt động</option>
+                                        <option value="suspended">Bị đình chỉ</option>
+                                    </select>
+                                    <select class="form-select form-select-sm" id="filter-user-level" style="width: auto;">
+                                        <option value="all" selected>Tất cả cấp độ</option>
+                                        <option value="N5">N5</option>
+                                        <option value="N4">N4</option>
+                                        <option value="N3">N3</option>
+                                        <option value="N2">N2</option>
+                                        <option value="N1">N1</option>
+                                    </select>
+                                    <button class="btn btn-sm btn-primary" onclick="loadUsersData()">
                                 <i class="fas fa-sync-alt me-1"></i> Tải lại
                             </button>
                         </div>
-                        <div class="card-body">
+                            </div>
+                        </div>
+                        <div class="card-body p-0">
                             <div class="table-responsive">
-                                <table class="table table-striped table-hover users-table">
-                                    <thead>
+                                <table class="table table-hover mb-0 users-table">
+                                    <thead class="table-light">
                                         <tr>
-                                            <th>ID</th>
-                                            <th>Email</th>
-                                            <th>Tên hiển thị</th>
-                                            <th>Ngày tạo</th>
-                                            <th>Cấp độ</th>
-                                            <th>Trạng thái</th>
-                                            <th>Thao tác</th>
+                                            <th class="border-0"><i class="fas fa-hashtag me-1"></i>ID</th>
+                                            <th class="border-0"><i class="fas fa-envelope me-1"></i>Email</th>
+                                            <th class="border-0"><i class="fas fa-user me-1"></i>Tên hiển thị</th>
+                                            <th class="border-0"><i class="fas fa-calendar me-1"></i>Ngày tạo</th>
+                                            <th class="border-0"><i class="fas fa-layer-group me-1"></i>Cấp độ</th>
+                                            <th class="border-0"><i class="fas fa-book me-1"></i>Từ vựng</th>
+                                            <th class="border-0"><i class="fas fa-question-circle me-1"></i>Quiz</th>
+                                            <th class="border-0"><i class="fas fa-toggle-on me-1"></i>Trạng thái</th>
+                                            <th class="border-0"><i class="fas fa-cogs me-1"></i>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody id="users-list">
-                                        <!-- User items will be loaded here -->
                                         <tr>
-                                            <td colspan="7" class="text-center">Đang tải dữ liệu...</td>
+                                            <td colspan="9" class="text-center py-4">
+                                                <div class="spinner-border text-primary" role="status">
+                                                    <span class="visually-hidden">Đang tải...</span>
+                                                </div>
+                                                <div class="mt-2">Đang tải dữ liệu...</div>
+                                            </td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -417,17 +1021,163 @@
 
     <!-- Modal for viewing vocabulary details -->
     <div class="modal fade" id="vocabulary-detail-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Chi tiết từ vựng</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-book me-2"></i>
+                        Chi tiết từ vựng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="vocabulary-detail-content">
                     <!-- Content will be loaded dynamically -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Đóng
+                    </button>
+                    <button type="button" class="btn btn-warning" id="edit-vocabulary-btn">
+                        <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-vocabulary-btn">
+                        <i class="fas fa-trash me-1"></i> Xóa từ vựng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing vocabulary -->
+    <div class="modal fade" id="edit-vocabulary-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        Chỉnh sửa từ vựng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-vocabulary-form">
+                        <input type="hidden" id="edit-vocabulary-id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="edit-japanese" class="form-label fw-semibold">
+                                    <i class="fas fa-language me-1"></i>Từ tiếng Nhật
+                                </label>
+                                <input type="text" class="form-control" id="edit-japanese" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-reading" class="form-label fw-semibold">
+                                    <i class="fas fa-volume-up me-1"></i>Cách đọc
+                                </label>
+                                <input type="text" class="form-control" id="edit-reading" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="edit-vietnamese" class="form-label fw-semibold">
+                                    <i class="fas fa-flag me-1"></i>Nghĩa tiếng Việt
+                                </label>
+                                <input type="text" class="form-control" id="edit-vietnamese" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-level" class="form-label fw-semibold">
+                                    <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                </label>
+                                <select class="form-select" id="edit-level" required>
+                                    <option value="N5">N5 (Cơ bản)</option>
+                                    <option value="N4">N4</option>
+                                    <option value="N3">N3 (Trung cấp)</option>
+                                    <option value="N2">N2</option>
+                                    <option value="N1">N1 (Cao cấp)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="edit-category" class="form-label fw-semibold">
+                                    <i class="fas fa-tags me-1"></i>Danh mục
+                                </label>
+                                <select class="form-select" id="edit-category" required>
+                                    <option value="animals">🐾 Animals</option>
+                                    <option value="food">🍱 Food</option>
+                                    <option value="colors">🎨 Colors</option>
+                                    <option value="family">👨‍👩‍👧‍👦 Family</option>
+                                    <option value="numbers">🔢 Numbers</option>
+                                    <option value="time">⏰ Time</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-difficulty" class="form-label fw-semibold">
+                                    <i class="fas fa-signal me-1"></i>Độ khó (0.0 - 1.0)
+                                </label>
+                                <input type="number" class="form-control" id="edit-difficulty" min="0" max="1" step="0.1">
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="edit-mastery-level" class="form-label fw-semibold">
+                                    <i class="fas fa-star me-1"></i>Mức độ thành thạo
+                                </label>
+                                <select class="form-select" id="edit-mastery-level" required>
+                                    <option value="NEW">Mới</option>
+                                    <option value="LEARNING">Đang học</option>
+                                    <option value="MASTERED">Đã thành thạo</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-image-url" class="form-label fw-semibold">
+                                    <i class="fas fa-image me-1"></i>URL hình ảnh
+                                </label>
+                                <input type="url" class="form-control" id="edit-image-url" placeholder="https://example.com/image.jpg">
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="edit-example-japanese" class="form-label fw-semibold">
+                                    <i class="fas fa-comment me-1"></i>Ví dụ tiếng Nhật
+                                </label>
+                                <input type="text" class="form-control" id="edit-example-japanese" placeholder="Ví dụ: これは本です">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-example-vietnamese" class="form-label fw-semibold">
+                                    <i class="fas fa-comment me-1"></i>Ví dụ tiếng Việt
+                                </label>
+                                <input type="text" class="form-control" id="edit-example-vietnamese" placeholder="Ví dụ: Đây là quyển sách">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Hủy
+                    </button>
+                    <button type="button" class="btn btn-warning" id="save-vocabulary-changes-btn">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for confirming vocabulary deletion -->
+    <div class="modal fade" id="confirm-delete-vocabulary-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa từ vựng</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa từ vựng này? Hành động này không thể hoàn tác.</p>
+                    <p class="text-danger"><strong>Cảnh báo:</strong> Từ vựng sẽ bị xóa khỏi hệ thống.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-vocabulary-btn">Xác nhận xóa</button>
                 </div>
             </div>
         </div>
@@ -445,7 +1195,183 @@
                     <!-- Content will be loaded dynamically -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Đóng
+                    </button>
+                    <button type="button" class="btn btn-warning" id="edit-quiz-btn">
+                        <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-quiz-btn">
+                        <i class="fas fa-trash me-1"></i> Xóa câu hỏi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing quiz -->
+    <div class="modal fade" id="edit-quiz-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        Chỉnh sửa câu hỏi
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-quiz-form">
+                        <input type="hidden" id="edit-quiz-id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="edit-quiz-category" class="form-label fw-semibold">
+                                    <i class="fas fa-tags me-1"></i>Danh mục
+                                </label>
+                                <select class="form-select" id="edit-quiz-category" required>
+                                    <option value="ANIMALS">Animals (Động vật)</option>
+                                    <option value="FOOD">Food (Đồ ăn)</option>
+                                    <option value="TRANSPORTATION">Transportation (Phương tiện)</option>
+                                    <option value="WEATHER">Weather (Thời tiết)</option>
+                                    <option value="FAMILY">Family (Gia đình)</option>
+                                    <option value="COLORS">Colors (Màu sắc)</option>
+                                    <option value="NUMBERS">Numbers (Số)</option>
+                                    <option value="TIME">Time (Thời gian)</option>
+                                    <option value="VERBS">Verbs (Động từ)</option>
+                                    <option value="ADJECTIVES">Adjectives (Tính từ)</option>
+                                    <option value="PLACES">Places (Địa điểm)</option>
+                                    <option value="DAILY_LIFE">Daily Life (Cuộc sống hàng ngày)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-quiz-level" class="form-label fw-semibold">
+                                    <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                </label>
+                                <select class="form-select" id="edit-quiz-level" required>
+                                    <option value="N5">N5 (Cơ bản)</option>
+                                    <option value="N4">N4</option>
+                                    <option value="N3">N3 (Trung cấp)</option>
+                                    <option value="N2">N2</option>
+                                    <option value="N1">N1 (Cao cấp)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <label for="edit-question-type" class="form-label fw-semibold">
+                                    <i class="fas fa-question-circle me-1"></i>Loại câu hỏi
+                                </label>
+                                <select class="form-select" id="edit-question-type" required>
+                                    <option value="MULTIPLE_CHOICE">Multiple Choice (Trắc nghiệm)</option>
+                                    <option value="TRUE_FALSE">True/False (Đúng/Sai)</option>
+                                    <option value="MATCHING">Matching (Ghép đôi)</option>
+                                    <option value="FILL_BLANK">Fill in the blank (Điền vào chỗ trống)</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <label for="edit-question" class="form-label fw-semibold">
+                                    <i class="fas fa-comment me-1"></i>Câu hỏi
+                                </label>
+                                <textarea class="form-control" id="edit-question" rows="2" required></textarea>
+                            </div>
+                        </div>
+                        <div id="edit-multiple-choice-options" class="mt-3">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-list me-1"></i>Các lựa chọn
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">A</span>
+                                        <input type="text" class="form-control" id="edit-option-a" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">B</span>
+                                        <input type="text" class="form-control" id="edit-option-b" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">C</span>
+                                        <input type="text" class="form-control" id="edit-option-c" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <span class="input-group-text">D</span>
+                                        <input type="text" class="form-control" id="edit-option-d" required>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="edit-true-false-options" class="mt-3" style="display: none;">
+                            <label class="form-label fw-semibold">
+                                <i class="fas fa-list me-1"></i>Các lựa chọn
+                            </label>
+                            <div class="row g-2">
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="edit-true-false" id="edit-true" value="true">
+                                        <label class="form-check-label" for="edit-true">Đúng</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="edit-true-false" id="edit-false" value="false">
+                                        <label class="form-check-label" for="edit-false">Sai</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <label for="edit-correct-answer" class="form-label fw-semibold">
+                                    <i class="fas fa-check-circle me-1"></i>Đáp án đúng
+                                </label>
+                                <input type="text" class="form-control" id="edit-correct-answer" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <label for="edit-explanation" class="form-label fw-semibold">
+                                    <i class="fas fa-lightbulb me-1"></i>Giải thích (tùy chọn)
+                                </label>
+                                <textarea class="form-control" id="edit-explanation" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Hủy
+                    </button>
+                    <button type="button" class="btn btn-warning" id="save-quiz-changes-btn">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for confirming quiz deletion -->
+    <div class="modal fade" id="confirm-delete-quiz-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Xác nhận xóa câu hỏi</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Bạn có chắc chắn muốn xóa câu hỏi này? Hành động này không thể hoàn tác.</p>
+                    <p class="text-danger"><strong>Cảnh báo:</strong> Câu hỏi sẽ bị xóa khỏi hệ thống.</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-danger" id="confirm-delete-quiz-btn">Xác nhận xóa</button>
                 </div>
             </div>
         </div>
@@ -453,19 +1379,129 @@
 
     <!-- Modal for viewing user details -->
     <div class="modal fade" id="user-detail-modal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Chi tiết người dùng</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user me-2"></i>
+                        Chi tiết người dùng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body" id="user-detail-content">
                     <!-- Content will be loaded dynamically -->
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-sm btn-secondary" data-bs-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-sm btn-warning" id="toggle-user-status-btn">Vô hiệu hóa</button>
-                    <button type="button" class="btn btn-sm btn-danger" id="delete-user-btn">Xóa người dùng</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Đóng
+                    </button>
+                    <button type="button" class="btn btn-warning" id="toggle-user-status-btn">
+                        <i class="fas fa-toggle-off me-1"></i> Vô hiệu hóa
+                    </button>
+                    <button type="button" class="btn btn-info" id="edit-user-btn">
+                        <i class="fas fa-edit me-1"></i> Chỉnh sửa
+                    </button>
+                    <button type="button" class="btn btn-danger" id="delete-user-btn">
+                        <i class="fas fa-trash me-1"></i> Xóa người dùng
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing user -->
+    <div class="modal fade" id="edit-user-modal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-edit me-2"></i>
+                        Chỉnh sửa người dùng
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="edit-user-form">
+                        <input type="hidden" id="edit-user-id">
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label for="edit-user-email" class="form-label fw-semibold">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                <input type="email" class="form-control" id="edit-user-email" required>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-user-display-name" class="form-label fw-semibold">
+                                    <i class="fas fa-user me-1"></i>Tên hiển thị
+                                </label>
+                                <input type="text" class="form-control" id="edit-user-display-name" required>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-6">
+                                <label for="edit-user-level" class="form-label fw-semibold">
+                                    <i class="fas fa-layer-group me-1"></i>Cấp độ
+                                </label>
+                                <select class="form-select" id="edit-user-level" required>
+                                    <option value="N5">N5 (Cơ bản)</option>
+                                    <option value="N4">N4</option>
+                                    <option value="N3">N3 (Trung cấp)</option>
+                                    <option value="N2">N2</option>
+                                    <option value="N1">N1 (Cao cấp)</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-user-status" class="form-label fw-semibold">
+                                    <i class="fas fa-toggle-on me-1"></i>Trạng thái
+                                </label>
+                                <select class="form-select" id="edit-user-status" required>
+                                    <option value="active">Hoạt động</option>
+                                    <option value="inactive">Không hoạt động</option>
+                                    <option value="suspended">Bị đình chỉ</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <label for="edit-user-avatar" class="form-label fw-semibold">
+                                    <i class="fas fa-image me-1"></i>Avatar URL
+                                </label>
+                                <input type="url" class="form-control" id="edit-user-avatar" placeholder="https://example.com/avatar.jpg">
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2">
+                            <div class="col-md-12">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="change-password">
+                                    <label class="form-check-label" for="change-password">
+                                        <i class="fas fa-key me-1"></i>Thay đổi mật khẩu
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row g-3 mt-2" id="password-fields" style="display: none;">
+                            <div class="col-md-6">
+                                <label for="edit-user-password" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-1"></i>Mật khẩu mới
+                                </label>
+                                <input type="password" class="form-control" id="edit-user-password" placeholder="Mật khẩu mới">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="edit-user-confirm-password" class="form-label fw-semibold">
+                                    <i class="fas fa-lock me-1"></i>Xác nhận mật khẩu
+                                </label>
+                                <input type="password" class="form-control" id="edit-user-confirm-password" placeholder="Xác nhận mật khẩu">
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                        <i class="fas fa-times me-1"></i> Hủy
+                    </button>
+                    <button type="button" class="btn btn-warning" id="save-user-changes-btn">
+                        <i class="fas fa-save me-1"></i> Lưu thay đổi
+                    </button>
                 </div>
             </div>
         </div>

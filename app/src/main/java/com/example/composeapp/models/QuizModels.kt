@@ -60,6 +60,8 @@ data class QuizCategory(
     val title: String = "",
     val description: String = "",
     val icon: String = "",
+    val iconUrl: String? = null,
+    val color: String? = null,
     val levels: Map<String, QuizLevel> = emptyMap()
 )
 
@@ -67,5 +69,6 @@ data class QuizLevel(
     val id: String = "",
     val name: String = "",
     val description: String = "",
-    val quizzes: List<Quiz> = emptyList()
+    val quizzes: List<Quiz> = emptyList(),
+    val color: String = "#9C27B0"
 ) 

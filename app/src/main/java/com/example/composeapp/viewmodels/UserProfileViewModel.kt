@@ -55,10 +55,15 @@ class UserProfileViewModel : ViewModel() {
     private val _learningProgress = MutableStateFlow(0f)
     val learningProgress: StateFlow<Float> = _learningProgress
 
+    // Tiến độ theo danh mục cho HomeScreen (FlashcardCategory -> progress 0..1)
+    private val _categoryProgress = MutableStateFlow<Map<String, Float>>(emptyMap())
+    val categoryProgress: StateFlow<Map<String, Float>> = _categoryProgress
+
     init {
         loadUserProfile()
         loadStudyTimeToday()
         loadWordsLearned()
+        loadCategoryProgress()
     }
 
     fun saveUserProfile(profile: UserProfileData) {
@@ -68,19 +73,20 @@ class UserProfileViewModel : ViewModel() {
                 
                 val userId = auth.currentUser?.uid ?: throw Exception("User not authenticated")
                 
-                // Save profile data to Realtime Database
+                // Save profile data to Realtime Database using new Firebase structure
                 database.reference
+                    .child("app_data")
                     .child("users")
                     .child(userId)
                     .child("profile")
                     .setValue(profile)
                     .addOnSuccessListener {
                         _profileData.value = profile
-                _saveProfileState.value = SaveProfileState.Success
+                        _saveProfileState.value = SaveProfileState.Success
                     }
                     .addOnFailureListener { e ->
                         _saveProfileState.value = SaveProfileState.Error(e.message ?: "Failed to save profile")
-                }
+                    }
             } catch (e: Exception) {
                 _saveProfileState.value = SaveProfileState.Error(e.message ?: "Unknown error occurred")
             }
@@ -92,7 +98,7 @@ class UserProfileViewModel : ViewModel() {
         
                 _loadProfileState.value = LoadProfileState.Loading
                 
-        database.reference.child("users").child(userId).child("profile")
+        database.reference.child("app_data").child("users").child(userId).child("profile")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
                     val profile = snapshot.getValue(UserProfileData::class.java)
@@ -105,6 +111,38 @@ class UserProfileViewModel : ViewModel() {
                     }
                 })
     }
+
+    // Tải tiến độ theo từng danh mục từ app_data/users/{uid}/learning_stats/category_progress
+    private fun loadCategoryProgress() {
+        viewModelScope.launch {
+            try {
+                val currentUser = auth.currentUser ?: return@launch
+                val progressRef = database.reference
+                    .child("app_data")
+                    .child("users")
+                    .child(currentUser.uid)
+                    .child("learning_stats")
+                    .child("category_progress")
+
+                val snapshot = progressRef.get().await()
+                val map = mutableMapOf<String, Float>()
+                for (catSnap in snapshot.children) {
+                    val category = catSnap.key ?: continue
+                    val accuracy = catSnap.child("accuracy").getValue(Double::class.java)?.toFloat()
+                    val wordsLearned = catSnap.child("wordsLearned").getValue(Int::class.java) ?: 0
+                    val lessonsCompleted = catSnap.child("lessonsCompleted").getValue(Int::class.java) ?: 0
+
+                    // Quy đổi về 0..1: 50% theo accuracy, 50% theo số liệu tiến độ tương đối (heuristic)
+                    val accuracyPart = (accuracy ?: 0f).coerceIn(0f, 1f) * 0.5f
+                    val progressPart = (minOf(wordsLearned / 50f, 1f) * 0.35f) + (minOf(lessonsCompleted / 10f, 1f) * 0.15f)
+                    map[category] = (accuracyPart + progressPart).coerceIn(0f, 1f)
+                }
+                _categoryProgress.value = map
+            } catch (e: Exception) {
+                // Ignore
+            }
+        }
+    }
     
     fun checkUserHasProfile(onResult: (Boolean) -> Unit) {
         val userId = auth.currentUser?.uid
@@ -113,7 +151,7 @@ class UserProfileViewModel : ViewModel() {
             return
                 }
                 
-        database.reference.child("users").child(userId).child("profile")
+        database.reference.child("app_data").child("users").child(userId).child("profile")
             .addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
                     onResult(snapshot.exists())
@@ -121,7 +159,7 @@ class UserProfileViewModel : ViewModel() {
                 
                 override fun onCancelled(error: DatabaseError) {
                     onResult(false)
-            }
+                }
             })
     }
     
@@ -136,7 +174,7 @@ class UserProfileViewModel : ViewModel() {
                 val currentUser = auth.currentUser
                 if (currentUser == null) return@launch
 
-                val userRef = database.reference.child("users").child(currentUser.uid).child("progress")
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid).child("progress")
                 
                 // Lấy thông tin hiện tại
                 val progressSnapshot = userRef.get().await()
@@ -184,7 +222,7 @@ class UserProfileViewModel : ViewModel() {
             val downloadUrl = storageRef.downloadUrl.await()
             
             // Cập nhật avatarUrl trong database
-            val userRef = database.reference.child("users").child(currentUser.uid).child("profile").child("avatarUrl")
+            val userRef = database.reference.child("app_data").child("users").child(currentUser.uid).child("profile").child("avatarUrl")
             userRef.setValue(downloadUrl.toString()).await()
             
             // Trả về URL để cập nhật trong local state
@@ -207,7 +245,7 @@ class UserProfileViewModel : ViewModel() {
                 
                 // Upload image if provided
                 if (imageUri != null) {
-                    val userRef = database.reference.child("users").child(userId).child("profile").child("avatarUrl")
+                    val userRef = database.reference.child("app_data").child("users").child(userId).child("profile").child("avatarUrl")
                     userRef.setValue(imageUri.toString()).await()
                     updatedAvatarUrl = imageUri.toString()
                 }
@@ -217,8 +255,8 @@ class UserProfileViewModel : ViewModel() {
                 profileData["name"] = profile.name
                 profileData["email"] = profile.email
                 profileData["age"] = profile.age
-                profileData["currentLevel"] = profile.currentLevel.name
-                profileData["targetLevel"] = profile.targetLevel.name
+                profileData["currentLevel"] = profile.currentLevel
+                profileData["targetLevel"] = profile.targetLevel
                 if (updatedAvatarUrl != null) profileData["avatarUrl"] = updatedAvatarUrl
                 if (profile.registrationDate != null) profileData["registrationDate"] = profile.registrationDate
                 
@@ -240,7 +278,7 @@ class UserProfileViewModel : ViewModel() {
                     "progress" to progressData,
                     "settings" to settingsData
                 )
-                database.reference.child("users").child(userId).updateChildren(updates).await()
+                database.reference.child("app_data").child("users").child(userId).updateChildren(updates).await()
                 
                 _profileData.value = profile.copy(avatarUrl = updatedAvatarUrl)
                 _saveProfileState.value = SaveProfileState.Success
@@ -266,7 +304,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid).child("progress")
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid).child("progress")
                 
                 // Lấy số từ vựng hiện tại
                 val progressSnapshot = userRef.get().await()
@@ -295,7 +333,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid).child("learning_stats")
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid).child("learning_stats")
                 
                 val calendar = Calendar.getInstance()
                 val today = "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.DAY_OF_MONTH)}"
@@ -312,7 +350,7 @@ class UserProfileViewModel : ViewModel() {
                 _studyTimeToday.value = updatedStudyTime
                 
                 // Cập nhật streak nếu đạt mục tiêu học tập
-                val settingsSnapshot = database.reference.child("users").child(currentUser.uid).child("settings").get().await()
+                val settingsSnapshot = database.reference.child("app_data").child("users").child(currentUser.uid).child("settings").get().await()
                 val targetStudyTime = settingsSnapshot.child("studyTimeMinutes").getValue(Int::class.java) ?: 30
                 
                 if (updatedStudyTime >= targetStudyTime) {
@@ -329,7 +367,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid).child("progress")
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid).child("progress")
                 
                 // Lấy thông tin streak hiện tại
                 val progressSnapshot = userRef.get().await()
@@ -385,7 +423,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid)
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid)
                 
                 // Đánh dấu bài học đã hoàn thành
                 userRef.child("learning").child("completedLessons").child(lessonId)
@@ -415,7 +453,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid)
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid)
                 
                 // Đánh dấu từ vựng đã học
                 userRef.child("learning").child("vocabulary").child(wordId)
@@ -434,7 +472,7 @@ class UserProfileViewModel : ViewModel() {
         viewModelScope.launch {
             try {
                 val currentUser = auth.currentUser ?: return@launch
-                val userRef = database.reference.child("users").child(currentUser.uid)
+                val userRef = database.reference.child("app_data").child("users").child(currentUser.uid)
                 
                 // Lấy thông tin tiến độ
                 val progressSnapshot = userRef.child("progress").get().await()
@@ -496,6 +534,7 @@ class UserProfileViewModel : ViewModel() {
                 val today = "${calendar.get(Calendar.YEAR)}-${calendar.get(Calendar.MONTH) + 1}-${calendar.get(Calendar.DAY_OF_MONTH)}"
                 
                 val statsRef = database.reference
+                    .child("app_data")
                     .child("users")
                     .child(currentUser.uid)
                     .child("learning_stats")
@@ -517,6 +556,7 @@ class UserProfileViewModel : ViewModel() {
             try {
                 val currentUser = auth.currentUser ?: return@launch
                 val progressRef = database.reference
+                    .child("app_data")
                     .child("users")
                     .child(currentUser.uid)
                     .child("progress")

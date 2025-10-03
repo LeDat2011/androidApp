@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.composeapp.models.JapaneseLevel
+import com.example.composeapp.models.JLPTLevel
 import com.example.composeapp.models.StudyTimeOptions
 import com.example.composeapp.models.UserProfileData
 import com.example.composeapp.viewmodels.UserProfileViewModel
@@ -54,8 +54,8 @@ fun EditProfileScreen(
     // UI States
     var name by remember { mutableStateOf(profileData?.name ?: "") }
     var age by remember { mutableStateOf(profileData?.age?.toString() ?: "") }
-    var currentLevelIndex by remember { mutableStateOf(JapaneseLevel.values().indexOf(profileData?.currentLevel ?: JapaneseLevel.N5)) }
-    var targetLevelIndex by remember { mutableStateOf(JapaneseLevel.values().indexOf(profileData?.targetLevel ?: JapaneseLevel.N4)) }
+    var currentLevelIndex by remember { mutableStateOf(JLPTLevel.values().indexOf(profileData?.getCurrentLevelEnum() ?: JLPTLevel.N5)) }
+    var targetLevelIndex by remember { mutableStateOf(JLPTLevel.values().indexOf(profileData?.getTargetLevelEnum() ?: JLPTLevel.N4)) }
     var studyTimeIndex by remember { mutableStateOf(StudyTimeOptions.options.indexOfFirst { it.first == profileData?.studyTimeMinutes }.coerceAtLeast(0)) }
     var isLoading by remember { mutableStateOf(false) }
     
@@ -74,8 +74,8 @@ fun EditProfileScreen(
         profileData?.let { data ->
             name = data.name
             age = data.age.toString()
-            currentLevelIndex = JapaneseLevel.values().indexOf(data.currentLevel).coerceAtLeast(0)
-            targetLevelIndex = JapaneseLevel.values().indexOf(data.targetLevel).coerceAtLeast(0)
+            currentLevelIndex = JLPTLevel.values().indexOf(data.getCurrentLevelEnum()).coerceAtLeast(0)
+            targetLevelIndex = JLPTLevel.values().indexOf(data.getTargetLevelEnum()).coerceAtLeast(0)
             studyTimeIndex = StudyTimeOptions.options.indexOfFirst { it.first == data.studyTimeMinutes }
                 .coerceAtLeast(0)
         }
@@ -144,8 +144,8 @@ fun EditProfileScreen(
                                 val profile = UserProfileData(
                                     name = name,
                                     age = age.toInt(),
-                                    currentLevel = JapaneseLevel.values()[currentLevelIndex],
-                                    targetLevel = JapaneseLevel.values()[targetLevelIndex],
+                                    currentLevel = JLPTLevel.values()[currentLevelIndex].name,
+                                    targetLevel = JLPTLevel.values()[targetLevelIndex].name,
                                     studyTimeMinutes = StudyTimeOptions.options[studyTimeIndex].first,
                                     streak = profileData?.streak ?: 0,
                                     wordsLearned = profileData?.wordsLearned ?: 0,
@@ -265,7 +265,7 @@ fun EditProfileScreen(
                 onExpandedChange = { isCurrentLevelExpanded = it }
             ) {
                 OutlinedTextField(
-                    value = JapaneseLevel.values()[currentLevelIndex].displayName,
+                    value = JLPTLevel.values()[currentLevelIndex].displayName,
                     onValueChange = { },
                     readOnly = true,
                     label = { Text("Trình độ hiện tại") },
@@ -284,11 +284,11 @@ fun EditProfileScreen(
                     expanded = isCurrentLevelExpanded,
                     onDismissRequest = { isCurrentLevelExpanded = false }
                 ) {
-                    JapaneseLevel.values().reversed().forEachIndexed { index, level ->
+                    JLPTLevel.values().reversed().forEachIndexed { index, level ->
                         DropdownMenuItem(
                             text = { Text(level.displayName) },
                             onClick = { 
-                                currentLevelIndex = JapaneseLevel.values().size - 1 - index
+                                currentLevelIndex = JLPTLevel.values().size - 1 - index
                                 isCurrentLevelExpanded = false
                             }
                         )
@@ -304,7 +304,7 @@ fun EditProfileScreen(
                 onExpandedChange = { isTargetLevelExpanded = it }
             ) {
                 OutlinedTextField(
-                    value = JapaneseLevel.values()[targetLevelIndex].displayName,
+                    value = JLPTLevel.values()[targetLevelIndex].displayName,
                     onValueChange = { },
                     readOnly = true,
                     label = { Text("Mục tiêu") },
@@ -323,11 +323,11 @@ fun EditProfileScreen(
                     expanded = isTargetLevelExpanded,
                     onDismissRequest = { isTargetLevelExpanded = false }
                 ) {
-                    JapaneseLevel.values().reversed().forEachIndexed { index, level ->
+                    JLPTLevel.values().reversed().forEachIndexed { index, level ->
                             DropdownMenuItem(
                                 text = { Text(level.displayName) },
                                 onClick = { 
-                                targetLevelIndex = JapaneseLevel.values().size - 1 - index
+                                targetLevelIndex = JLPTLevel.values().size - 1 - index
                                     isTargetLevelExpanded = false
                                 }
                             )

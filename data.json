@@ -1,371 +1,779 @@
 {
   "app_data": {
-    "vocabulary": {
-      "ANIMALS": {
-        "N4": {
-          "vocab1": {
-            "example": "さるは木に登ります。 - Con khỉ trèo lên cây.",
-            "japanese": "さる",
-            "reading": "saru",
-            "vietnamese": "Con khỉ"
-          },
-          "vocab10": {
-            "example": "リスが木の実を集めます。 - Sóc thu thập hạt.",
-            "japanese": "りす",
-            "reading": "risu",
-            "vietnamese": "Con sóc"
-          },
-          "vocab2": {
-            "example": "ぞうは大きな動物です。 - Voi là động vật lớn.",
-            "japanese": "ぞう",
-            "reading": "zou",
-            "vietnamese": "Con voi"
-          },
-          "vocab3": {
-            "example": "きりんは首が長いです。 - Hươu cao cổ có cổ dài.",
-            "japanese": "きりん",
-            "reading": "kirin",
-            "vietnamese": "Con hươu cao cổ"
-          },
-          "vocab4": {
-            "example": "とらは強い動物です。 - Hổ là động vật mạnh mẽ.",
-            "japanese": "とら",
-            "reading": "tora",
-            "vietnamese": "Con hổ"
-          },
-          "vocab5": {
-            "example": "パンダは竹を食べます。 - Gấu trúc ăn tre.",
-            "japanese": "パンダ",
-            "reading": "panda",
-            "vietnamese": "Con gấu trúc"
-          },
-          "vocab6": {
-            "example": "ライオンは百獣の王です。 - Sư tử là chúa tể muôn loài.",
-            "japanese": "ライオン",
-            "reading": "raion",
-            "vietnamese": "Con sư tử"
-          },
-          "vocab7": {
-            "example": "カンガルーが跳びます。 - Kangaroo nhảy.",
-            "japanese": "かんがるー",
-            "reading": "kangaruu",
-            "vietnamese": "Con kangaroo"
-          },
-          "vocab8": {
-            "example": "ワニは危険な動物です。 - Cá sấu là động vật nguy hiểm.",
-            "japanese": "わに",
-            "reading": "wani",
-            "vietnamese": "Con cá sấu"
-          },
-          "vocab9": {
-            "example": "くじらは海の哺乳類です。 - Cá voi là động vật có vú ở biển.",
-            "japanese": "くじら",
-            "reading": "kujira",
-            "vietnamese": "Con cá voi"
+    "users": {
+      "6LeUBY9LnVMESDzEL5okduZdfU62": {
+        "profile": {
+          "userId": "6LeUBY9LnVMESDzEL5okduZdfU62",
+          "name": "user1",
+          "email": "user1@example.com",
+          "age": 22,
+          "currentLevel": "BEGINNER",
+          "targetLevel": "N5",
+          "studyTimeMinutes": 30,
+          "registrationDate": 1750995097969,
+          "lastActiveDate": 1750995097969,
+          "avatarUrl": null
+        },
+        "progress": {
+          "streak": 0,
+          "wordsLearned": 0,
+          "lessonsCompleted": 0,
+          "daysActive": 0,
+          "lastActiveDate": 1750995097969,
+          "learningProgress": 0.0,
+          "readyForLevelUp": false,
+          "totalStudyTimeMinutes": 0
+        },
+        "settings": {
+          "studyTimeMinutes": 30,
+          "notificationsEnabled": true,
+          "dailyGoalEnabled": true,
+          "soundEnabled": true,
+          "theme": "system"
+        },
+        "learning": {
+          "vocabulary": {},
+          "completedLessons": {},
+          "quizResults": {},
+          "flashcardProgress": {},
+          "studyStreak": {
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "lastStudyDate": null
           }
         },
-        "N5": {
-          "vocab1": {
-            "example": "かわいい いぬ です。 - Là một con chó dễ thương.",
-            "japanese": "いぬ",
-            "reading": "inu",
-            "vietnamese": "Con chó"
+        "learning_stats": {
+          "study_time": {
+            "2025-01-27": 30
           },
-          "vocab10": {
-            "example": "ねずみがチーズを食べます。 - Chuột ăn phô mai.",
-            "japanese": "ねずみ",
-            "reading": "nezumi",
-            "vietnamese": "Con chuột"
+          "daily_progress": {
+            "2025-01-27": {
+              "wordsLearned": 5,
+              "lessonsCompleted": 1,
+              "quizCompleted": 2,
+              "studyTimeMinutes": 30
+            }
           },
-          "vocab2": {
-            "example": "ねこが 魚を 食べます。 - Con mèo ăn cá.",
-            "japanese": "ねこ",
-            "reading": "neko",
-            "vietnamese": "Con mèo"
-          },
-          "vocab3": {
-            "example": "とりが空を飛びます。 - Chim bay trên bầu trời.",
-            "japanese": "とり",
-            "reading": "tori",
-            "vietnamese": "Con chim"
-          },
-          "vocab4": {
-            "example": "うさぎは人参が好きです。 - Thỏ thích cà rốt.",
-            "japanese": "うさぎ",
-            "reading": "usagi",
-            "vietnamese": "Con thỏ"
-          },
-          "vocab5": {
-            "example": "さかなが泳いでいます。 - Cá đang bơi.",
-            "japanese": "さかな",
-            "reading": "sakana",
-            "vietnamese": "Con cá"
-          },
-          "vocab6": {
-            "example": "ぶたは太っています。 - Con lợn rất mập.",
-            "japanese": "ぶた",
-            "reading": "buta",
-            "vietnamese": "Con lợn"
-          },
-          "vocab7": {
-            "example": "にわとりが卵を産みます。 - Gà đẻ trứng.",
-            "japanese": "にわとり",
-            "reading": "niwatori",
-            "vietnamese": "Con gà"
-          },
-          "vocab8": {
-            "example": "うまが走ります。 - Ngựa đang chạy.",
-            "japanese": "うま",
-            "reading": "uma",
-            "vietnamese": "Con ngựa"
-          },
-          "vocab9": {
-            "example": "かえるが池にいます。 - Có con ếch ở trong hồ.",
-            "japanese": "かえる",
-            "reading": "kaeru",
-            "vietnamese": "Con ếch"
+          "category_progress": {
+      "ANIMALS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "COLORS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "FOOD": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            }
           }
-        }
+        },
+        "achievements": {
+          "first_lesson": {
+            "unlocked": false,
+            "unlockedAt": null
+          },
+          "vocabulary_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 100
+          },
+          "streak_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 7
+          }
+        },
+        "admin": false
+      },
+      "HxG9zGAhe2NlftmHswtPC9aiLmU2": {
+        "profile": {
+          "userId": "HxG9zGAhe2NlftmHswtPC9aiLmU2",
+          "name": "khach",
+          "email": "khach@example.com",
+          "age": 21,
+          "currentLevel": "N4",
+          "targetLevel": "N1",
+          "studyTimeMinutes": 45,
+          "registrationDate": 1750995097969,
+          "lastActiveDate": 1750995097969,
+          "avatarUrl": null
+        },
+        "progress": {
+          "streak": 0,
+          "wordsLearned": 0,
+          "lessonsCompleted": 0,
+          "daysActive": 0,
+          "lastActiveDate": 1750995097969,
+          "learningProgress": 0.0,
+          "readyForLevelUp": false,
+          "totalStudyTimeMinutes": 0
+        },
+        "settings": {
+          "studyTimeMinutes": 45,
+          "notificationsEnabled": true,
+          "dailyGoalEnabled": true,
+          "soundEnabled": true,
+          "theme": "system"
+        },
+        "learning": {
+          "vocabulary": {},
+          "completedLessons": {},
+          "quizResults": {},
+          "flashcardProgress": {},
+          "studyStreak": {
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "lastStudyDate": null
+          }
+        },
+        "learning_stats": {
+          "study_time": {
+            "2025-01-27": 45
+          },
+          "daily_progress": {
+            "2025-01-27": {
+              "wordsLearned": 8,
+              "lessonsCompleted": 2,
+              "quizCompleted": 3,
+              "studyTimeMinutes": 45
+            }
+          },
+          "category_progress": {
+            "ANIMALS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "COLORS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "FOOD": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            }
+          }
+        },
+        "achievements": {
+          "first_lesson": {
+            "unlocked": false,
+            "unlockedAt": null
+          },
+          "vocabulary_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 100
+          },
+          "streak_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 7
+          }
+        },
+        "admin": false
+      },
+      "JptyN2U9z6cpgbR0lA4WdG1jtKj1": {
+        "profile": {
+          "userId": "JptyN2U9z6cpgbR0lA4WdG1jtKj1",
+          "name": "dat",
+          "email": "dat@example.com",
+          "age": 22,
+          "currentLevel": "N5",
+          "targetLevel": "N3",
+          "studyTimeMinutes": 30,
+          "registrationDate": 1750995097969,
+          "lastActiveDate": 1750995097969,
+          "avatarUrl": null
+        },
+        "progress": {
+          "streak": 0,
+          "wordsLearned": 0,
+          "lessonsCompleted": 0,
+          "daysActive": 0,
+          "lastActiveDate": 1750995097969,
+          "learningProgress": 0.0,
+          "readyForLevelUp": false,
+          "totalStudyTimeMinutes": 0
+        },
+        "settings": {
+          "studyTimeMinutes": 30,
+          "notificationsEnabled": true,
+          "dailyGoalEnabled": true,
+          "soundEnabled": true,
+          "theme": "system"
+        },
+        "learning": {
+          "vocabulary": {},
+          "completedLessons": {},
+          "quizResults": {},
+          "flashcardProgress": {},
+          "studyStreak": {
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "lastStudyDate": null
+          }
+        },
+        "learning_stats": {
+          "study_time": {
+            "2025-01-27": 30
+          },
+          "daily_progress": {
+            "2025-01-27": {
+              "wordsLearned": 6,
+              "lessonsCompleted": 1,
+              "quizCompleted": 2,
+              "studyTimeMinutes": 30
+            }
+          },
+          "category_progress": {
+            "ANIMALS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
       },
       "COLORS": {
-        "N4": {
-          "vocab1": {
-            "example": "紫の花が咲いています。 - Hoa màu tím đang nở.",
-            "japanese": "むらさき",
-            "reading": "murasaki",
-            "vietnamese": "Màu tím"
-          },
-          "vocab2": {
-            "example": "灰色の雲です。 - Là đám mây xám.",
-            "japanese": "はいいろ",
-            "reading": "haiiro",
-            "vietnamese": "Màu xám"
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "FOOD": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            }
           }
         },
-        "N5": {
-          "vocab1": {
-            "example": "赤いりんごです。 - Là quả táo đỏ.",
-            "japanese": "あか",
-            "reading": "aka",
-            "vietnamese": "Màu đỏ"
+        "achievements": {
+          "first_lesson": {
+            "unlocked": false,
+            "unlockedAt": null
           },
-          "vocab2": {
-            "example": "空は青いです。 - Bầu trời màu xanh.",
-            "japanese": "あお",
-            "reading": "ao",
-            "vietnamese": "Màu xanh dương"
+          "vocabulary_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 100
+          },
+          "streak_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 7
           }
-        }
+        },
+        "admin": false
       },
-      "DAILY_LIFE": {
-        "N4": {
-          "vocab1": {
-            "example": "部屋を掃除します。 - Dọn dẹp phòng.",
-            "japanese": "そうじ",
-            "reading": "souji",
-            "vietnamese": "Dọn dẹp"
-          },
-          "vocab2": {
-            "example": "服を洗濯します。 - Giặt quần áo.",
-            "japanese": "せんたく",
-            "reading": "sentaku",
-            "vietnamese": "Giặt giũ"
+      "SmfisvPDsVeOFlqzzGZFamXOa4x1": {
+        "profile": {
+          "userId": "SmfisvPDsVeOFlqzzGZFamXOa4x1",
+          "name": "ledat",
+          "email": "ledat@example.com",
+          "age": 22,
+          "currentLevel": "BEGINNER",
+          "targetLevel": "N5",
+          "studyTimeMinutes": 30,
+          "registrationDate": 1750995097969,
+          "lastActiveDate": 1750995097969,
+          "avatarUrl": null
+        },
+        "progress": {
+          "streak": 0,
+          "wordsLearned": 0,
+          "lessonsCompleted": 0,
+          "daysActive": 0,
+          "lastActiveDate": 1750995097969,
+          "learningProgress": 0.0,
+          "readyForLevelUp": false,
+          "totalStudyTimeMinutes": 0
+        },
+        "settings": {
+          "studyTimeMinutes": 30,
+          "notificationsEnabled": true,
+          "dailyGoalEnabled": true,
+          "soundEnabled": true,
+          "theme": "system"
+        },
+        "learning": {
+          "vocabulary": {},
+          "completedLessons": {},
+          "quizResults": {},
+          "flashcardProgress": {},
+          "studyStreak": {
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "lastStudyDate": null
           }
         },
-        "N5": {
-          "vocab1": {
-            "example": "日本語を勉強します。 - Học tiếng Nhật.",
-            "japanese": "べんきょう",
-            "reading": "benkyou",
-            "vietnamese": "Học tập"
+        "learning_stats": {
+          "study_time": {
+            "2025-01-27": 30
           },
-          "vocab2": {
-            "example": "早く寝ましょう。 - Hãy đi ngủ sớm.",
-            "japanese": "ねる",
-            "reading": "neru",
-            "vietnamese": "Đi ngủ"
+          "daily_progress": {
+            "2025-01-27": {
+              "wordsLearned": 4,
+              "lessonsCompleted": 1,
+              "quizCompleted": 1,
+              "studyTimeMinutes": 30
+            }
+          },
+          "category_progress": {
+            "ANIMALS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "COLORS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "FOOD": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            }
           }
-        }
+        },
+        "achievements": {
+          "first_lesson": {
+            "unlocked": false,
+            "unlockedAt": null
+          },
+          "vocabulary_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 100
+          },
+          "streak_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 7
+          }
+        },
+        "admin": false
       },
-      "FAMILY": {
-        "N4": {
-          "vocab1": {
-            "example": "両親と住んでいます。 - Sống cùng bố mẹ.",
-            "japanese": "りょうしん",
-            "reading": "ryoushin",
-            "vietnamese": "Bố mẹ"
-          },
-          "vocab2": {
-            "example": "祖父は庭で本を読みます。 - Ông nội đọc sách trong vườn.",
-            "japanese": "そふ",
-            "reading": "sofu",
-            "vietnamese": "Ông nội"
+      "Y5Mc85VS1aVrIYJkEgM8Joo91Ea2": {
+        "profile": {
+          "userId": "Y5Mc85VS1aVrIYJkEgM8Joo91Ea2",
+          "name": "adminhehe",
+          "email": "admin@example.com",
+          "age": 22,
+          "currentLevel": "N5",
+          "targetLevel": "N1",
+          "studyTimeMinutes": 15,
+          "registrationDate": 1748797808119,
+          "lastActiveDate": 1749373253946,
+          "avatarUrl": null
+        },
+        "progress": {
+          "streak": 0,
+          "wordsLearned": 0,
+          "lessonsCompleted": 0,
+          "daysActive": 0,
+          "lastActiveDate": 1749373253946,
+          "learningProgress": 0.0,
+          "readyForLevelUp": false,
+          "totalStudyTimeMinutes": 0
+        },
+        "settings": {
+          "studyTimeMinutes": 15,
+          "notificationsEnabled": true,
+          "dailyGoalEnabled": true,
+          "soundEnabled": true,
+          "theme": "system"
+        },
+        "learning": {
+          "vocabulary": {},
+          "completedLessons": {},
+          "quizResults": {},
+          "flashcardProgress": {},
+          "studyStreak": {
+            "currentStreak": 0,
+            "longestStreak": 0,
+            "lastStudyDate": null
           }
         },
-        "N5": {
-          "vocab1": {
-            "example": "私の家族です。 - Đây là gia đình tôi.",
-            "japanese": "かぞく",
-            "reading": "kazoku",
-            "vietnamese": "Gia đình"
+        "learning_stats": {
+          "study_time": {
+            "2025-01-27": 15
           },
-          "vocab2": {
-            "example": "おかあさんは料理が上手です。 - Mẹ nấu ăn rất giỏi.",
-            "japanese": "おかあさん",
-            "reading": "okaasan",
-            "vietnamese": "Mẹ"
+          "daily_progress": {
+            "2025-01-27": {
+              "wordsLearned": 3,
+              "lessonsCompleted": 1,
+              "quizCompleted": 1,
+              "studyTimeMinutes": 15
+            }
+          },
+          "category_progress": {
+            "ANIMALS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "COLORS": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            },
+            "FOOD": {
+              "wordsLearned": 0,
+              "lessonsCompleted": 0,
+              "accuracy": 0.0
+            }
           }
-        }
+        },
+        "achievements": {
+          "first_lesson": {
+            "unlocked": false,
+            "unlockedAt": null
+          },
+          "vocabulary_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 100
+          },
+          "streak_master": {
+            "unlocked": false,
+            "unlockedAt": null,
+            "target": 7
+          }
+        },
+        "admin": true
+      }
+    },
+    "vocabulary": {
+      "animals_n5_1": {
+        "id": "animals_n5_1",
+        "japanese": "いぬ",
+        "reading": "inu",
+        "vietnamese": "Con chó",
+        "level": "N5",
+        "categories": ["ANIMALS"],
+        "exampleSentences": [
+          {
+            "japanese": "かわいい いぬ です。",
+            "vietnamese": "Là một con chó dễ thương."
+          }
+        ],
+        "difficulty": 0.3,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
       },
-      "FOOD": {
-        "N4": {
-          "vocab1": {
-            "example": "てりやきチキンが好きです。 - Tôi thích gà teriyaki.",
-            "japanese": "てりやき",
-            "reading": "teriyaki",
-            "vietnamese": "Teriyaki"
-          },
-          "vocab2": {
-            "example": "野菜を食べましょう。 - Hãy ăn rau củ.",
-            "japanese": "やさい",
-            "reading": "yasai",
-            "vietnamese": "Rau củ"
+      "animals_n5_2": {
+        "id": "animals_n5_2",
+        "japanese": "ねこ",
+        "reading": "neko",
+        "vietnamese": "Con mèo",
+        "level": "N5",
+        "categories": ["ANIMALS"],
+        "exampleSentences": [
+          {
+            "japanese": "ねこが 魚を 食べます。",
+            "vietnamese": "Con mèo ăn cá."
           }
-        },
-        "N5": {
-          "vocab1": {
-            "example": "ごはんを食べます。 - Ăn cơm.",
-            "japanese": "ごはん",
-            "reading": "gohan",
-            "vietnamese": "Cơm"
-          },
-          "vocab2": {
-            "example": "水を飲みます。 - Uống nước.",
-            "japanese": "みず",
-            "reading": "mizu",
-            "vietnamese": "Nước"
-          }
-        }
+        ],
+        "difficulty": 0.3,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
       },
-      "NUMBERS": {
-        "N4": {
-          "vocab1": {
-            "example": "百万円です。 - Một triệu yên.",
-            "japanese": "ひゃくまん",
-            "reading": "hyakuman",
-            "vietnamese": "Một triệu"
-          },
-          "vocab2": {
-            "example": "千円を払いました。 - Tôi đã trả một nghìn yên.",
-            "japanese": "せん",
-            "reading": "sen",
-            "vietnamese": "Một nghìn"
+      "animals_n5_3": {
+        "id": "animals_n5_3",
+        "japanese": "とり",
+        "reading": "tori",
+        "vietnamese": "Con chim",
+        "level": "N5",
+        "categories": ["ANIMALS"],
+        "exampleSentences": [
+          {
+            "japanese": "とりが空を飛びます。",
+            "vietnamese": "Chim bay trên bầu trời."
           }
-        },
-        "N5": {
-          "vocab1": {
-            "example": "一つください。 - Cho tôi một cái.",
-            "japanese": "いち",
-            "reading": "ichi",
-            "vietnamese": "Một"
-          },
-          "vocab2": {
-            "example": "二人の子供がいます。 - Có hai đứa trẻ.",
-            "japanese": "に",
-            "reading": "ni",
-            "vietnamese": "Hai"
-          }
-        }
+        ],
+        "difficulty": 0.3,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
       },
-      "TIME": {
-        "N4": {
-          "vocab1": {
-            "example": "週末は何をしますか。 - Cuối tuần bạn làm gì?",
-            "japanese": "しゅうまつ",
-            "reading": "shuumatsu",
-            "vietnamese": "Cuối tuần"
-          },
-          "vocab2": {
-            "example": "月末に給料が出ます。 - Cuối tháng được phát lương.",
-            "japanese": "げつまつ",
-            "reading": "getsumatsu",
-            "vietnamese": "Cuối tháng"
+      "animals_n4_1": {
+        "id": "animals_n4_1",
+        "japanese": "さる",
+        "reading": "saru",
+        "vietnamese": "Con khỉ",
+        "level": "N4",
+        "categories": ["ANIMALS"],
+        "exampleSentences": [
+          {
+            "japanese": "さるは木に登ります。",
+            "vietnamese": "Con khỉ trèo lên cây."
           }
-        },
-        "N5": {
-          "vocab1": {
-            "example": "時間がありません。 - Không có thời gian.",
-            "japanese": "じかん",
-            "reading": "jikan",
-            "vietnamese": "Thời gian"
-          },
-          "vocab2": {
-            "example": "日曜日は休みです。 - Chủ nhật được nghỉ.",
-            "japanese": "にちようび",
-            "reading": "nichiyoubi",
-            "vietnamese": "Chủ nhật"
-          }
-        }
+        ],
+        "difficulty": 0.5,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
       },
-      "TRANSPORTATION": {
-        "N4": {
-          "vocab1": {
-            "example": "飛行機で旅行します。 - Du lịch bằng máy bay.",
-            "japanese": "ひこうき",
-            "reading": "hikouki",
-            "vietnamese": "Máy bay"
-          },
-          "vocab2": {
-            "example": "地下鉄を使います。 - Sử dụng tàu điện ngầm.",
-            "japanese": "ちかてつ",
-            "reading": "chikatetsu",
-            "vietnamese": "Tàu điện ngầm"
+      "colors_n5_1": {
+        "id": "colors_n5_1",
+        "japanese": "あか",
+        "reading": "aka",
+        "vietnamese": "Màu đỏ",
+        "level": "N5",
+        "categories": ["COLORS"],
+        "exampleSentences": [
+          {
+            "japanese": "赤いりんごです。",
+            "vietnamese": "Là quả táo đỏ."
           }
-        },
-        "N5": {
-          "vocab1": {
-            "example": "でんしゃに乗ります。 - Đi tàu điện.",
-            "japanese": "でんしゃ",
-            "reading": "densha",
-            "vietnamese": "Tàu điện"
-          },
-          "vocab2": {
-            "example": "バスで学校に行きます。 - Đi học bằng xe buýt.",
-            "japanese": "バス",
-            "reading": "basu",
-            "vietnamese": "Xe buýt"
-          }
-        }
+        ],
+        "difficulty": 0.2,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
       },
-      "WEATHER": {
-        "N4": {
-          "vocab1": {
-            "example": "明日は曇りです。 - Ngày mai trời nhiều mây.",
-            "japanese": "くもり",
-            "reading": "kumori",
-            "vietnamese": "Mây, trời âm u"
-          },
-          "vocab2": {
-            "example": "気温が高いです。 - Nhiệt độ cao.",
-            "japanese": "きおん",
-            "reading": "kion",
-            "vietnamese": "Nhiệt độ"
+      "food_n5_1": {
+        "id": "food_n5_1",
+        "japanese": "ごはん",
+        "reading": "gohan",
+        "vietnamese": "Cơm",
+        "level": "N5",
+        "categories": ["FOOD"],
+        "exampleSentences": [
+          {
+            "japanese": "ごはんを食べます。",
+            "vietnamese": "Ăn cơm."
           }
-        },
-        "N5": {
-          "vocab1": {
-            "example": "あめが降っています。 - Trời đang mưa.",
-            "japanese": "あめ",
-            "reading": "ame",
-            "vietnamese": "Mưa"
-          },
-          "vocab2": {
-            "example": "今日は晴れです。 - Hôm nay trời nắng.",
-            "japanese": "はれ",
-            "reading": "hare",
-            "vietnamese": "Nắng"
+        ],
+        "difficulty": 0.2,
+        "masteryLevel": "NEW",
+        "imageUrl": null,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
+      }
+    },
+    "lessons": {
+      "lesson_animals_n5_1": {
+        "id": "lesson_animals_n5_1",
+        "title": "Động vật cơ bản",
+        "description": "Học từ vựng về các loài động vật thường gặp",
+        "level": "N5",
+        "category": "ANIMALS",
+        "order": 1,
+        "vocabularyIds": ["animals_n5_1", "animals_n5_2", "animals_n5_3"],
+        "grammarPoints": [
+          {
+            "rule": "Danh từ + です",
+            "explanation": "Cách nói 'là' trong tiếng Nhật",
+            "examples": ["いぬです", "ねこです", "とりです"]
           }
-        }
+        ],
+        "estimatedTimeMinutes": 15,
+        "difficulty": 0.3,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
+      },
+      "lesson_colors_n5_1": {
+        "id": "lesson_colors_n5_1",
+        "title": "Màu sắc cơ bản",
+        "description": "Học các màu sắc cơ bản",
+        "level": "N5",
+        "category": "COLORS",
+        "order": 2,
+        "vocabularyIds": ["colors_n5_1"],
+        "grammarPoints": [
+          {
+            "rule": "Tính từ + い",
+            "explanation": "Cách sử dụng tính từ màu sắc",
+            "examples": ["赤い", "青い", "白い"]
+          }
+        ],
+        "estimatedTimeMinutes": 10,
+        "difficulty": 0.2,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
+      },
+      "lesson_food_n5_1": {
+        "id": "lesson_food_n5_1",
+        "title": "Đồ ăn cơ bản",
+        "description": "Học từ vựng về các món ăn Nhật Bản phổ biến",
+        "level": "N5",
+        "category": "FOOD",
+        "order": 3,
+        "vocabularyIds": ["food_n5_1"],
+        "grammarPoints": [
+          {
+            "rule": "Danh từ + を + động từ",
+            "explanation": "Cách nói về hành động ăn uống",
+            "examples": ["ごはんを食べます", "みずを飲みます"]
+          }
+        ],
+        "estimatedTimeMinutes": 12,
+        "difficulty": 0.3,
+        "createdAt": 1750995097969,
+        "updatedAt": 1750995097969
+      }
+    },
+    "categories": {
+      "animals": {
+        "id": "animals",
+        "name": "Động vật",
+        "description": "Từ vựng về các loài động vật",
+        "iconUrl": "🐾",
+        "color": "#4CAF50",
+        "order": 1,
+        "vocabularyCount": 15,
+        "lessonCount": 5
+      },
+      "colors": {
+        "id": "colors",
+        "name": "Màu sắc",
+        "description": "Từ vựng về màu sắc",
+        "iconUrl": "🎨",
+        "color": "#E91E63",
+        "order": 2,
+        "vocabularyCount": 8,
+        "lessonCount": 2
+      },
+      "food": {
+        "id": "food",
+        "name": "Đồ ăn",
+        "description": "Từ vựng về đồ ăn",
+        "iconUrl": "🍱",
+        "color": "#FF9800",
+        "order": 3,
+        "vocabularyCount": 20,
+        "lessonCount": 6
+      },
+      "family": {
+        "id": "family",
+        "name": "Gia đình",
+        "description": "Từ vựng về gia đình",
+        "iconUrl": "👨‍👩‍👧‍👦",
+        "color": "#2196F3",
+        "order": 4,
+        "vocabularyCount": 12,
+        "lessonCount": 3
+      },
+      "numbers": {
+        "id": "numbers",
+        "name": "Số đếm",
+        "description": "Từ vựng về số đếm",
+        "iconUrl": "🔢",
+        "color": "#9C27B0",
+        "order": 5,
+        "vocabularyCount": 30,
+        "lessonCount": 4
+      },
+      "time": {
+        "id": "time",
+        "name": "Thời gian",
+        "description": "Từ vựng về thời gian",
+        "iconUrl": "⏰",
+        "color": "#607D8B",
+        "order": 6,
+        "vocabularyCount": 18,
+        "lessonCount": 4
+      },
+      "transportation": {
+        "id": "transportation",
+        "name": "Giao thông",
+        "description": "Từ vựng về phương tiện giao thông",
+        "iconUrl": "🚆",
+        "color": "#795548",
+        "order": 7,
+        "vocabularyCount": 10,
+        "lessonCount": 2
+      },
+      "weather": {
+        "id": "weather",
+        "name": "Thời tiết",
+        "description": "Từ vựng về thời tiết",
+        "iconUrl": "🌤",
+        "color": "#00BCD4",
+        "order": 8,
+        "vocabularyCount": 12,
+        "lessonCount": 3
+      }
+    },
+    "achievements": {
+      "first_lesson": {
+        "id": "first_lesson",
+        "title": "Bước đầu học tập",
+        "description": "Hoàn thành bài học đầu tiên",
+        "iconUrl": "🎓",
+        "type": "lesson",
+        "target": 1,
+        "points": 10,
+        "rarity": "common"
+      },
+      "vocabulary_master": {
+        "id": "vocabulary_master",
+        "title": "Bậc thầy từ vựng",
+        "description": "Học được 100 từ vựng",
+        "iconUrl": "📚",
+        "type": "vocabulary",
+        "target": 100,
+        "points": 50,
+        "rarity": "rare"
+      },
+      "streak_master": {
+        "id": "streak_master",
+        "title": "Chuyên gia duy trì",
+        "description": "Duy trì chuỗi học tập 7 ngày liên tiếp",
+        "iconUrl": "🔥",
+        "type": "streak",
+        "target": 7,
+        "points": 30,
+        "rarity": "uncommon"
+      },
+      "quiz_champion": {
+        "id": "quiz_champion",
+        "title": "Nhà vô địch quiz",
+        "description": "Đạt điểm 100% trong 10 quiz",
+        "iconUrl": "🏆",
+        "type": "quiz",
+        "target": 10,
+        "points": 75,
+        "rarity": "epic"
+      },
+      "level_up": {
+        "id": "level_up",
+        "title": "Thăng tiến",
+        "description": "Lên level mới",
+        "iconUrl": "⬆️",
+        "type": "level",
+        "target": 1,
+        "points": 25,
+        "rarity": "uncommon"
+      }
+    },
+    "system_settings": {
+      "app_version": "1.0.0",
+      "min_supported_version": "1.0.0",
+      "maintenance_mode": false,
+      "features": {
+        "quiz_enabled": true,
+        "flashcard_enabled": true,
+        "achievements_enabled": true,
+        "social_features_enabled": false,
+        "offline_mode_enabled": true
+      },
+      "content_updates": {
+        "last_update": 1750995097969,
+        "next_update": 1751081497969,
+        "auto_update": true
       }
     }
   },
@@ -415,19 +823,6 @@
                 "question": "「犬」(いぬ) の意味は何ですか。",
                 "type": "MULTIPLE_CHOICE"
               },
-              "q10": {
-                "correctAnswer": "c",
-                "explanation": "とり và 鳥 là cặp hiragana-kanji đúng, có nghĩa là chim",
-                "options": {
-                  "a": "いぬ - 猫",
-                  "b": "ねこ - 犬",
-                  "c": "とり - 鳥",
-                  "d": "さかな - 猫"
-                },
-                "points": 15,
-                "question": "次の中で、正しい組み合わせはどれですか。",
-                "type": "MULTIPLE_CHOICE"
-              },
               "q2": {
                 "correctAnswer": "b",
                 "explanation": "猫 (ねこ) có nghĩa là mèo",
@@ -452,76 +847,6 @@
                 },
                 "points": 10,
                 "question": "「鳥」(とり) の意味は何ですか。",
-                "type": "MULTIPLE_CHOICE"
-              },
-              "q4": {
-                "correctAnswer": "a",
-                "explanation": "魚 (さかな) có nghĩa là cá",
-                "options": {
-                  "a": "Cá",
-                  "b": "Tôm",
-                  "c": "Cua",
-                  "d": "Mực"
-                },
-                "points": 10,
-                "question": "「魚」(さかな) の意味は何ですか。",
-                "type": "MULTIPLE_CHOICE"
-              },
-              "q5": {
-                "correctAnswer": "a",
-                "explanation": "うさぎ có nghĩa là thỏ",
-                "options": {
-                  "a": "🐰 Thỏ",
-                  "b": "🐭 Chuột",
-                  "c": "🐸 Ếch",
-                  "d": "🐦 Chim"
-                },
-                "points": 10,
-                "question": "「うさぎ」はどの動物ですか。",
-                "type": "MATCHING"
-              },
-              "q6": {
-                "correctAnswer": "c",
-                "explanation": "ねずみ có nghĩa là chuột",
-                "options": {
-                  "a": "Thỏ",
-                  "b": "Mèo",
-                  "c": "Chuột",
-                  "d": "Chó"
-                },
-                "points": 10,
-                "question": "「ねずみ」の意味は何ですか。",
-                "type": "MULTIPLE_CHOICE"
-              },
-              "q7": {
-                "correctAnswer": "a",
-                "explanation": "ぞう được viết bằng kanji là 象, có nghĩa là con voi",
-                "options": {
-                  "a": "Đúng",
-                  "b": "Sai"
-                },
-                "points": 10,
-                "question": "「ぞう」は「象」と書きます。",
-                "type": "TRUE_FALSE"
-              },
-              "q8": {
-                "correctAnswer": "える",
-                "explanation": "かえる (カエル) có nghĩa là con ếch",
-                "points": 15,
-                "question": "「か＿＿」(カエル) は日本語で「ếch」という意味です。",
-                "type": "FILL_BLANK"
-              },
-              "q9": {
-                "correctAnswer": "a",
-                "explanation": "パンダ là từ katakana chỉ con gấu trúc",
-                "options": {
-                  "a": "Gấu trúc",
-                  "b": "Gấu nâu",
-                  "c": "Gấu bắc cực",
-                  "d": "Gấu túi"
-                },
-                "points": 10,
-                "question": "「パンダ」の意味は何ですか。",
                 "type": "MULTIPLE_CHOICE"
               }
             },
@@ -732,132 +1057,6 @@
             "title": "Thời tiết cơ bản"
           }
         }
-      }
-    }
-  },
-  "users": {
-    "6LeUBY9LnVMESDzEL5okduZdfU62": {
-      "profile": {
-        "age": 22,
-        "currentLevel": "BEGINNER",
-        "daysActive": 0,
-        "lessonsCompleted": 0,
-        "name": "user1",
-        "streak": 0,
-        "studyTimeMinutes": 30,
-        "targetLevel": "N5",
-        "userId": "",
-        "wordsLearned": 0
-      },
-      "learning": {
-        "vocabulary": {},
-        "completedLessons": {}
-      },
-      "learning_stats": {
-        "study_time": {}
-      },
-      "progress": {
-        "completed_quizzes": {}
-      }
-    },
-    "HxG9zGAhe2NlftmHswtPC9aiLmU2": {
-      "profile": {
-        "age": 21,
-        "currentLevel": "N4",
-        "daysActive": 0,
-        "lastActiveDate": 1750995097969,
-        "lessonsCompleted": 0,
-        "name": "khach",
-        "registrationDate": 1750995097969,
-        "streak": 0,
-        "studyTimeMinutes": 45,
-        "targetLevel": "N1",
-        "userId": "",
-        "wordsLearned": 0
-      },
-      "learning": {
-        "vocabulary": {},
-        "completedLessons": {}
-      },
-      "learning_stats": {
-        "study_time": {}
-      },
-      "progress": {
-        "completed_quizzes": {}
-      }
-    },
-    "JptyN2U9z6cpgbR0lA4WdG1jtKj1": {
-      "profile": {
-        "age": 22,
-        "currentLevel": "N5",
-        "daysActive": 0,
-        "lessonsCompleted": 0,
-        "name": "dat",
-        "streak": 0,
-        "studyTimeMinutes": 30,
-        "targetLevel": "N3",
-        "userId": "",
-        "wordsLearned": 0
-      },
-      "learning": {
-        "vocabulary": {},
-        "completedLessons": {}
-      },
-      "learning_stats": {
-        "study_time": {}
-      },
-      "progress": {
-        "completed_quizzes": {}
-      }
-    },
-    "SmfisvPDsVeOFlqzzGZFamXOa4x1": {
-      "profile": {
-        "age": 22,
-        "currentLevel": "BEGINNER",
-        "daysActive": 0,
-        "lessonsCompleted": 0,
-        "name": "ledat",
-        "streak": 0,
-        "studyTimeMinutes": 30,
-        "targetLevel": "N5",
-        "userId": "",
-        "wordsLearned": 0
-      },
-      "learning": {
-        "vocabulary": {},
-        "completedLessons": {}
-      },
-      "learning_stats": {
-        "study_time": {}
-      },
-      "progress": {
-        "completed_quizzes": {}
-      }
-    },
-    "Y5Mc85VS1aVrIYJkEgM8Joo91Ea2": {
-      "profile": {
-        "age": 22,
-        "currentLevel": "N5",
-        "daysActive": 0,
-        "lastActiveDate": 1749373253946,
-        "lessonsCompleted": 0,
-        "name": "adminhehe",
-        "registrationDate": 1748797808119,
-        "streak": 0,
-        "studyTimeMinutes": 15,
-        "targetLevel": "N1",
-        "userId": "",
-        "wordsLearned": 0
-      },
-      "learning": {
-        "vocabulary": {},
-        "completedLessons": {}
-      },
-      "learning_stats": {
-        "study_time": {}
-      },
-      "progress": {
-        "completed_quizzes": {}
       }
     }
   }

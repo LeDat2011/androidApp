@@ -43,6 +43,7 @@ fun FlashcardComponent(
     modifier: Modifier = Modifier
 ) {
     var isFlipped by remember { mutableStateOf(false) }
+    var showExample by remember { mutableStateOf(false) }
     var offsetX by remember { mutableStateOf(0f) }
     val coroutineScope = rememberCoroutineScope()
     
@@ -274,6 +275,20 @@ fun FlashcardComponent(
         Column(
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Example button
+            TextButton(
+                onClick = { showExample = true },
+                modifier = Modifier.align(Alignment.CenterHorizontally)
+            ) {
+                Icon(
+                    imageVector = Icons.Default.MenuBook,
+                    contentDescription = null,
+                    modifier = Modifier.size(18.dp)
+                )
+                Spacer(modifier = Modifier.width(8.dp))
+                Text("Xem ví dụ")
+            }
+
             // Learn button
             Button(
                 onClick = onLearn,
@@ -380,5 +395,22 @@ fun FlashcardComponent(
                 }
             }
         }
+    }
+
+    if (showExample) {
+        AlertDialog(
+            onDismissRequest = { showExample = false },
+            title = { Text("Ví dụ") },
+            text = {
+                Column {
+                    Text(flashcard.example, style = MaterialTheme.typography.bodyLarge)
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(flashcard.exampleMeaning, style = MaterialTheme.typography.bodyMedium, color = MaterialTheme.colorScheme.onSurfaceVariant)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { showExample = false }) { Text("Đóng") }
+            }
+        )
     }
 }

@@ -30,7 +30,6 @@ import com.example.composeapp.ui.theme.ComposeAppTheme
 import com.example.composeapp.viewmodels.UserProfileViewModel
 import com.example.composeapp.viewmodels.AuthViewModel
 import com.example.composeapp.viewmodels.LoadProfileState
-import com.example.composeapp.viewmodels.FlashcardViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -427,14 +426,14 @@ private fun LearningProgressSection(profileData: UserProfileData?) {
             LearningProgressItem(
                 icon = Icons.Default.School,
                 label = "Trình độ hiện tại",
-                value = profileData?.currentLevel?.displayName ?: "N5",
+                value = profileData?.getCurrentLevelEnum()?.displayName ?: "N5",
                 color = MaterialTheme.colorScheme.primary
             )
 
             LearningProgressItem(
                 icon = Icons.Default.Flag,
                 label = "Mục tiêu",
-                value = profileData?.targetLevel?.displayName ?: "N4",
+                value = profileData?.getTargetLevelEnum()?.displayName ?: "N4",
                 color = MaterialTheme.colorScheme.secondary
             )
 

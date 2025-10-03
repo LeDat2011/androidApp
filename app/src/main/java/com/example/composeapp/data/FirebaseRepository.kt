@@ -22,10 +22,13 @@ class FirebaseRepository {
                 val description = categorySnapshot.child("description").getValue(String::class.java) ?: ""
                 val icon = categorySnapshot.child("icon").getValue(String::class.java) ?: ""
                 
+                // Mapping title tiếng Việt cho từng category
+                val title = getCategoryTitle(id)
+                
                 categories.add(
                     QuizCategory(
                         id = id,
-                        title = id.capitalize(),
+                        title = title,
                         description = description,
                         icon = icon
                     )
@@ -35,6 +38,33 @@ class FirebaseRepository {
             categories
         } catch (e: Exception) {
             emptyList()
+        }
+    }
+    
+    // Mapping title tiếng Việt cho categories
+    private fun getCategoryTitle(categoryId: String): String {
+        return when (categoryId.lowercase()) {
+            "animals" -> "Động Vật"
+            "colors" -> "Màu Sắc"
+            "family" -> "Gia Đình"
+            "food" -> "Thức Ăn"
+            "numbers" -> "Số Đếm"
+            "time" -> "Thời Gian"
+            "transportation" -> "Phương Tiện"
+            "weather" -> "Thời Tiết"
+            "body" -> "Cơ Thể"
+            "clothing" -> "Quần Áo"
+            "house" -> "Nhà Cửa"
+            "nature" -> "Thiên Nhiên"
+            "school" -> "Trường Học"
+            "work" -> "Công Việc"
+            "hobby" -> "Sở Thích"
+            "sports" -> "Thể Thao"
+            "music" -> "Âm Nhạc"
+            "travel" -> "Du Lịch"
+            "shopping" -> "Mua Sắm"
+            "health" -> "Sức Khỏe"
+            else -> categoryId.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
         }
     }
     
@@ -168,7 +198,7 @@ class FirebaseRepository {
     }
 
     suspend fun saveQuizResult(userId: String, quizId: String, result: QuizResult) {
-        val resultRef = database.getReference("users/$userId/progress/completed_quizzes/$quizId")
+        val resultRef = database.getReference("app_data/users/$userId/learning/quizResults/$quizId")
         try {
             resultRef.setValue(result).await()
         } catch (e: Exception) {
@@ -178,7 +208,7 @@ class FirebaseRepository {
 
     // User Progress Repository
     suspend fun getUserProgress(userId: String): UserProgress? {
-        val progressRef = database.getReference("users/$userId/progress")
+        val progressRef = database.getReference("app_data/users/$userId/progress")
         return try {
             val snapshot = progressRef.get().await()
             snapshot.getValue(UserProgress::class.java)
@@ -188,7 +218,7 @@ class FirebaseRepository {
     }
 
     suspend fun updateUserProgress(userId: String, progress: UserProgress) {
-        val progressRef = database.getReference("users/$userId/progress")
+        val progressRef = database.getReference("app_data/users/$userId/progress")
         try {
             progressRef.setValue(progress).await()
         } catch (e: Exception) {

@@ -53,10 +53,19 @@ fun FlashcardLearningScreen(
 
     // Theo dõi từ vựng đã học trong phiên hiện tại
     var learnedWords by remember { mutableStateOf(setOf<String>()) }
+    
+    // State để theo dõi tiến độ theo chủ đề
+    var topicWordsLearned by remember { mutableStateOf(0) }
+    var totalWordsInTopic by remember { mutableStateOf(0) }
 
     // Load flashcards when the screen is first displayed
     LaunchedEffect(categoryName, level) {
         viewModel.loadFlashcards(categoryName, level)
+        
+        // Tải tiến độ theo chủ đề
+        val progress = viewModel.getTopicProgress(categoryName, level)
+        topicWordsLearned = progress.first
+        totalWordsInTopic = progress.second
     }
 
     // Update progress when currentIndex changes
@@ -132,50 +141,45 @@ fun FlashcardLearningScreen(
                                 // Hiển thị thông tin học tập
                                 Row(
                                     modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
+                                    horizontalArrangement = Arrangement.SpaceEvenly
                                 ) {
-                                    // Từ vựng đã học trong bộ này
-                                    Column {
-                                        Text(
-                                            text = "Bộ này",
-                                            style = MaterialTheme.typography.labelMedium,
-                                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                                        )
-                                        Text(
-                                            text = "$wordsLearned/${flashcards.size} từ",
-                                            style = MaterialTheme.typography.bodyMedium,
-                                            fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
-                                        )
-                                    }
-                                    
-                                    // Tổng số từ vựng đã học
+                                    // Tổng số từ vựng đã học toàn thời gian
                                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text(
-                                            text = "Tổng số từ",
+                                            text = "Tổng đã học",
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
-                                            text = "$totalWordsLearned từ",
+                                            text = "$totalWordsLearned",
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = if (totalWordsLearned > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "từ",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                     
                                     // Thời gian học hôm nay
-                                    Column(horizontalAlignment = Alignment.End) {
+                                    Column(horizontalAlignment = Alignment.CenterHorizontally) {
                                         Text(
                                             text = "Hôm nay",
                                             style = MaterialTheme.typography.labelMedium,
                                             color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                         Text(
-                                            text = "$todayStudyTime phút",
+                                            text = if (todayStudyTime > 0) "$todayStudyTime" else "0",
                                             style = MaterialTheme.typography.bodyMedium,
                                             fontWeight = FontWeight.Bold,
-                                            color = MaterialTheme.colorScheme.primary
+                                            color = if (todayStudyTime > 0) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.onSurfaceVariant
+                                        )
+                                        Text(
+                                            text = "phút",
+                                            style = MaterialTheme.typography.labelSmall,
+                                            color = MaterialTheme.colorScheme.onSurfaceVariant
                                         )
                                     }
                                 }
@@ -208,6 +212,8 @@ fun FlashcardLearningScreen(
                                 viewModel.markWordAsLearned(currentWordId)
                                 // Cập nhật danh sách từ vựng đã học trong phiên hiện tại
                                 learnedWords = learnedWords + currentWordId
+                                // Cập nhật tiến độ theo chủ đề
+                                topicWordsLearned++
                             }
                         )
                     }
@@ -268,39 +274,21 @@ fun FlashcardLearningScreen(
                     Spacer(modifier = Modifier.height(16.dp))
                     
                     // Hiển thị thông tin học tập
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceEvenly
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
                     ) {
-                        // Từ vựng đã học trong bộ này
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "$wordsLearned/${flashcards.size}",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = "Từ đã học",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                            )
-                        }
-                        
                         // Thời gian học hôm nay
-                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                            Text(
-                                text = "$todayStudyTime",
-                                style = MaterialTheme.typography.titleLarge,
-                                fontWeight = FontWeight.Bold,
-                                color = MaterialTheme.colorScheme.primary
-                            )
-                            Text(
-                                text = "Phút học",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
-                            )
-                        }
+                        Text(
+                            text = "$todayStudyTime phút",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                        Text(
+                            text = "Thời gian học hôm nay",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                        )
                     }
                     
                     Spacer(modifier = Modifier.height(16.dp))
@@ -319,6 +307,8 @@ fun FlashcardLearningScreen(
                         showCompletionDialog = false
                         // Cập nhật thời gian học trước khi đóng dialog
                         viewModel.updateStudyTime()
+                        // Reset counter sau khi đóng dialog
+                        viewModel.resetWordsLearnedCounter()
                     },
                     colors = ButtonDefaults.buttonColors(
                         containerColor = MaterialTheme.colorScheme.primary
@@ -332,6 +322,8 @@ fun FlashcardLearningScreen(
                     onClick = {
                         // Cập nhật thời gian học trước khi quay lại
                         viewModel.updateStudyTime()
+                        // Reset counter sau khi đóng dialog
+                        viewModel.resetWordsLearnedCounter()
                         onNavigateBack()
                     }
                 ) {

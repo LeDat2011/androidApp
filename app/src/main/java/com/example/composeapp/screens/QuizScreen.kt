@@ -20,6 +20,8 @@ import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeapp.models.QuizCategory
 import com.example.composeapp.viewmodels.QuizViewModel
+import com.example.composeapp.ui.design.*
+import com.example.composeapp.ui.theme.*
 import androidx.compose.runtime.LaunchedEffect
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -54,20 +56,36 @@ fun QuizScreen(
             modifier = Modifier.fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            // Header
+            // Header với gradient đẹp
             Surface(
                 modifier = Modifier.fillMaxWidth(),
                 color = MaterialTheme.colorScheme.primary,
-                tonalElevation = 4.dp
+                tonalElevation = elevation().high
             ) {
-                Text(
-                    text = "Kiểm Tra Kiến Thức",
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = MaterialTheme.colorScheme.onPrimary,
-                    modifier = Modifier.padding(24.dp),
-                    textAlign = TextAlign.Center
-                )
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(spacing().lg)
+                ) {
+                    Column(
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text(
+                            text = "🎯 Kiểm Tra Kiến Thức",
+                            fontSize = 28.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.onPrimary,
+                            textAlign = TextAlign.Center
+                        )
+                        Spacer(modifier = Modifier.height(spacing().sm))
+                        Text(
+                            text = "Chọn chủ đề để bắt đầu học",
+                            fontSize = 16.sp,
+                            color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
+                            textAlign = TextAlign.Center
+                        )
+                    }
+                }
             }
 
             if (isLoading) {
@@ -98,12 +116,12 @@ fun QuizScreen(
                     }
                 }
             } else {
-                // Categories Grid
+                // Categories Grid với spacing đẹp
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    contentPadding = PaddingValues(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                    contentPadding = PaddingValues(spacing().md),
+                    horizontalArrangement = Arrangement.spacedBy(spacing().md),
+                    verticalArrangement = Arrangement.spacedBy(spacing().md),
                     modifier = Modifier.fillMaxSize()
                 ) {
                     items(categories) { category ->
@@ -121,12 +139,14 @@ fun QuizScreen(
             val selectedCategoryData = categories.find { it.id == category }
             if (selectedCategoryData != null) {
                 LevelSelectionDialog(
+                    categoryId = selectedCategoryData.id,
                     categoryTitle = selectedCategoryData.title,
                     onDismiss = { selectedCategory = null },
                     onLevelSelected = { level ->
                         showQuizDetail = true
                         selectedLevel = level
-                    }
+                    },
+                    viewModel = viewModel
                 )
             }
         }
@@ -140,15 +160,27 @@ fun QuizCategoryCard(
     onClick: () -> Unit
 ) {
     val backgroundColor = when (category.id) {
-        "animals" -> Color(0xFF8BC34A)
-        "colors" -> Color(0xFF2196F3)
-        "family" -> Color(0xFFE91E63)
-        "food" -> Color(0xFFFF9800)
-        "numbers" -> Color(0xFF673AB7)
-        "time" -> Color(0xFF009688)
-        "transportation" -> Color(0xFF795548)
-        "weather" -> Color(0xFF607D8B)
-        else -> Color(0xFF9C27B0)
+        "animals" -> Color(0xFF42A5F5) // Xanh dương sáng (như Hiragana)
+        "colors" -> Color(0xFFFF7043) // Cam đậm (như Katakana)
+        "family" -> Color(0xFF66BB6A) // Xanh lá đậm (như Kanji)
+        "food" -> Color(0xFFE53935) // Đỏ đậm
+        "numbers" -> Color(0xFF9C27B0) // Tím đậm
+        "time" -> Color(0xFF26C6DA) // Teal sáng
+        "transportation" -> Color(0xFFAB47BC) // Tím nhạt
+        "weather" -> Color(0xFFFFCA28) // Vàng cam
+        "body" -> Color(0xFFEF5350) // Đỏ nhạt
+        "clothing" -> Color(0xFF78909C) // Xanh xám
+        "house" -> Color(0xFF8BC34A) // Xanh lá nhạt
+        "nature" -> Color(0xFF009688) // Teal đậm
+        "school" -> Color(0xFF607D8B) // Xanh xám đậm
+        "work" -> Color(0xFF795548) // Nâu
+        "hobby" -> Color(0xFFEC407A) // Hồng nhạt
+        "sports" -> Color(0xFF4CAF50) // Xanh lá
+        "music" -> Color(0xFF673AB7) // Tím đậm
+        "travel" -> Color(0xFF00BCD4) // Cyan
+        "shopping" -> Color(0xFFFF9800) // Cam
+        "health" -> Color(0xFFE91E63) // Hồng đậm
+        else -> Color(0xFF2196F3) // Xanh dương mặc định
     }
     
     val icon = when (category.id) {
@@ -160,50 +192,67 @@ fun QuizCategoryCard(
         "time" -> Icons.Default.Schedule
         "transportation" -> Icons.Default.DirectionsCar
         "weather" -> Icons.Default.WbSunny
+        "body" -> Icons.Default.Accessibility
+        "clothing" -> Icons.Default.Checkroom
+        "house" -> Icons.Default.Home
+        "nature" -> Icons.Default.Park
+        "school" -> Icons.Default.School
+        "work" -> Icons.Default.Work
+        "hobby" -> Icons.Default.Favorite
+        "sports" -> Icons.Default.SportsSoccer
+        "music" -> Icons.Default.MusicNote
+        "travel" -> Icons.Default.Flight
+        "shopping" -> Icons.Default.ShoppingCart
+        "health" -> Icons.Default.HealthAndSafety
         else -> Icons.Default.Category
     }
 
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(1f),
-        shape = RoundedCornerShape(16.dp),
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .aspectRatio(1f),
+        shape = shapes().large,
         colors = CardDefaults.cardColors(
             containerColor = backgroundColor
+        ),
+        elevation = CardDefaults.cardElevation(
+            defaultElevation = elevation().high
         ),
         onClick = onClick
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(spacing().md),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             Icon(
                 imageVector = icon,
                 contentDescription = category.title,
-                modifier = Modifier.size(48.dp),
+                modifier = Modifier.size(components().iconSize * 2.5f),
                 tint = Color.White
             )
             
-            Spacer(modifier = Modifier.height(8.dp))
+            Spacer(modifier = Modifier.height(spacing().sm))
             
             Text(
                 text = category.title,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Bold,
                 color = Color.White,
                 textAlign = TextAlign.Center
             )
             
-            Spacer(modifier = Modifier.height(4.dp))
+            Spacer(modifier = Modifier.height(spacing().xs))
             
             Text(
                 text = category.description,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color.White.copy(alpha = 0.8f),
-                textAlign = TextAlign.Center
+                color = Color.White.copy(alpha = 0.95f),
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                fontWeight = FontWeight.Medium
             )
         }
     }
@@ -211,106 +260,144 @@ fun QuizCategoryCard(
 
 @Composable
 fun LevelSelectionDialog(
+    categoryId: String,
     categoryTitle: String,
     onDismiss: () -> Unit,
-    onLevelSelected: (String) -> Unit
+    onLevelSelected: (String) -> Unit,
+    viewModel: QuizViewModel = viewModel()
 ) {
+    val levels by viewModel.levels.collectAsState()
+    val isLoading by viewModel.quizRepository.isLoading.collectAsState()
+    
+    // Tải levels khi dialog mở
+    LaunchedEffect(Unit) {
+        viewModel.loadLevelsForCategory(categoryId)
+    }
+    
     Dialog(onDismissRequest = onDismiss) {
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp),
-            shape = RoundedCornerShape(16.dp)
+                .padding(spacing().md),
+            shape = shapes().large,
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.surface
+            ),
+            elevation = CardDefaults.cardElevation(
+                defaultElevation = elevation().high
+            )
         ) {
             Column(
-                modifier = Modifier.padding(16.dp),
+                modifier = Modifier.padding(spacing().lg),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
+                // Title với icon
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Center
+                ) {
+                    Text(
+                        text = "🎯 Chọn cấp độ",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+                }
+                
+                Spacer(modifier = Modifier.height(spacing().sm))
+                
                 Text(
-                    text = "Chọn cấp độ - $categoryTitle",
-                    style = MaterialTheme.typography.titleLarge,
-                    fontWeight = FontWeight.Bold,
+                    text = categoryTitle,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = MaterialTheme.colorScheme.primary,
+                    fontWeight = FontWeight.SemiBold,
                     textAlign = TextAlign.Center
                 )
                 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(spacing().lg))
                 
-                levels.forEach { level ->
-                    Button(
-                        onClick = { onLevelSelected(level.id) },
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 8.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = level.color
-                        )
+                if (isLoading) {
+                    Box(
+                        modifier = Modifier.padding(spacing().xl),
+                        contentAlignment = Alignment.Center
                     ) {
-                        Column(
-                            modifier = Modifier.padding(vertical = 8.dp),
-                            horizontalAlignment = Alignment.CenterHorizontally
+                        CircularProgressIndicator(
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                } else {
+                    levels.forEach { level ->
+                        val levelColor = when (level.id) {
+                            "N1" -> Color(0xFFE53935) // Đỏ đậm (như Kanji)
+                            "N2" -> Color(0xFFFF7043) // Cam đậm (như Katakana)
+                            "N3" -> Color(0xFF42A5F5) // Xanh dương sáng (như Hiragana)
+                            "N4" -> Color(0xFF66BB6A) // Xanh lá đậm
+                            "N5" -> Color(0xFF9C27B0) // Tím đậm
+                            else -> Color(0xFF607D8B) // Xanh xám
+                        }
+                        
+                        Card(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(vertical = spacing().xs),
+                            shape = shapes().medium,
+                            colors = CardDefaults.cardColors(
+                                containerColor = levelColor.copy(alpha = 0.25f)
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = elevation().low
+                            ),
+                            onClick = { onLevelSelected(level.id) }
                         ) {
-                            Text(
-                                text = level.name,
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Text(
-                                text = level.description,
-                                style = MaterialTheme.typography.bodySmall
-                            )
+                            Row(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(spacing().md),
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                Column(
+                                    modifier = Modifier.weight(1f)
+                                ) {
+                                    Text(
+                                        text = level.name,
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Bold,
+                                        color = levelColor
+                                    )
+                                    Text(
+                                        text = level.description,
+                                        style = MaterialTheme.typography.bodySmall,
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f)
+                                    )
+                                }
+                                
+                                Icon(
+                                    imageVector = Icons.Default.ArrowForward,
+                                    contentDescription = "Chọn",
+                                    tint = levelColor,
+                                    modifier = Modifier.size(components().iconSize * 1.2f)
+                                )
+                            }
                         }
                     }
                 }
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(spacing().md))
                 
                 TextButton(
                     onClick = onDismiss,
-                    modifier = Modifier.align(Alignment.End)
+                    modifier = Modifier.align(Alignment.End),
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = MaterialTheme.colorScheme.error
+                    )
                 ) {
-                    Text("Đóng")
+                    Text(
+                        text = "Đóng",
+                        fontWeight = FontWeight.Medium
+                    )
                 }
             }
         }
     }
 }
-
-data class Level(
-    val id: String,
-    val name: String,
-    val description: String,
-    val color: Color
-)
-
-private val levels = listOf(
-    Level(
-        id = "N1",
-        name = "N1 - Cao cấp",
-        description = "Trình độ cao nhất, tương đương bản ngữ",
-        color = Color(0xFFE91E63)
-    ),
-    Level(
-        id = "N2",
-        name = "N2 - Trung cấp cao",
-        description = "Có thể giao tiếp trong hầu hết tình huống",
-        color = Color(0xFF2196F3)
-    ),
-    Level(
-        id = "N3",
-        name = "N3 - Trung cấp",
-        description = "Hiểu và sử dụng tiếng Nhật trong cuộc sống hàng ngày",
-        color = Color(0xFF4CAF50)
-    ),
-    Level(
-        id = "N4",
-        name = "N4 - Sơ trung cấp",
-        description = "Hiểu được tiếng Nhật cơ bản",
-        color = Color(0xFFFF9800)
-    ),
-    Level(
-        id = "N5",
-        name = "N5 - Sơ cấp",
-        description = "Hiểu những cấu trúc tiếng Nhật đơn giản",
-        color = Color(0xFF607D8B)
-    )
-) 

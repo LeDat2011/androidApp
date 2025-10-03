@@ -42,8 +42,16 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import com.example.composeapp.components.CategoryCard
 import com.example.composeapp.components.RecommendedFlashcardComponent
 import com.example.composeapp.models.*
+import com.example.composeapp.repository.CategoryRepository
+import com.example.composeapp.repository.CategoryData
 import com.example.composeapp.viewmodels.FlashcardRecommendationViewModel
 import com.example.composeapp.viewmodels.UserProfileViewModel
+import com.example.composeapp.ui.design.spacing
+import com.example.composeapp.ui.design.shapes
+import com.example.composeapp.ui.design.elevation
+import com.example.composeapp.ui.design.components
+import com.example.composeapp.ui.design.CategoryColors
+import com.example.composeapp.ui.design.AppGradients
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import java.util.*
@@ -51,11 +59,11 @@ import java.util.*
 // Data class for managing HomeScreen state
 data class HomeScreenState(
     val userName: String = "",
-    val categories: List<FlashcardCategory> = emptyList(),
+    val categories: List<CategoryData> = emptyList(),
     val isLoading: Boolean = true,
     val errorMessage: String? = null,
-    val selectedCategory: FlashcardCategory? = null,
-    val categoryProgress: Map<FlashcardCategory, Float> = emptyMap()
+    val selectedCategory: CategoryData? = null,
+    val categoryProgress: Map<String, Float> = emptyMap()
 )
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -67,16 +75,30 @@ fun HomeScreen(
 ) {
     val userProfileViewModel: UserProfileViewModel = viewModel()
     val recommendationViewModel: FlashcardRecommendationViewModel = viewModel()
+    val categoryRepository = remember { CategoryRepository() }
     
     val profileData by userProfileViewModel.profileData.collectAsState()
     val recommendedFlashcard by recommendationViewModel.currentRecommendedFlashcard.collectAsState()
     val recommendedFlashcards by recommendationViewModel.recommendedFlashcards.collectAsState()
     val isLoading by recommendationViewModel.isLoading.collectAsState()
     val error by recommendationViewModel.error.collectAsState()
+    val categoryProgressMap by userProfileViewModel.categoryProgress.collectAsState()
     
-    // Load user profile data
+    // Category data from Firebase
+    val categories by categoryRepository.categories.collectAsState()
+    val categoriesLoading by categoryRepository.isLoading.collectAsState()
+    val categoriesError by categoryRepository.error.collectAsState()
+    
+    // Design System
+    val spacing = spacing()
+    val shapes = shapes()
+    val elevation = elevation()
+    val components = components()
+    
+    // Load user profile data and categories
     LaunchedEffect(Unit) {
         userProfileViewModel.loadUserProfile()
+        categoryRepository.loadCategories()
     }
     
     // State for the screen
@@ -84,12 +106,9 @@ fun HomeScreen(
         mutableStateOf(
             HomeScreenState(
                 userName = profileData?.name ?: "Người dùng",
-                categories = FlashcardCategory.values().toList(),
-                isLoading = false,
-                categoryProgress = FlashcardCategory.values().associateWith { 
-                    // Random progress for each category between 0.0 and 1.0
-                    (0..100).random() / 100f
-                }
+                categories = emptyList(),
+                isLoading = true,
+                categoryProgress = emptyMap()
             )
         )
     }
@@ -99,15 +118,35 @@ fun HomeScreen(
         state = state.copy(userName = profileData?.name ?: "Người dùng")
     }
     
+    // Update state when categories data changes
+    LaunchedEffect(categories) {
+        state = state.copy(
+            categories = categories,
+            isLoading = categoriesLoading
+        )
+    }
+    
+    // Update progress map when category progress data changes
+    LaunchedEffect(categoryProgressMap) {
+        state = state.copy(categoryProgress = categoryProgressMap)
+    }
+    
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Trang chủ") },
                 actions = {
                     IconButton(onClick = navigateToProfile) {
-                        Icon(Icons.Default.Person, contentDescription = "Profile")
+                        Icon(
+                            Icons.Default.Person, 
+                            contentDescription = "Profile",
+                            modifier = Modifier.size(components.iconSize)
+                        )
                     }
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.95f)
+                )
             )
         }
     ) { paddingValues ->
@@ -120,7 +159,7 @@ fun HomeScreen(
             item {
                 JapaneseGreetingHeader(
                     userName = state.userName,
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(spacing.md)
                 )
             }
             
@@ -137,7 +176,7 @@ fun HomeScreen(
                     canGoNext = recommendedFlashcards.indexOf(recommendedFlashcard) < recommendedFlashcards.size - 1,
                     canGoPrevious = recommendedFlashcards.indexOf(recommendedFlashcard) > 0,
                     onSeeAll = navigateToFlashcardLearning,
-                    modifier = Modifier.padding(horizontal = 16.dp)
+                    modifier = Modifier.padding(horizontal = spacing.md)
                 )
             }
 
@@ -146,7 +185,7 @@ fun HomeScreen(
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp)
+                        .padding(spacing.md)
                         .animateItemPlacement()
                 ) {
                     Text(
@@ -159,28 +198,45 @@ fun HomeScreen(
                         style = MaterialTheme.typography.bodyMedium,
                         color = MaterialTheme.colorScheme.onSurfaceVariant
                     )
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(spacing.md))
                     
-                    CategoriesWithProgressGrid(
-                        categories = state.categories,
-                        progressMap = state.categoryProgress,
-                        onCategoryClick = { category ->
-                            navigateToCategory(category.name)
+                    if (state.isLoading) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(200.dp),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            CircularProgressIndicator()
                         }
-                    )
+                    } else {
+                        CategoriesWithProgressGrid(
+                            categories = state.categories,
+                            progressMap = state.categoryProgress,
+                            onCategoryClick = { category ->
+                                navigateToCategory(category.id)
+                            }
+                        )
+                    }
                 }
             }
         }
     }
     
     // Hiển thị lỗi nếu có
-    error?.let { errorMessage ->
+    (error ?: categoriesError)?.let { errorMessage ->
         AlertDialog(
-            onDismissRequest = { recommendationViewModel.resetError() },
+            onDismissRequest = { 
+                recommendationViewModel.resetError()
+                categoryRepository.resetError()
+            },
             title = { Text("Lỗi") },
             text = { Text(errorMessage) },
             confirmButton = {
-                TextButton(onClick = { recommendationViewModel.resetError() }) {
+                TextButton(onClick = { 
+                    recommendationViewModel.resetError()
+                    categoryRepository.resetError()
+                }) {
                     Text("Đóng")
                 }
             }
@@ -275,6 +331,9 @@ fun JapaneseGreetingHeader(
     userName: String,
     modifier: Modifier = Modifier
 ) {
+    val spacing = spacing()
+    val shapes = shapes()
+    
     val greeting = remember {
         val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
         when {
@@ -288,8 +347,8 @@ fun JapaneseGreetingHeader(
     Card(
         modifier = modifier
             .fillMaxWidth()
-            .padding(8.dp), // Reduced padding
-        shape = RoundedCornerShape(16.dp), // Smaller corner radius
+            .padding(spacing.sm),
+        shape = shapes.large,
         colors = CardDefaults.cardColors(
             containerColor = Color.Transparent
         ),
@@ -302,14 +361,11 @@ fun JapaneseGreetingHeader(
                 .fillMaxWidth()
                 .background(
                     brush = Brush.linearGradient(
-                        colors = listOf(
-                            Color(0xFFFF5B94),
-                            Color(0xFF8441A4)
-                        )
+                        colors = AppGradients.primaryGradient
                     ),
-                    shape = RoundedCornerShape(16.dp) // Smaller corner radius
+                    shape = shapes.large
                 )
-                .padding(16.dp) // Reduced padding
+                .padding(spacing.md)
         ) {
             Column(
                 modifier = Modifier.fillMaxWidth(),
@@ -318,13 +374,13 @@ fun JapaneseGreetingHeader(
                 Text(
                     text = greeting,
                     color = Color.White,
-                    fontSize = 20.sp, // Smaller font size
+                    fontSize = 20.sp,
                     fontWeight = FontWeight.Bold
                 )
                 Text(
                     text = userName,
                     color = Color.White,
-                    fontSize = 16.sp, // Smaller font size
+                    fontSize = 16.sp,
                     fontWeight = FontWeight.Normal
                 )
             }
@@ -334,9 +390,9 @@ fun JapaneseGreetingHeader(
 
 @Composable
 fun CategoriesWithProgressGrid(
-    categories: List<FlashcardCategory>,
-    progressMap: Map<FlashcardCategory, Float>,
-    onCategoryClick: (FlashcardCategory) -> Unit,
+    categories: List<CategoryData>,
+    progressMap: Map<String, Float>,
+    onCategoryClick: (CategoryData) -> Unit,
     modifier: Modifier = Modifier
 ) {
     LazyVerticalGrid(
@@ -351,7 +407,7 @@ fun CategoriesWithProgressGrid(
         items(categories) { category ->
             CategoryWithProgressCard(
                 category = category,
-                progress = progressMap[category] ?: 0f,
+                progress = progressMap[category.id] ?: 0f,
                 onClick = { onCategoryClick(category) }
             )
         }
@@ -360,19 +416,19 @@ fun CategoriesWithProgressGrid(
 
 @Composable
 fun CategoryWithProgressCard(
-    category: FlashcardCategory,
+    category: CategoryData,
     progress: Float,
     onClick: () -> Unit
 ) {
-    // Get a color based on the category name - for visual variety
-    val cardColor = when (category) {
-        FlashcardCategory.ANIMALS -> Color(0xFF42A5F5)  // Blue
-        FlashcardCategory.FOOD -> Color(0xFFFF7043)     // Orange
-        FlashcardCategory.TRANSPORTATION -> Color(0xFF66BB6A) // Green
-        FlashcardCategory.FAMILY -> Color(0xFFAB47BC)   // Purple
-        FlashcardCategory.WEATHER -> Color(0xFF26C6DA)  // Teal
-        FlashcardCategory.DAILY_LIFE -> Color(0xFFFFCA28) // Amber
-        else -> Color(0xFF78909C)                       // Blue Grey
+    val spacing = spacing()
+    val shapes = shapes()
+    val elevation = elevation()
+    
+    // Get a color from Firebase data or fallback to default
+    val cardColor = try {
+        Color(android.graphics.Color.parseColor(category.color))
+    } catch (e: Exception) {
+        CategoryColors.misc
     }
     
     Card(
@@ -383,24 +439,25 @@ fun CategoryWithProgressCard(
         colors = CardDefaults.cardColors(
             containerColor = cardColor.copy(alpha = 0.8f)
         ),
-        shape = RoundedCornerShape(16.dp)
+        shape = shapes.large,
+        elevation = CardDefaults.cardElevation(defaultElevation = elevation.medium)
     ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(16.dp)
+                .padding(spacing.md)
         ) {
             // Category emoji or icon at the top
-            val emoji = when (category) {
-                FlashcardCategory.ANIMALS -> "🐱"
-                FlashcardCategory.FOOD -> "🍣"
-                FlashcardCategory.TRANSPORTATION -> "🚆"
-                FlashcardCategory.WEATHER -> "☀️"
-                FlashcardCategory.FAMILY -> "👪"
-                FlashcardCategory.COLORS -> "🎨"
-                FlashcardCategory.NUMBERS -> "🔢"
-                FlashcardCategory.TIME -> "🕒"
-                FlashcardCategory.DAILY_LIFE -> "🏠"
+            val emoji = when (category.id.lowercase()) {
+                "animals" -> "🐱"
+                "food" -> "🍣"
+                "transportation" -> "🚆"
+                "weather" -> "☀️"
+                "family" -> "👪"
+                "colors" -> "🎨"
+                "numbers" -> "🔢"
+                "time" -> "🕒"
+                "daily_life" -> "🏠"
                 else -> "📚"
             }
             
@@ -424,7 +481,7 @@ fun CategoryWithProgressCard(
                     color = Color.White
                 )
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(spacing.sm))
                 
                 // Progress bar
                 val animatedProgress by animateFloatAsState(
@@ -443,7 +500,7 @@ fun CategoryWithProgressCard(
                     trackColor = Color.White.copy(alpha = 0.3f)
                 )
                 
-                Spacer(modifier = Modifier.height(4.dp))
+                Spacer(modifier = Modifier.height(spacing.xs))
                 
                 // Progress percentage
                 Text(

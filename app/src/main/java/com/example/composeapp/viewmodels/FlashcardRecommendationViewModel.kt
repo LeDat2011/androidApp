@@ -62,95 +62,73 @@ class FlashcardRecommendationViewModel : ViewModel() {
                     return@launch
                 }
                 
-                // 1. Tải tất cả flashcard từ Firebase
+                // 1. Tải tất cả flashcard từ Firebase (app_data/vocabulary)
                 val allFlashcards = mutableListOf<Flashcard>()
-                
-                // Lặp qua từng danh mục
-                for (category in FlashcardCategory.values()) {
-                    try {
-                        // Lấy dữ liệu từ Firebase
-                        val categoryRef = database.getReference("app_data/vocabulary/${category.name}")
-                        val snapshot = categoryRef.get().await()
-                        
-                        for (levelSnapshot in snapshot.children) {
-                            val levelName = levelSnapshot.key ?: continue
-                            
-                            for (cardSnapshot in levelSnapshot.children) {
-                                val cardId = cardSnapshot.key ?: continue
-                                val japanese = cardSnapshot.child("japanese").getValue(String::class.java) ?: ""
-                                val reading = cardSnapshot.child("reading").getValue(String::class.java) ?: ""
-                                val vietnamese = cardSnapshot.child("vietnamese").getValue(String::class.java) ?: ""
-                                val example = cardSnapshot.child("example").getValue(String::class.java) ?: ""
-                                
-                                // Tách ví dụ thành tiếng Nhật và tiếng Việt
-                                val parts = example.split(" - ")
-                                val japaneseExample = parts.getOrNull(0) ?: ""
-                                val vietnameseExample = parts.getOrNull(1) ?: ""
-                                
-                                // Tạo đối tượng Example
-                                val exampleObj = com.example.composeapp.models.Example(
-                                    japanese = japaneseExample,
-                                    vietnamese = vietnameseExample
-                                )
-                                
-                                // 2. Tải dữ liệu học tập của người dùng cho từng flashcard
-                                val userLearningRef = database.getReference("users/${currentUser.uid}/learning/flashcards/$cardId")
-                                val userLearningSnapshot = userLearningRef.get().await()
-                                
-                                // Lấy thông tin học tập
-                                val masteryLevel = userLearningSnapshot.child("masteryLevel")
-                                    .getValue(String::class.java)?.let { 
-                                        try {
-                                            MasteryLevel.valueOf(it)
-                                        } catch (e: Exception) {
-                                            MasteryLevel.NEW
-                                        }
-                                    } ?: MasteryLevel.NEW
-                                
-                                val lastReviewTimestamp = userLearningSnapshot.child("lastReviewDate")
-                                    .getValue(Long::class.java)
-                                val lastReviewDate = if (lastReviewTimestamp != null) Date(lastReviewTimestamp) else null
-                                
-                                val nextReviewTimestamp = userLearningSnapshot.child("nextReviewDate")
-                                    .getValue(Long::class.java)
-                                val nextReviewDate = if (nextReviewTimestamp != null) Date(nextReviewTimestamp) else null
-                                
-                                val difficulty = userLearningSnapshot.child("difficulty")
-                                    .getValue(Float::class.java) ?: 0.3f
-                                
-                                val viewCount = userLearningSnapshot.child("viewCount")
-                                    .getValue(Int::class.java) ?: 0
-                                
-                                val correctCount = userLearningSnapshot.child("correctCount")
-                                    .getValue(Int::class.java) ?: 0
-                                
-                                val incorrectCount = userLearningSnapshot.child("incorrectCount")
-                                    .getValue(Int::class.java) ?: 0
-                                
-                                // Tạo đối tượng Flashcard
-                                val flashcard = Flashcard(
-                                    id = cardId,
-                                    japaneseWord = japanese,
-                                    vietnameseMeaning = vietnamese,
-                                    reading = reading,
-                                    category = category,
-                                    examples = listOf(exampleObj),
-                                    masteryLevel = masteryLevel,
-                                    lastReviewDate = lastReviewDate,
-                                    nextReviewDate = nextReviewDate,
-                                    difficulty = difficulty,
-                                    viewCount = viewCount,
-                                    correctCount = correctCount,
-                                    incorrectCount = incorrectCount
-                                )
-                                
-                                allFlashcards.add(flashcard)
-                            }
-                        }
-                    } catch (e: Exception) {
-                        // Bỏ qua lỗi cho danh mục này và tiếp tục với danh mục tiếp theo
-                        continue
+                val vocabularyRef = database.getReference("app_data/vocabulary")
+                val vocabSnapshot = vocabularyRef.get().await()
+
+                for (cardSnapshot in vocabSnapshot.children) {
+                    val cardId = cardSnapshot.key ?: continue
+                    val japanese = cardSnapshot.child("japanese").getValue(String::class.java) ?: ""
+                    val reading = cardSnapshot.child("reading").getValue(String::class.java) ?: ""
+                    val vietnamese = cardSnapshot.child("vietnamese").getValue(String::class.java) ?: ""
+                    val categories = cardSnapshot.child("categories").children.mapNotNull { it.getValue(String::class.java) }
+                    val level = cardSnapshot.child("level").getValue(String::class.java) ?: ""
+
+                    // Lấy 1 ví dụ đầu tiên nếu có
+                    val exampleSentences = cardSnapshot.child("exampleSentences").children.toList()
+                    val firstExample = exampleSentences.firstOrNull()
+                    val exampleObj = if (firstExample != null) {
+                        com.example.composeapp.models.Example(
+                            japanese = firstExample.child("japanese").getValue(String::class.java) ?: "",
+                            vietnamese = firstExample.child("vietnamese").getValue(String::class.java) ?: ""
+                        )
+                    } else {
+                        com.example.composeapp.models.Example(japanese = "", vietnamese = "")
                     }
+
+                    // Suy ra danh mục chính từ mảng categories (nếu có)
+                    val categoryEnum = categories.firstOrNull()?.let {
+                        try { FlashcardCategory.valueOf(it) } catch (_: Exception) { null }
+                    } ?: FlashcardCategory.MISC
+
+                    // 2. Tải dữ liệu học tập của người dùng cho từng flashcard
+                    val userLearningRef = database.getReference("app_data/users/${currentUser.uid}/learning/flashcardProgress/$cardId")
+                    val userLearningSnapshot = userLearningRef.get().await()
+
+                    val masteryLevel = userLearningSnapshot.child("masteryLevel")
+                        .getValue(String::class.java)?.let {
+                            try { MasteryLevel.valueOf(it) } catch (_: Exception) { MasteryLevel.NEW }
+                        } ?: MasteryLevel.NEW
+
+                    val lastReviewTimestamp = userLearningSnapshot.child("lastReviewDate").getValue(Long::class.java)
+                    val lastReviewDate = if (lastReviewTimestamp != null) Date(lastReviewTimestamp) else null
+
+                    val nextReviewTimestamp = userLearningSnapshot.child("nextReviewDate").getValue(Long::class.java)
+                    val nextReviewDate = if (nextReviewTimestamp != null) Date(nextReviewTimestamp) else null
+
+                    val difficulty = userLearningSnapshot.child("difficulty").getValue(Float::class.java) ?: 0.3f
+                    val viewCount = userLearningSnapshot.child("viewCount").getValue(Int::class.java) ?: 0
+                    val correctCount = userLearningSnapshot.child("correctCount").getValue(Int::class.java) ?: 0
+                    val incorrectCount = userLearningSnapshot.child("incorrectCount").getValue(Int::class.java) ?: 0
+
+                    val flashcard = Flashcard(
+                        id = cardId,
+                        japaneseWord = japanese,
+                        vietnameseMeaning = vietnamese,
+                        reading = reading,
+                        category = categoryEnum,
+                        examples = listOf(exampleObj),
+                        masteryLevel = masteryLevel,
+                        lastReviewDate = lastReviewDate,
+                        nextReviewDate = nextReviewDate,
+                        difficulty = difficulty,
+                        viewCount = viewCount,
+                        correctCount = correctCount,
+                        incorrectCount = incorrectCount
+                    )
+
+                    allFlashcards.add(flashcard)
                 }
                 
                 // 3. Áp dụng thuật toán đề xuất
@@ -282,7 +260,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật thông tin học tập lên Firebase
                 val userLearningRef = database.getReference(
-                    "users/${currentUser.uid}/learning/flashcards/${currentFlashcard.id}"
+                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
                 )
                 
                 // Tính toán mức độ thành thạo mới
@@ -365,7 +343,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật độ khó lên Firebase
                 val userLearningRef = database.getReference(
-                    "users/${currentUser.uid}/learning/flashcards/${currentFlashcard.id}"
+                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
                 )
                 
                 // Tăng độ khó lên nhưng không vượt quá 1.0
@@ -394,7 +372,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật độ khó lên Firebase
                 val userLearningRef = database.getReference(
-                    "users/${currentUser.uid}/learning/flashcards/${currentFlashcard.id}"
+                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
                 )
                 
                 // Giảm độ khó xuống nhưng không nhỏ hơn 0.0
