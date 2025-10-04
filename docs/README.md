@@ -2,126 +2,8 @@
 
 Ứng dụng học tiếng Nhật được xây dựng bằng Jetpack Compose với Firebase.
 
-## Sơ đồ luồng ứng dụng
-
-```mermaid
-graph TD
-    Start([🚀 Khởi động]) --> Splash[Splash Screen]
-    Splash --> Auth{Đã đăng nhập?}
-    
-    Auth -->|Không| Login[🔐 Đăng nhập]
-    Auth -->|Có| ProfileCheck{Đã có hồ sơ?}
-    
-    Login --> Register[📝 Đăng ký]
-    Register --> ProfileSetup[👤 Thiết lập hồ sơ]
-    Login --> ProfileSetup
-    
-    ProfileSetup --> Main[🏠 Màn hình chính]
-    ProfileCheck -->|Chưa có| ProfileSetup
-    ProfileCheck -->|Đã có| Main
-    
-    Main --> Home[📚 Home Tab]
-    Main --> Learn[🎓 Learn Tab]
-    Main --> Games[🎮 Games Tab]
-    Main --> Profile[👤 Profile Tab]
-    
-    %% Home Tab Flow
-    Home --> Dashboard[Dashboard]
-    Dashboard --> QuickLearn[Học nhanh]
-    Dashboard --> Progress[📊 Tiến độ]
-    Dashboard --> Recommendations[💡 Gợi ý]
-    
-    %% Learn Tab Flow
-    Learn --> CategorySelect[📂 Chọn danh mục]
-    CategorySelect --> LevelSelect[📊 Chọn cấp độ]
-    LevelSelect --> Content[📖 Nội dung học]
-    
-    Content --> Alphabet[🔤 Bảng chữ cái]
-    Content --> Vocabulary[📝 Từ vựng]
-    Content --> Writing[✍️ Luyện viết]
-    
-    Alphabet --> Hiragana[ひらがな]
-    Alphabet --> Katakana[カタカナ]
-    Alphabet --> Kanji[漢字]
-    
-    Hiragana --> CharDetail[Chi tiết ký tự]
-    Katakana --> CharDetail
-    Kanji --> CharDetail
-    
-    CharDetail --> StrokeOrder[Thứ tự nét]
-    CharDetail --> Meaning[Ý nghĩa]
-    CharDetail --> Examples[Ví dụ]
-    CharDetail --> Writing[Luyện viết]
-    
-    Vocabulary --> Flashcards[🃏 Flashcards]
-    Vocabulary --> Quiz[❓ Quiz]
-    
-    Flashcards --> SpacedRep[Spaced Repetition]
-    Flashcards --> Progress[Tiến độ học]
-    
-    %% Writing Flow
-    Writing --> WritingMode{Chế độ viết}
-    WritingMode -->|Theo nét| StrokeMode[Viết theo nét]
-    WritingMode -->|Tự do| FreeMode[Viết tự do]
-    
-    StrokeMode --> StrokeGuide[Hướng dẫn nét]
-    StrokeMode --> Accuracy[Đánh giá độ chính xác]
-    FreeMode --> Accuracy
-    
-    %% Games Flow
-    Games --> GameSelect[Chọn game]
-    GameSelect --> WordPuzzle[🧩 Word Puzzle]
-    GameSelect --> MemoryGame[🧠 Memory Game]
-    GameSelect --> SpeedQuiz[⚡ Speed Quiz]
-    
-    WordPuzzle --> GameResult[Kết quả game]
-    MemoryGame --> GameResult
-    SpeedQuiz --> GameResult
-    
-    GameResult --> Leaderboard[🏆 Bảng xếp hạng]
-    GameResult --> Achievements[🏅 Thành tích]
-    
-    %% Profile Flow
-    Profile --> UserInfo[Thông tin cá nhân]
-    Profile --> EditProfile[✏️ Chỉnh sửa hồ sơ]
-    Profile --> LevelProgress[📈 Tiến độ cấp độ]
-    Profile --> Statistics[📊 Thống kê]
-    Profile --> Settings[⚙️ Cài đặt]
-    Profile --> Logout[🚪 Đăng xuất]
-    
-    EditProfile --> Profile
-    LevelProgress --> Achievements
-    Statistics --> Progress
-    
-    %% Navigation
-    Logout --> Login
-    UserInfo --> EditProfile
-    
-    %% Progress Tracking
-    Progress --> LevelSystem[🎯 Hệ thống cấp độ]
-    LevelSystem --> XP[Điểm kinh nghiệm]
-    LevelSystem --> UnlockContent[Mở khóa nội dung]
-    
-    %% Recommendations
-    Recommendations --> SmartFlashcards[Flashcards thông minh]
-    Recommendations --> Personalized[Gợi ý cá nhân hóa]
-    
-    %% Styling with better contrast
-    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
-    classDef auth fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
-    classDef main fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
-    classDef learning fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000000
-    classDef games fill:#fff8e1,stroke:#f57f17,stroke-width:2px,color:#000000
-    classDef profile fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px,color:#000000
-    
-    class Start,Splash startEnd
-    class Login,Register,ProfileSetup,Auth,ProfileCheck auth
-    class Main,Home,Learn,Games,Profile main
-    class Dashboard,CategorySelect,LevelSelect,Content,Alphabet,Vocabulary,Writing,Flashcards,Quiz,CharDetail,StrokeOrder,Meaning,Examples,WritingMode,StrokeMode,FreeMode,StrokeGuide,Accuracy,SpacedRep,Progress,Recommendations,SmartFlashcards,Personalized learning
-    class GameSelect,WordPuzzle,MemoryGame,SpeedQuiz,GameResult,Leaderboard,Achievements games
-    class UserInfo,EditProfile,LevelProgress,Statistics,Settings,Logout,LevelSystem,XP,UnlockContent profile
-```
-
+?
+<!-- 
 ## Sơ đồ luồng đơn giản (Dễ đọc)
 
 ```mermaid
@@ -169,7 +51,7 @@ graph TD
     class F,Q,R,S games
     class G,T,U,V profile
 ```
-
+-->
 ## Tài Liệu
 
 Thư mục này chứa các tài liệu về thiết kế và cấu trúc ứng dụng:
