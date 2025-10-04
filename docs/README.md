@@ -112,6 +112,32 @@ Xem chi tiết cấu trúc cơ sở dữ liệu tại [DATABASE_STRUCTURE.md](./
 9. **Theo dõi tiến độ**: Số từ học được, bài học hoàn thành, streak
 10. **Cá nhân hóa**: Điều chỉnh mục tiêu và thời gian học
 
+## Web Admin Panel
+
+Ứng dụng bao gồm một web admin panel hiện đại để quản lý nội dung và người dùng:
+
+### Tính Năng Web Admin:
+1. **Quản lý từ vựng**: Thêm, sửa, xóa từ vựng tiếng Nhật
+2. **Quản lý bài học**: Tạo và chỉnh sửa bài học
+3. **Quản lý danh mục**: Phân loại nội dung học tập
+4. **Quản lý người dùng**: Xem thống kê và tiến độ học tập
+5. **Quản lý thành tích**: Tạo và quản lý hệ thống thành tích
+6. **Thống kê**: Phân tích dữ liệu người dùng và hiệu suất
+
+### Giao Diện Web Admin:
+- **Modern Design**: Header gradient với hiệu ứng shimmer
+- **Dark/Light Theme**: Chuyển đổi giao diện sáng/tối
+- **Responsive**: Tối ưu cho mọi thiết bị
+- **Real-time Status**: Hiển thị trạng thái kết nối Firebase
+- **User-friendly**: Giao diện thân thiện, dễ sử dụng
+
+### Công Nghệ Web Admin:
+- **HTML5/CSS3**: Giao diện hiện đại với animations
+- **Bootstrap 5**: Framework responsive
+- **JavaScript ES6+**: Logic xử lý và tương tác
+- **Firebase SDK**: Kết nối trực tiếp với database
+- **Font Awesome**: Icons đẹp mắt
+
 ## Hướng Phát Triển
 
 1. **Offline Mode**: Hỗ trợ học tập khi không có mạng
@@ -119,6 +145,11 @@ Xem chi tiết cấu trúc cơ sở dữ liệu tại [DATABASE_STRUCTURE.md](./
 3. **Nhận dạng viết tay**: Luyện tập viết chữ Nhật
 4. **Phát âm**: Nghe và luyện phát âm
 5. **Ngữ pháp**: Bài học ngữ pháp tiếng Nhật
+6. **Web Admin Enhancements**: 
+   - Dashboard analytics
+   - Content management system
+   - User progress tracking
+   - Export/Import data features
 
 ## Cài Đặt
 
@@ -132,4 +163,36 @@ cd composeapp
 1. Tạo dự án Firebase mới tại https://console.firebase.google.com/
 2. Thêm ứng dụng Android vào dự án
 3. Tải file google-services.json và đặt vào thư mục app/
-4. Bật Firebase Authentication và Realtime Database 
+4. Bật Firebase Authentication và Realtime Database
+
+## Sử Dụng Web Admin Panel
+
+### Truy Cập Web Admin:
+1. Mở file `web-admin/index.html` trong trình duyệt
+2. Web admin sẽ tự động kết nối với Firebase
+3. Sử dụng các tab để quản lý nội dung
+
+### Các Chức Năng Chính:
+
+#### 1. Quản Lý Từ Vựng:
+- Thêm từ vựng mới với độ khó và hình ảnh
+- Chỉnh sửa thông tin từ vựng hiện có
+- Xóa từ vựng không cần thiết
+- Lọc theo danh mục và cấp độ
+
+#### 2. Quản Lý Người Dùng:
+- Xem danh sách tất cả người dùng
+- Theo dõi tiến độ học tập
+- Xem thống kê flashcards và quiz
+- Chi tiết hồ sơ người dùng
+
+#### 3. Quản Lý Nội Dung:
+- Tạo bài học mới
+- Quản lý danh mục
+- Thiết lập thành tích
+- Tạo câu hỏi quiz
+
+### Giao Diện:
+- **Dark/Light Theme**: Nhấn nút "Giao diện" để chuyển đổi
+- **Real-time Status**: Theo dõi trạng thái kết nối Firebase
+- **Responsive Design**: Hoạt động tốt trên mọi thiết bị 
