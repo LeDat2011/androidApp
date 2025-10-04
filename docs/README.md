@@ -3,7 +3,7 @@
 Ứng dụng học tiếng Nhật được xây dựng bằng Jetpack Compose với Firebase.
 
 ?
-<!-- 
+
 ## Sơ đồ luồng đơn giản (Dễ đọc)
 
 ```mermaid
@@ -51,7 +51,7 @@ graph TD
     class F,Q,R,S games
     class G,T,U,V profile
 ```
--->
+
 ## Tài Liệu
 
 Thư mục này chứa các tài liệu về thiết kế và cấu trúc ứng dụng:
