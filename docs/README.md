@@ -106,13 +106,13 @@ graph TD
     Recommendations --> SmartFlashcards[Flashcards thông minh]
     Recommendations --> Personalized[Gợi ý cá nhân hóa]
     
-    %% Styling
-    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:2px
-    classDef auth fill:#fff3e0,stroke:#e65100,stroke-width:2px
-    classDef main fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
-    classDef learning fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px
-    classDef games fill:#fff8e1,stroke:#f57f17,stroke-width:2px
-    classDef profile fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px
+    %% Styling with better contrast
+    classDef startEnd fill:#e1f5fe,stroke:#01579b,stroke-width:2px,color:#000000
+    classDef auth fill:#fff3e0,stroke:#e65100,stroke-width:2px,color:#000000
+    classDef main fill:#f3e5f5,stroke:#4a148c,stroke-width:2px,color:#000000
+    classDef learning fill:#e8f5e8,stroke:#1b5e20,stroke-width:2px,color:#000000
+    classDef games fill:#fff8e1,stroke:#f57f17,stroke-width:2px,color:#000000
+    classDef profile fill:#e3f2fd,stroke:#0d47a1,stroke-width:2px,color:#000000
     
     class Start,Splash startEnd
     class Login,Register,ProfileSetup,Auth,ProfileCheck auth
@@ -120,6 +120,54 @@ graph TD
     class Dashboard,CategorySelect,LevelSelect,Content,Alphabet,Vocabulary,Writing,Flashcards,Quiz,CharDetail,StrokeOrder,Meaning,Examples,WritingMode,StrokeMode,FreeMode,StrokeGuide,Accuracy,SpacedRep,Progress,Recommendations,SmartFlashcards,Personalized learning
     class GameSelect,WordPuzzle,MemoryGame,SpeedQuiz,GameResult,Leaderboard,Achievements games
     class UserInfo,EditProfile,LevelProgress,Statistics,Settings,Logout,LevelSystem,XP,UnlockContent profile
+```
+
+## Sơ đồ luồng đơn giản (Dễ đọc)
+
+```mermaid
+graph TD
+    A[🚀 Khởi động] --> B[🔐 Đăng nhập]
+    B --> C[👤 Thiết lập hồ sơ]
+    C --> D[🏠 Màn hình chính]
+    
+    D --> E[📚 Học tập]
+    D --> F[🎮 Games]
+    D --> G[👤 Hồ sơ]
+    
+    E --> H[🔤 Bảng chữ cái]
+    E --> I[📝 Từ vựng]
+    E --> J[✍️ Luyện viết]
+    
+    H --> K[Hiragana/Katakana/Kanji]
+    K --> L[Chi tiết ký tự]
+    
+    I --> M[Flashcards]
+    I --> N[Quiz]
+    
+    J --> O[Viết theo nét]
+    J --> P[Viết tự do]
+    
+    F --> Q[Word Puzzle]
+    F --> R[Memory Game]
+    F --> S[Speed Quiz]
+    
+    G --> T[Thông tin cá nhân]
+    G --> U[Tiến độ học tập]
+    G --> V[Thành tích]
+    
+    %% Styling cho sơ đồ đơn giản
+    classDef default fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
+    classDef start fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#ffffff
+    classDef main fill:#2196F3,stroke:#1565C0,stroke-width:3px,color:#ffffff
+    classDef learning fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#ffffff
+    classDef games fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#ffffff
+    classDef profile fill:#F44336,stroke:#C62828,stroke-width:2px,color:#ffffff
+    
+    class A start
+    class D main
+    class E,H,I,J,K,L,M,N,O,P learning
+    class F,Q,R,S games
+    class G,T,U,V profile
 ```
 
 ## Tài Liệu
