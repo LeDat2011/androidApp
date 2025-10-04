@@ -24,6 +24,6 @@ const DB_PATHS = {
     LESSONS: 'app_data/lessons',
     ACHIEVEMENTS: 'app_data/achievements',
     QUIZ: 'quizzes',
-    USERS: 'users',
+    USERS: 'app_data/users',
     SYSTEM_SETTINGS: 'app_data/system_settings'
 }; 

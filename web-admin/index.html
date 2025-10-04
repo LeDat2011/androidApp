@@ -3,32 +3,57 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Japanese Learning App - Admin Panel</title>
+    <title>Japanese Learning App</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@300;400;500;600;700&display=swap">
     <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
-    <!-- Modern Header -->
-    <nav class="navbar navbar-expand-lg navbar-dark bg-primary shadow-sm">
+    <!-- Modern Enhanced Header -->
+    <nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
         <div class="container-fluid">
-            <a class="navbar-brand fw-bold" href="#">
-                <i class="fas fa-graduation-cap me-2"></i>
-                Japanese Learning Admin
-            </a>
-            <div class="navbar-nav ms-auto">
-                <div class="nav-item">
-                    <span class="navbar-text">
-                        <i class="fas fa-circle text-success me-1" id="connection-icon"></i>
-                        <span id="connection-status">Đang kết nối...</span>
-                    </span>
+            <!-- Brand Section -->
+            <div class="navbar-brand d-flex align-items-center">
+                <div class="brand-icon me-3">
+                    <div style="width: 45px; height: 45px; background: linear-gradient(45deg, #ff6b6b, #feca57); border-radius: 12px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(255,107,107,0.3);">
+                        <i class="fas fa-book-open text-white" style="font-size: 20px;"></i>
+                    </div>
                 </div>
-                <div class="nav-item ms-3">
-                    <span class="navbar-text">
-                        <i class="fas fa-user me-1"></i>
-                        <span id="user-status">Chưa đăng nhập</span>
-                    </span>
+                <div class="brand-text">
+                    <h4 class="mb-0 fw-bold text-white">日本語学習</h4>
+                    <small class="text-light opacity-75">Japanese Learning</small>
+                </div>
+            </div>
+
+            <!-- Status Indicators -->
+            <div class="navbar-nav ms-auto d-flex align-items-center">
+                <!-- Connection Status -->
+                <div class="nav-item me-4">
+                    <div class="status-indicator d-flex align-items-center">
+                        <div class="status-dot me-2" id="connection-icon" style="width: 10px; height: 10px; border-radius: 50%; background-color: #dc3545; animation: pulse 2s infinite;"></div>
+                        <span class="navbar-text text-light fw-medium" id="connection-status">Đang kết nối...</span>
+                    </div>
+                </div>
+                
+                <!-- User Status -->
+                <div class="nav-item me-3">
+                    <div class="user-status d-flex align-items-center">
+                        <div class="user-avatar me-2" style="width: 35px; height: 35px; background: linear-gradient(45deg, #4facfe, #00f2fe); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-user text-white" style="font-size: 14px;"></i>
+                        </div>
+                        <span class="navbar-text text-light fw-medium" id="user-status">Chưa đăng nhập</span>
+                    </div>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="nav-item">
+                    <div class="quick-actions d-flex gap-2">
+                        <button class="btn btn-outline-light btn-sm rounded-pill px-3" onclick="toggleTheme()" title="Chuyển đổi giao diện">
+                            <i class="fas fa-moon me-1"></i>
+                            <span class="d-none d-md-inline">Giao diện</span>
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -996,13 +1021,15 @@
                                             <th class="border-0"><i class="fas fa-layer-group me-1"></i>Cấp độ</th>
                                             <th class="border-0"><i class="fas fa-book me-1"></i>Từ vựng</th>
                                             <th class="border-0"><i class="fas fa-question-circle me-1"></i>Quiz</th>
+                                            <th class="border-0"><i class="fas fa-brain me-1"></i>Flashcards</th>
+                                            <th class="border-0"><i class="fas fa-chart-line me-1"></i>Điểm TB</th>
                                             <th class="border-0"><i class="fas fa-toggle-on me-1"></i>Trạng thái</th>
                                             <th class="border-0"><i class="fas fa-cogs me-1"></i>Thao tác</th>
                                         </tr>
                                     </thead>
                                     <tbody id="users-list">
                                         <tr>
-                                            <td colspan="9" class="text-center py-4">
+                                            <td colspan="11" class="text-center py-4">
                                                 <div class="spinner-border text-primary" role="status">
                                                     <span class="visually-hidden">Đang tải...</span>
                                                 </div>

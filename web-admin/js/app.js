@@ -83,6 +83,9 @@ let currentQuizForDeletion = null;
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM loaded, initializing app...');
     
+    // Khôi phục theme đã lưu
+    restoreTheme();
+    
     // Kiểm tra các phần tử DOM có tồn tại
     if (!connectionStatus || !userStatus) {
         console.error('Không tìm thấy phần tử DOM cần thiết!');
@@ -151,9 +154,21 @@ function checkFirebaseConnection() {
         
         if (isConnected) {
             connectionStatus.textContent = 'Đã kết nối';
+            // Cập nhật dấu chấm xanh
+            const statusDot = document.querySelector('.status-dot');
+            if (statusDot) {
+                statusDot.classList.remove('disconnected');
+                statusDot.classList.add('connected');
+            }
             connectionIcon.className = 'fas fa-circle text-success me-1';
         } else {
             connectionStatus.textContent = 'Mất kết nối';
+            // Cập nhật dấu chấm đỏ với animation
+            const statusDot = document.querySelector('.status-dot');
+            if (statusDot) {
+                statusDot.classList.remove('connected');
+                statusDot.classList.add('disconnected');
+            }
             connectionIcon.className = 'fas fa-circle text-danger me-1';
         }
     });
@@ -167,7 +182,7 @@ function checkAuthStatus() {
             if (user.isAnonymous) {
                 userStatus.textContent = `Đã đăng nhập ẩn danh`;
             } else {
-                userStatus.textContent = `Đã đăng nhập: ${user.email || user.displayName || 'Admin'}`;
+                userStatus.textContent = `Đã đăng nhập: ${user.email || user.displayName || 'User'}`;
             }
             userStatus.className = 'authenticated';
             
@@ -1453,60 +1468,104 @@ function truncateText(text, maxLength) {
 function loadUsersData() {
     // Kiểm tra trạng thái đăng nhập
     if (!isAuthenticated) {
-        console.error('Chưa đăng nhập');
+        console.error('Chưa đăng nhập, đang thử đăng nhập ẩn danh...');
+        // Thử đăng nhập ẩn danh nếu chưa đăng nhập
+        auth.signInAnonymously().then(() => {
+            console.log('Đã đăng nhập ẩn danh thành công');
+            isAuthenticated = true;
+            loadUsersData(); // Gọi lại hàm sau khi đăng nhập
+        }).catch(error => {
+            console.error('Lỗi đăng nhập ẩn danh:', error);
+            usersList.innerHTML = `<tr><td colspan="11" class="text-danger text-center">Lỗi đăng nhập: ${error.message}</td></tr>`;
+        });
         return;
     }
     
     // Hiển thị trạng thái đang tải
-    usersList.innerHTML = `<tr><td colspan="9" class="text-center">Đang tải dữ liệu người dùng...</td></tr>`;
+    usersList.innerHTML = `<tr><td colspan="11" class="text-center">Đang tải dữ liệu người dùng...</td></tr>`;
     
     // Lấy danh sách người dùng từ Firebase
+    console.log("Đang tải dữ liệu người dùng từ đường dẫn:", DB_PATHS.USERS);
     const usersRef = database.ref(DB_PATHS.USERS);
     usersRef.once('value')
         .then((snapshot) => {
+            console.log("Đã nhận dữ liệu người dùng:", snapshot.val());
+            console.log("Snapshot exists:", snapshot.exists());
+            console.log("Number of children:", snapshot.numChildren());
+            
             const usersData = [];
             snapshot.forEach((userSnapshot) => {
-                    const userId = userSnapshot.key;
+                const userId = userSnapshot.key;
                 const userData = userSnapshot.val();
                 
                 console.log("Raw user data:", userId, userData); // Debug log
                 
-                // Lấy thông tin từ profile (nếu có)
+                // Lấy thông tin từ profile (theo cấu trúc thực tế)
                 const profile = userData.profile || {};
                 const progress = userData.progress || {};
-                const settings = userData.settings || {};
                 const learning = userData.learning || {};
-                    
-                // Lấy thông tin từ profile (theo cấu trúc thực tế)
+                
+                // Lấy thông tin cơ bản từ profile
                 const name = profile.name || 'Không có tên';
                 const email = profile.email || 'Không có email';
                 const age = profile.age || 0;
                 const currentLevel = profile.currentLevel || 'N5';
+                const currentLevelEnum = profile.currentLevelEnum || 'N5';
                 const targetLevel = profile.targetLevel || 'N5';
-                const avatarUrl = profile.avatarUrl || '';
-                const registrationDate = profile.registrationDate || Date.now();
-                
-                // Lấy thông tin từ progress
-                const streak = profile.streak || 0;
-                const wordsLearned = progress.wordsLearned || profile.wordsLearned || 0;
-                const lessonsCompleted = profile.lessonsCompleted || 0;
+                const targetLevelEnum = profile.targetLevelEnum || 'N5';
                 const daysActive = profile.daysActive || 0;
-                const lastActiveDate = userData.lastActiveDate || Date.now();
-                
-                // Lấy thông tin từ settings
+                const lessonsCompleted = profile.lessonsCompleted || 0;
+                const streak = profile.streak || 0;
                 const studyTimeMinutes = profile.studyTimeMinutes || 30;
-                const status = userData.status || 'active';
+                const profileUserId = profile.userId || '';
+                
+                // Lấy thông tin từ progress (ưu tiên progress.wordsLearned)
+                const wordsLearned = progress.wordsLearned || profile.wordsLearned || 0;
                 
                 // Lấy thông tin từ learning data
                 const learningData = learning || {};
+                
+                // Đếm từ vựng đã học từ learning.vocabulary
                 const vocabularyCount = learningData.vocabulary ? Object.keys(learningData.vocabulary).length : 0;
+                
+                // Đếm quiz đã hoàn thành từ learning.quizResults
                 const quizResults = learningData.quizResults || {};
                 const completedQuizzes = Object.keys(quizResults).filter(key => 
-                    typeof quizResults[key] === 'object' && quizResults[key].quizId
+                    typeof quizResults[key] === 'object' && quizResults[key].quizId && quizResults[key].quizId !== ''
+                ).length;
+                
+                // Lấy thông tin tiến độ theo danh mục
+                const categoryProgress = learningData.category_progress || {};
+                const flashcardProgress = learningData.flashcardProgress || {};
+                const completedFlashcards = learningData.completed_flashcards || {};
+                
+                // Đếm flashcards đã hoàn thành
+                const completedFlashcardsCount = Object.keys(completedFlashcards).length;
+                
+                // Đếm flashcards đang học
+                const learningFlashcardsCount = Object.keys(flashcardProgress).filter(key => 
+                    flashcardProgress[key].masteryLevel === 'LEARNING'
+                ).length;
+                
+                // Đếm flashcards đã thuộc
+                const masteredFlashcardsCount = Object.keys(flashcardProgress).filter(key => 
+                    flashcardProgress[key].masteryLevel === 'MASTERED'
                 ).length;
                 
                 // Kiểm tra admin
                 const isAdmin = userData.admin || false;
+                
+                // Tính tổng điểm quiz
+                let totalQuizScore = 0;
+                let totalQuizCount = 0;
+                Object.keys(quizResults).forEach(key => {
+                    const quiz = quizResults[key];
+                    if (typeof quiz === 'object' && quiz.score !== undefined) {
+                        totalQuizScore += quiz.score;
+                        totalQuizCount++;
+                    }
+                });
+                const averageQuizScore = totalQuizCount > 0 ? Math.round(totalQuizScore / totalQuizCount) : 0;
                 
                 console.log("Processed user:", { id: userId, name, email, isAdmin }); // Debug log
                 
@@ -1517,22 +1576,30 @@ function loadUsersData() {
                     email,
                     age,
                     currentLevel,
+                    currentLevelEnum,
                     targetLevel,
-                    avatarUrl,
-                    registrationDate,
-                    streak,
-                    wordsLearned,
-                    lessonsCompleted,
+                    targetLevelEnum,
                     daysActive,
-                    lastActiveDate,
+                    lessonsCompleted,
+                    streak,
                     studyTimeMinutes,
-                    status,
-                    isAdmin,
+                    profileUserId,
+                    wordsLearned,
                     vocabularyCount,
                     completedQuizzes,
+                    completedFlashcardsCount,
+                    learningFlashcardsCount,
+                    masteredFlashcardsCount,
+                    averageQuizScore,
+                    isAdmin,
+                    categoryProgress,
+                    flashcardProgress,
+                    completedFlashcards,
+                    quizResults,
                     learningData,
                     rawData: userData // Lưu dữ liệu gốc để debug
                 });
+            });
             
             // Hiển thị danh sách người dùng
             currentUsersData = usersData;
@@ -1541,14 +1608,14 @@ function loadUsersData() {
         })
         .catch((error) => {
             console.error('Lỗi khi tải dữ liệu người dùng:', error);
-            usersList.innerHTML = `<tr><td colspan="9" class="text-danger text-center">Lỗi khi tải dữ liệu người dùng: ${error.message}</td></tr>`;
+            usersList.innerHTML = `<tr><td colspan="11" class="text-danger text-center">Lỗi khi tải dữ liệu người dùng: ${error.message}</td></tr>`;
         });
 }
 
 // Hiển thị danh sách người dùng
 function renderUsersList(data) {
     if (!data || data.length === 0) {
-        usersList.innerHTML = `<tr><td colspan="9" class="text-center">Không có dữ liệu người dùng</td></tr>`;
+        usersList.innerHTML = `<tr><td colspan="11" class="text-center">Không có dữ liệu người dùng</td></tr>`;
         return;
     }
     
@@ -1574,21 +1641,24 @@ function renderUsersList(data) {
         const statusClass = user.status === 'active' ? 'text-success' : 'text-danger';
         const statusName = getStatusName(user.status);
         
-        // Hiển thị badge admin nếu là admin
-        const adminBadge = user.isAdmin ? '<span class="badge bg-danger ms-1">Admin</span>' : '';
-        
         html += `
             <tr>
                 <td class="user-id">${user.id ? user.id.substring(0, 10) : 'N/A'}...</td>
                 <td>${user.email || 'N/A'}</td>
-                <td>${user.name || 'N/A'}${adminBadge}</td>
+                <td>${user.name || 'N/A'}</td>
                 <td>${registrationDateStr}</td>
                 <td>${user.currentLevel || 'N/A'}</td>
                 <td class="text-center">
-                    <span class="badge bg-info">${user.vocabularyCount || 0}</span>
+                    <span class="badge bg-info" title="Từ vựng đã học">${user.vocabularyCount || 0}</span>
                 </td>
                 <td class="text-center">
-                    <span class="badge bg-success">${user.completedQuizzes || 0}</span>
+                    <span class="badge bg-success" title="Quiz đã hoàn thành">${user.completedQuizzes || 0}</span>
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-warning" title="Flashcards đang học">${user.learningFlashcardsCount || 0}</span>
+                </td>
+                <td class="text-center">
+                    <span class="badge bg-primary" title="Điểm quiz trung bình">${user.averageQuizScore || 0}</span>
                 </td>
                 <td class="${statusClass}">${statusName}</td>
                 <td>
@@ -2410,11 +2480,11 @@ function viewUserDetail(userId) {
                 <div class="col-md-6">
                     <div class="mb-3">
                         <strong>Trình độ hiện tại:</strong>
-                        <span class="text-muted">${user.currentLevel}</span>
+                        <span class="text-muted">${user.currentLevel} (${user.currentLevelEnum})</span>
                     </div>
                     <div class="mb-3">
                         <strong>Trình độ mục tiêu:</strong>
-                        <span class="text-muted">${user.targetLevel}</span>
+                        <span class="text-muted">${user.targetLevel} (${user.targetLevelEnum})</span>
                     </div>
                     <div class="mb-3">
                         <strong>Hoạt động cuối:</strong>
@@ -2451,13 +2521,55 @@ function viewUserDetail(userId) {
                                 <span>Số từ vựng đã học:</span>
                                 <span class="text-primary">${user.wordsLearned}</span>
                             </div>
-                    </div>
-                    
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Từ vựng trong learning:</span>
+                                <span class="text-primary">${user.vocabularyCount}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Quiz đã hoàn thành:</span>
+                                <span class="text-primary">${user.completedQuizzes}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Điểm quiz trung bình:</span>
+                                <span class="text-primary">${user.averageQuizScore}%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Flashcards đã hoàn thành:</span>
+                                <span class="text-primary">${user.completedFlashcardsCount}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Flashcards đang học:</span>
+                                <span class="text-primary">${user.learningFlashcardsCount}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <div class="d-flex justify-content-between">
+                                <span>Flashcards đã thuộc:</span>
+                                <span class="text-primary">${user.masteredFlashcardsCount}</span>
+                            </div>
+                        </div>
+                        
                         <div class="mb-2">
                             <div class="d-flex justify-content-between">
                                 <span>Số bài học đã hoàn thành:</span>
                                 <span class="text-primary">${user.lessonsCompleted}</span>
-                        </div>
+                            </div>
                         </div>
                         </div>
                 </div>
@@ -2469,6 +2581,76 @@ function viewUserDetail(userId) {
     document.getElementById('user-detail-content').innerHTML = detailContent;
     const userDetailModal = new bootstrap.Modal(document.getElementById('user-detail-modal'));
     userDetailModal.show();
+}
+
+
+// Hàm chuyển đổi theme
+function toggleTheme() {
+    const body = document.body;
+    const themeBtn = event.target.closest('button');
+    const icon = themeBtn.querySelector('i');
+    const isDark = body.classList.contains('dark-theme');
+    
+    if (isDark) {
+        body.classList.remove('dark-theme');
+        localStorage.setItem('theme', 'light');
+        icon.className = 'fas fa-moon me-1';
+        showNotification('Đã chuyển sang giao diện sáng', 'info');
+    } else {
+        body.classList.add('dark-theme');
+        localStorage.setItem('theme', 'dark');
+        icon.className = 'fas fa-sun me-1';
+        showNotification('Đã chuyển sang giao diện tối', 'info');
+    }
+}
+
+// Khôi phục theme từ localStorage
+function restoreTheme() {
+    const savedTheme = localStorage.getItem('theme');
+    const themeBtn = document.querySelector('button[onclick="toggleTheme()"]');
+    
+    if (savedTheme === 'dark') {
+        document.body.classList.add('dark-theme');
+        if (themeBtn) {
+            const icon = themeBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-sun me-1';
+            }
+        }
+    } else {
+        document.body.classList.remove('dark-theme');
+        if (themeBtn) {
+            const icon = themeBtn.querySelector('i');
+            if (icon) {
+                icon.className = 'fas fa-moon me-1';
+            }
+        }
+    }
+}
+
+// Hàm hiển thị thông báo
+function showNotification(message, type = 'info') {
+    // Tạo toast notification
+    const toast = document.createElement('div');
+    toast.className = `toast-notification toast-${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'} me-2"></i>
+            ${message}
+        </div>
+    `;
+    
+    // Thêm vào body
+    document.body.appendChild(toast);
+    
+    // Hiển thị với animation
+    setTimeout(() => toast.classList.add('show'), 100);
+    
+    // Tự động ẩn sau 3 giây
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // Thiết lập sự kiện xóa người dùng
