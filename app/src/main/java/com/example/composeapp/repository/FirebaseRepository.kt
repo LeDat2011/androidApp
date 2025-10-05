@@ -21,13 +21,45 @@ class FirebaseRepository @Inject constructor(
         return try {
             val uid = userId ?: return Result.failure(Exception("User not authenticated"))
             
-            val profileRef = database.reference
+            // Save profile data theo cấu trúc Firebase mới - chia thành profile, progress, settings
+            val profileData = mutableMapOf<String, Any>()
+            profileData["userId"] = profile.userId.ifEmpty { uid }
+            profileData["name"] = profile.name
+            profileData["email"] = profile.email
+            profileData["age"] = profile.age
+            profileData["currentLevel"] = profile.currentLevel
+            profileData["targetLevel"] = profile.targetLevel
+            profileData["registrationDate"] = profile.registrationDate ?: System.currentTimeMillis()
+            profileData["lastActiveDate"] = profile.lastActiveDate ?: System.currentTimeMillis()
+            if (profile.avatarUrl != null) profileData["avatarUrl"] = profile.avatarUrl
+            
+            // Save progress data
+            val progressData = mutableMapOf<String, Any>()
+            progressData["streak"] = profile.streak
+            progressData["wordsLearned"] = profile.wordsLearned
+            progressData["lessonsCompleted"] = profile.lessonsCompleted
+            progressData["daysActive"] = profile.daysActive
+            progressData["lastActiveDate"] = profile.lastActiveDate ?: System.currentTimeMillis()
+            progressData["totalExperience"] = profile.totalExperience
+            
+            // Save settings data
+            val settingsData = mutableMapOf<String, Any>()
+            settingsData["studyTimeMinutes"] = profile.studyTimeMinutes
+            
+            // Save to Realtime Database với cấu trúc đúng
+            val updates = hashMapOf<String, Any>(
+                "profile" to profileData,
+                "progress" to progressData,
+                "settings" to settingsData
+            )
+            
+            database.reference
                 .child("app_data")
                 .child("users")
                 .child(uid)
-                .child("profile")
+                .updateChildren(updates)
+                .await()
             
-            profileRef.setValue(profile).await()
             Result.success(profile)
         } catch (e: Exception) {
             Result.failure(e)
@@ -38,15 +70,39 @@ class FirebaseRepository @Inject constructor(
         return try {
             val uid = userId ?: return Result.failure(Exception("User not authenticated"))
             
-            val profileRef = database.reference
+            // Đọc dữ liệu từ cấu trúc mới - profile, progress, settings riêng biệt
+            val userRef = database.reference
                 .child("app_data")
                 .child("users")
                 .child(uid)
-                .child("profile")
             
-            val snapshot = profileRef.get().await()
-            val profile = snapshot.getValue(UserProfileData::class.java)
-            Result.success(profile)
+            val snapshot = userRef.get().await()
+            
+            if (!snapshot.child("profile").exists()) {
+                return Result.success(null)
+            }
+            
+            // Đọc profile data
+            val profileSnapshot = snapshot.child("profile")
+            val progressSnapshot = snapshot.child("progress")
+            val settingsSnapshot = snapshot.child("settings")
+            
+            val profileData = profileSnapshot.getValue(UserProfileData::class.java)
+            if (profileData != null) {
+                // Cập nhật thêm dữ liệu từ progress và settings
+                val updatedProfile = profileData.copy(
+                    streak = progressSnapshot.child("streak").getValue(Int::class.java) ?: profileData.streak,
+                    wordsLearned = progressSnapshot.child("wordsLearned").getValue(Int::class.java) ?: profileData.wordsLearned,
+                    lessonsCompleted = progressSnapshot.child("lessonsCompleted").getValue(Int::class.java) ?: profileData.lessonsCompleted,
+                    daysActive = progressSnapshot.child("daysActive").getValue(Int::class.java) ?: profileData.daysActive,
+                    totalExperience = progressSnapshot.child("totalExperience").getValue(Long::class.java) ?: profileData.totalExperience,
+                    studyTimeMinutes = settingsSnapshot.child("studyTimeMinutes").getValue(Int::class.java) ?: profileData.studyTimeMinutes
+                )
+                
+                Result.success(updatedProfile)
+            } else {
+                Result.success(null)
+            }
         } catch (e: Exception) {
             Result.failure(e)
         }

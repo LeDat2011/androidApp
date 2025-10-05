@@ -73,13 +73,43 @@ class UserProfileViewModel : ViewModel() {
                 
                 val userId = auth.currentUser?.uid ?: throw Exception("User not authenticated")
                 
-                // Save profile data to Realtime Database using new Firebase structure
+                // Save profile data theo cấu trúc Firebase mới - chia thành profile, progress, settings
+                val profileData = mutableMapOf<String, Any>()
+                profileData["userId"] = profile.userId.ifEmpty { userId }
+                profileData["name"] = profile.name
+                profileData["email"] = profile.email
+                profileData["age"] = profile.age
+                profileData["currentLevel"] = profile.currentLevel
+                profileData["targetLevel"] = profile.targetLevel
+                profileData["registrationDate"] = profile.registrationDate ?: System.currentTimeMillis()
+                profileData["lastActiveDate"] = profile.lastActiveDate ?: System.currentTimeMillis()
+                if (profile.avatarUrl != null) profileData["avatarUrl"] = profile.avatarUrl
+                
+                // Save progress data
+                val progressData = mutableMapOf<String, Any>()
+                progressData["streak"] = profile.streak
+                progressData["wordsLearned"] = profile.wordsLearned
+                progressData["lessonsCompleted"] = profile.lessonsCompleted
+                progressData["daysActive"] = profile.daysActive
+                progressData["lastActiveDate"] = profile.lastActiveDate ?: System.currentTimeMillis()
+                progressData["totalExperience"] = profile.totalExperience
+                
+                // Save settings data
+                val settingsData = mutableMapOf<String, Any>()
+                settingsData["studyTimeMinutes"] = profile.studyTimeMinutes
+                
+                // Save to Realtime Database với cấu trúc đúng
+                val updates = hashMapOf<String, Any>(
+                    "profile" to profileData,
+                    "progress" to progressData,
+                    "settings" to settingsData
+                )
+                
                 database.reference
                     .child("app_data")
                     .child("users")
                     .child(userId)
-                    .child("profile")
-                    .setValue(profile)
+                    .updateChildren(updates)
                     .addOnSuccessListener {
                         _profileData.value = profile
                         _saveProfileState.value = SaveProfileState.Success
@@ -96,20 +126,48 @@ class UserProfileViewModel : ViewModel() {
     fun loadUserProfile() {
         val userId = auth.currentUser?.uid ?: return
         
-                _loadProfileState.value = LoadProfileState.Loading
-                
-        database.reference.child("app_data").child("users").child(userId).child("profile")
+        _loadProfileState.value = LoadProfileState.Loading
+        
+        // Đọc dữ liệu từ cấu trúc mới - profile, progress, settings riêng biệt
+        database.reference.child("app_data").child("users").child(userId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
-                    override fun onDataChange(snapshot: DataSnapshot) {
-                    val profile = snapshot.getValue(UserProfileData::class.java)
-                    _profileData.value = profile
-                    _loadProfileState.value = LoadProfileState.Success
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    try {
+                        // Đọc profile data
+                        val profileSnapshot = snapshot.child("profile")
+                        val progressSnapshot = snapshot.child("progress")
+                        val settingsSnapshot = snapshot.child("settings")
+                        
+                        if (profileSnapshot.exists()) {
+                            val profileData = profileSnapshot.getValue(UserProfileData::class.java)
+                            if (profileData != null) {
+                                // Cập nhật thêm dữ liệu từ progress và settings
+                                val updatedProfile = profileData.copy(
+                                    streak = progressSnapshot.child("streak").getValue(Int::class.java) ?: profileData.streak,
+                                    wordsLearned = progressSnapshot.child("wordsLearned").getValue(Int::class.java) ?: profileData.wordsLearned,
+                                    lessonsCompleted = progressSnapshot.child("lessonsCompleted").getValue(Int::class.java) ?: profileData.lessonsCompleted,
+                                    daysActive = progressSnapshot.child("daysActive").getValue(Int::class.java) ?: profileData.daysActive,
+                                    totalExperience = progressSnapshot.child("totalExperience").getValue(Long::class.java) ?: profileData.totalExperience,
+                                    studyTimeMinutes = settingsSnapshot.child("studyTimeMinutes").getValue(Int::class.java) ?: profileData.studyTimeMinutes
+                                )
+                                
+                                _profileData.value = updatedProfile
+                                _loadProfileState.value = LoadProfileState.Success
+                            } else {
+                                _loadProfileState.value = LoadProfileState.Error("Không thể đọc dữ liệu profile")
+                            }
+                        } else {
+                            _loadProfileState.value = LoadProfileState.Error("Không tìm thấy dữ liệu profile")
+                        }
+                    } catch (e: Exception) {
+                        _loadProfileState.value = LoadProfileState.Error(e.message ?: "Lỗi khi đọc profile")
                     }
-                    
-                    override fun onCancelled(error: DatabaseError) {
-                        _loadProfileState.value = LoadProfileState.Error(error.message)
-                    }
-                })
+                }
+                
+                override fun onCancelled(error: DatabaseError) {
+                    _loadProfileState.value = LoadProfileState.Error(error.message)
+                }
+            })
     }
 
     // Tải tiến độ theo từng danh mục từ app_data/users/{uid}/learning_stats/category_progress

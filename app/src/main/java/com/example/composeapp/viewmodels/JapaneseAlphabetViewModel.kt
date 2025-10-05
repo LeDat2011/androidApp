@@ -32,6 +32,11 @@ class JapaneseAlphabetViewModel : ViewModel() {
     // State cho thông báo lỗi
     val errorMessage: StateFlow<String?> = repository.error
     
+    init {
+        // Tải dữ liệu mặc định cho Hiragana
+        loadCharacters(AlphabetType.HIRAGANA)
+    }
+    
     // Đổi loại bảng chữ cái
     fun switchAlphabetType(type: AlphabetType) {
         _currentAlphabetType.value = type

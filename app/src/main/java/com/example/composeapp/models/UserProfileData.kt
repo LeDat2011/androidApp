@@ -16,9 +16,9 @@ data class UserProfileData(
     val lastActiveDate: Long? = null,
     val avatarUrl: String? = null,
     val totalExperience: Long = 0L,
-    val unlockedLevels: List<String> = listOf("N5"), // Danh sách level đã unlock
-    val levelProgress: Map<String, Map<String, Any>> = emptyMap(), // Progress của từng level/category
-    val achievements: List<String> = emptyList() // Danh sách achievement đã đạt được
+    val unlockedLevels: ArrayList<String> = arrayListOf("N5"), // Danh sách level đã unlock - sử dụng ArrayList cho Firebase
+    val levelProgress: HashMap<String, HashMap<String, Any>> = hashMapOf(), // Progress của từng level/category - sử dụng HashMap cho Firebase
+    val achievements: ArrayList<String> = arrayListOf() // Danh sách achievement đã đạt được - sử dụng ArrayList cho Firebase
 ) {
     // Helper methods to convert between String and JLPTLevel enum
     fun getCurrentLevelEnum(): JLPTLevel {
@@ -54,6 +54,32 @@ data class UserProfileData(
                 else -> null
             }
         }.toSet()
+    }
+    
+    // Helper method to add unlocked level
+    fun addUnlockedLevel(level: JLPTLevel): UserProfileData {
+        val newUnlockedLevels = ArrayList(unlockedLevels)
+        if (!newUnlockedLevels.contains(level.name)) {
+            newUnlockedLevels.add(level.name)
+        }
+        return this.copy(unlockedLevels = newUnlockedLevels)
+    }
+    
+    // Helper method to add achievement
+    fun addAchievement(achievement: String): UserProfileData {
+        val newAchievements = ArrayList(achievements)
+        if (!newAchievements.contains(achievement)) {
+            newAchievements.add(achievement)
+        }
+        return this.copy(achievements = newAchievements)
+    }
+    
+    // Helper method to update level progress
+    fun updateLevelProgress(level: String, category: String, progress: Any): UserProfileData {
+        val newLevelProgress = HashMap(levelProgress)
+        val categoryProgress = newLevelProgress.getOrPut(level) { HashMap<String, Any>() } as HashMap<String, Any>
+        categoryProgress[category] = progress
+        return this.copy(levelProgress = newLevelProgress)
     }
     
     companion object {
@@ -92,8 +118,8 @@ data class UserProfileData(
                 lastActiveDate = lastActiveDate,
                 avatarUrl = avatarUrl,
                 totalExperience = totalExperience,
-                unlockedLevels = unlockedLevels.map { it.name },
-                achievements = achievements
+                unlockedLevels = ArrayList(unlockedLevels.map { it.name }),
+                achievements = ArrayList(achievements)
             )
         }
     }

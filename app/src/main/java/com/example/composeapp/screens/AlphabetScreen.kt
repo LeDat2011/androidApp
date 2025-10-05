@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,7 +50,8 @@ fun AlphabetScreen(
     val selectedCharacter by viewModel.selectedCharacter
     
     // Lấy danh sách ký tự theo hàng dựa trên loại bảng chữ cái hiện tại
-    val characterRows by remember(currentAlphabetType) {
+    val characters by viewModel.characters.collectAsState()
+    val characterRows by remember(currentAlphabetType, characters) {
         mutableStateOf(
             when (currentAlphabetType) {
                 AlphabetType.HIRAGANA -> JapaneseAlphabet.getRows(AlphabetType.HIRAGANA)
