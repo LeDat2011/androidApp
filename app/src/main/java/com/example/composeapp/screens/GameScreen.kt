@@ -295,7 +295,7 @@ private fun GameTypeSelection(
             color = Color(0xFFFF9800),
             userLevelInfo = userLevelInfo,
             gameType = GameType.SPEED_QUIZ,
-            onStart = { onStartGame(GameType.SPEED_QUIZ, GameDifficulty.MEDIUM) }
+            onStart = { onStartGame(GameType.SPEED_QUIZ, GameDifficulty.EASY) }
         )
     }
 }

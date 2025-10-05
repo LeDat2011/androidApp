@@ -1,8 +1,7 @@
 package com.example.composeapp.components
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,7 +13,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeapp.models.GameQuestion
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -33,6 +31,14 @@ fun SpeedQuizComponent(
         selectedAnswer = null
         isAnswered = false
         showResult = null
+    }
+    
+    // Tự động chuyển câu hỏi sau khi trả lời
+    LaunchedEffect(isAnswered, showResult) {
+        if (isAnswered && showResult != null) {
+            delay(1500)
+            onAnswer(selectedAnswer ?: "")
+        }
     }
     
     Card(
@@ -76,10 +82,10 @@ fun SpeedQuizComponent(
             }
             
             // Các lựa chọn
-            LazyColumn(
+            Column(
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(question.options) { option ->
+                question.options.forEach { option ->
                     SpeedQuizOption(
                         option = option,
                         isSelected = selectedAnswer == option,
@@ -92,12 +98,6 @@ fun SpeedQuizComponent(
                                 // Tự động xác nhận sau khi chọn
                                 isAnswered = true
                                 showResult = option == question.correctAnswer
-                                
-                                // Tự động chuyển câu sau 1.5 giây
-                                GlobalScope.launch {
-                                    delay(1500)
-                                    onAnswer(option)
-                                }
                             }
                         }
                     )
@@ -235,11 +235,17 @@ private fun SpeedQuizOption(
     }
     
     Card(
-        onClick = onClick,
         colors = CardDefaults.cardColors(containerColor = backgroundColor),
         modifier = Modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .height(60.dp)
+            .then(
+                if (!isDisabled) {
+                    Modifier.clickable { onClick() }
+                } else {
+                    Modifier
+                }
+            ),
         shape = RoundedCornerShape(12.dp),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isSelected) 8.dp else 2.dp

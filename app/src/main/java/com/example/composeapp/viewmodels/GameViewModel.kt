@@ -49,7 +49,13 @@ class GameViewModel : ViewModel() {
     val achievements: StateFlow<List<GameAchievement>> = _achievements.asStateFlow()
     
     // State cho thông tin level của user
-    private val _userLevelInfo = MutableStateFlow(UserLevelInfo(userId = "current_user"))
+    private val _userLevelInfo = MutableStateFlow(
+        UserLevelInfo(
+            userId = "current_user",
+            currentLevel = JLPTLevel.N4,
+            unlockedLevels = setOf(JLPTLevel.N5, JLPTLevel.N4, JLPTLevel.N3)
+        )
+    )
     val userLevelInfo: StateFlow<UserLevelInfo> = _userLevelInfo.asStateFlow()
     
     init {
@@ -151,6 +157,56 @@ class GameViewModel : ViewModel() {
                     japaneseText = "いえ",
                     correctAnswer = "house",
                     options = listOf("house", "car", "tree", "mountain"),
+                    explanation = "いえ có nghĩa là nhà",
+                    points = 15,
+                    timeLimit = 25
+                ),
+                
+                // Speed Quiz - Easy
+                GameQuestion(
+                    id = "sq_easy_1",
+                    type = GameType.SPEED_QUIZ,
+                    difficulty = GameDifficulty.EASY,
+                    question = "Chọn nghĩa đúng của từ:",
+                    japaneseText = "こんにちは",
+                    correctAnswer = "Hello",
+                    options = listOf("Hello", "Goodbye", "Thank you", "Sorry"),
+                    explanation = "こんにちは là lời chào tiếng Nhật",
+                    points = 15,
+                    timeLimit = 25
+                ),
+                GameQuestion(
+                    id = "sq_easy_2",
+                    type = GameType.SPEED_QUIZ,
+                    difficulty = GameDifficulty.EASY,
+                    question = "Chọn từ đúng:",
+                    japaneseText = "____ です",
+                    correctAnswer = "わたし",
+                    options = listOf("わたし", "あなた", "かれ", "かのじょ"),
+                    explanation = "わたし có nghĩa là tôi",
+                    points = 15,
+                    timeLimit = 25
+                ),
+                GameQuestion(
+                    id = "sq_easy_3",
+                    type = GameType.SPEED_QUIZ,
+                    difficulty = GameDifficulty.EASY,
+                    question = "Chọn nghĩa đúng:",
+                    japaneseText = "ありがとう",
+                    correctAnswer = "Thank you",
+                    options = listOf("Thank you", "Please", "Sorry", "Excuse me"),
+                    explanation = "ありがとう có nghĩa là cảm ơn",
+                    points = 15,
+                    timeLimit = 25
+                ),
+                GameQuestion(
+                    id = "sq_easy_4",
+                    type = GameType.SPEED_QUIZ,
+                    difficulty = GameDifficulty.EASY,
+                    question = "Chọn từ đúng:",
+                    japaneseText = "いえ",
+                    correctAnswer = "house",
+                    options = listOf("house", "car", "tree", "water"),
                     explanation = "いえ có nghĩa là nhà",
                     points = 15,
                     timeLimit = 25
