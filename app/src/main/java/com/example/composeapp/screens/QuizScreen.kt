@@ -65,7 +65,7 @@ fun QuizScreen(
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(spacing().md)
+                        .padding(horizontal = spacing().sm, vertical = spacing().sm)
                 ) {
                     Column(
                         horizontalAlignment = Alignment.CenterHorizontally
@@ -82,7 +82,8 @@ fun QuizScreen(
                             text = "Chọn chủ đề để bắt đầu học",
                             fontSize = 12.sp,
                             color = MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.8f),
-                            textAlign = TextAlign.Center
+                            textAlign = TextAlign.Center,
+                            maxLines = 1
                         )
                     }
                 }

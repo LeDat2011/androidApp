@@ -463,7 +463,7 @@ fun CategoryWithProgressCard(
             
             Text(
                 text = emoji,
-                fontSize = 32.sp,
+                fontSize = 40.sp,
                 modifier = Modifier
                     .align(Alignment.TopStart)
             )
@@ -476,38 +476,16 @@ fun CategoryWithProgressCard(
                 // Category name
                 Text(
                     text = category.displayName,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.titleLarge,
                     fontWeight = FontWeight.Bold,
-                    color = Color.White
+                    color = Color.White,
+                    fontSize = 20.sp
                 )
                 
                 Spacer(modifier = Modifier.height(spacing.sm))
                 
                 // Progress bar
-                val animatedProgress by animateFloatAsState(
-                    targetValue = progress,
-                    animationSpec = tween(1000),
-                    label = "category_progress"
-                )
-                
-                LinearProgressIndicator(
-                    progress = { animatedProgress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = Color.White,
-                    trackColor = Color.White.copy(alpha = 0.3f)
-                )
-                
-                Spacer(modifier = Modifier.height(spacing.xs))
-                
-                // Progress percentage
-                Text(
-                    text = "${(animatedProgress * 100).toInt()}% hoàn thành",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color.White.copy(alpha = 0.9f)
-                )
+                // Removed progress bar and percentage as requested
             }
         }
     }
