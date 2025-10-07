@@ -15,7 +15,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.composeapp.models.LearningProgress
+import com.example.composeapp.models.progress.LearningProgress
 
 @Composable
 fun ProgressCard(progress: LearningProgress) {
