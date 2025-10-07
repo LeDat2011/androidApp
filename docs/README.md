@@ -4,7 +4,7 @@
 
 ?
 
-## Sơ đồ luồng đơn giản (Dễ đọc)
+## Sơ đồ luồng đơn giản (cập nhật)
 
 ```mermaid
 graph TD
@@ -13,43 +13,37 @@ graph TD
     C --> D[🏠 Màn hình chính]
     
     D --> E[📚 Học tập]
-    D --> F[🎮 Games]
+    D --> F[🎮 Trò chơi]
     D --> G[👤 Hồ sơ]
     
     E --> H[🔤 Bảng chữ cái]
-    E --> I[📝 Từ vựng]
-    E --> J[✍️ Luyện viết]
+    E --> I[📝 Flashcards]
+    E --> N[🧪 Quiz]
     
     H --> K[Hiragana/Katakana/Kanji]
     K --> L[Chi tiết ký tự]
     
-    I --> M[Flashcards]
-    I --> N[Quiz]
-    
-    J --> O[Viết theo nét]
-    J --> P[Viết tự do]
+    I --> M[Học bằng Flashcards]
     
     F --> Q[Word Puzzle]
     F --> R[Memory Game]
     F --> S[Speed Quiz]
     
     G --> T[Thông tin cá nhân]
-    G --> U[Tiến độ học tập]
-    G --> V[Thành tích]
     
-    %% Styling cho sơ đồ đơn giản
-    classDef default fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000000
-    classDef start fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#ffffff
-    classDef main fill:#2196F3,stroke:#1565C0,stroke-width:3px,color:#ffffff
-    classDef learning fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#ffffff
-    classDef games fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#ffffff
-    classDef profile fill:#F44336,stroke:#C62828,stroke-width:2px,color:#ffffff
+    %% Styling
+    classDef default fill:#ffffff,stroke:#333333,stroke-width:2px,color:#000
+    classDef start fill:#4CAF50,stroke:#2E7D32,stroke-width:3px,color:#fff
+    classDef main fill:#2196F3,stroke:#1565C0,stroke-width:3px,color:#fff
+    classDef learning fill:#FF9800,stroke:#E65100,stroke-width:2px,color:#fff
+    classDef games fill:#9C27B0,stroke:#6A1B9A,stroke-width:2px,color:#fff
+    classDef profile fill:#F44336,stroke:#C62828,stroke-width:2px,color:#fff
     
     class A start
     class D main
-    class E,H,I,J,K,L,M,N,O,P learning
+    class E,H,I,K,L,M,N learning
     class F,Q,R,S games
-    class G,T,U,V profile
+    class G,T profile
 ```
 
 ## Tài Liệu
@@ -84,18 +78,13 @@ Thư mục này chứa các tài liệu về thiết kế và cấu trúc ứng 
 - **CategoryLevelScreen**: Chọn cấp độ cho từng danh mục
 - **CategoryDetailScreen**: Chi tiết nội dung trong danh mục
 
-#### ✍️ Luyện Viết
-- **WritingScreen**: Màn hình luyện viết ký tự tiếng Nhật
-- **WritingSettings**: Cài đặt cho chế độ luyện viết
-
 #### 🎮 Games & Giải Trí
 - **GameScreen**: Màn hình chơi mini games
 - **QuizScreen**: Bài kiểm tra kiến thức
 - **QuizDetailScreen**: Chi tiết câu hỏi quiz
 
 #### 📊 Theo Dõi & Thống Kê
-- **LevelProgressionScreen**: Theo dõi tiến độ học tập chi tiết
-- **StatusScreen**: Thống kê tổng quan hiệu suất học tập
+Hiện tại các màn theo dõi chi tiết đã được lược bỏ khỏi ứng dụng.
 
 ### 2. ViewModel
 
@@ -151,10 +140,7 @@ Thư mục này chứa các tài liệu về thiết kế và cấu trúc ứng 
 - **ProgressComponent**: Hiển thị tiến độ học tập
 
 #### ✍️ Luyện Viết
-- **WritingSettingsComponent**: Cài đặt chế độ luyện viết
-- **StrokeWritingComponent**: Luyện viết theo từng nét
-- **FreeWritingComponent**: Luyện viết tự do
-- **BoldWritingCanvas**: Canvas vẽ ký tự với nét đậm
+Các thành phần luyện viết đã được loại bỏ trong phiên bản hiện tại.
 
 #### 🎮 Mini Games
 - **WordPuzzleGame**: Game ghép từ thành câu
