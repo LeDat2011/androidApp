@@ -260,7 +260,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật thông tin học tập lên Firebase
                 val userLearningRef = database.getReference(
-                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
+                    "app_data/users/${currentUser.uid}/learning/flashcardProgress/${currentFlashcard.id}"
                 )
                 
                 // Tính toán mức độ thành thạo mới
@@ -343,7 +343,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật độ khó lên Firebase
                 val userLearningRef = database.getReference(
-                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
+                    "app_data/users/${currentUser.uid}/learning/flashcardProgress/${currentFlashcard.id}"
                 )
                 
                 // Tăng độ khó lên nhưng không vượt quá 1.0
@@ -372,7 +372,7 @@ class FlashcardRecommendationViewModel : ViewModel() {
                 
                 // Cập nhật độ khó lên Firebase
                 val userLearningRef = database.getReference(
-                    "app_data/users/${'$'}{currentUser.uid}/learning/flashcardProgress/${'$'}{currentFlashcard.id}"
+                    "app_data/users/${currentUser.uid}/learning/flashcardProgress/${currentFlashcard.id}"
                 )
                 
                 // Giảm độ khó xuống nhưng không nhỏ hơn 0.0
