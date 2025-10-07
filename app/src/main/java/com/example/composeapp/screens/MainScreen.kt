@@ -91,8 +91,8 @@ fun MainScreen(
                 NavigationBarItem(
                     icon = { 
                         Icon(
-                            Icons.Default.Edit,
-                            contentDescription = "Writing",
+                            Icons.Default.Games,
+                            contentDescription = "Games",
                             modifier = Modifier.size(20.dp)
                         )
                     },
