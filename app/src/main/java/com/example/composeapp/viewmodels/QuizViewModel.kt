@@ -2,7 +2,7 @@ package com.example.composeapp.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.composeapp.data.FirebaseRepository
+import com.example.composeapp.repository.FirebaseRepository
 import com.example.composeapp.models.*
 import com.google.firebase.database.FirebaseDatabase
 import com.example.composeapp.repository.QuizRepository
@@ -15,7 +15,10 @@ import java.util.Date
 import java.util.Locale
 
 class QuizViewModel : ViewModel() {
-    private val repository = FirebaseRepository()
+    private val repository = FirebaseRepository(
+        com.google.firebase.auth.FirebaseAuth.getInstance(),
+        com.google.firebase.database.FirebaseDatabase.getInstance()
+    )
     val quizRepository = QuizRepository()
 
     private val _categories = MutableStateFlow<List<QuizCategory>>(emptyList())
@@ -430,11 +433,7 @@ class QuizViewModel : ViewModel() {
                     level = currentLevelId ?: ""
                 )
                 try {
-                    // Lưu qua repository Firebase (app_data)
-                    com.example.composeapp.repository.FirebaseRepository(
-                        com.google.firebase.auth.FirebaseAuth.getInstance(),
-                        com.google.firebase.database.FirebaseDatabase.getInstance()
-                    ).saveQuizResult(result)
+                    repository.saveQuizResult(result)
                 } catch (e: Exception) {
                     _error.value = "Lỗi khi lưu kết quả: ${e.message}"
                 }

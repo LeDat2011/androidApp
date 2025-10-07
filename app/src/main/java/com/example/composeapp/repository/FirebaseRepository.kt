@@ -438,6 +438,177 @@ class FirebaseRepository @Inject constructor(
             Result.failure(e)
         }
     }
+
+    // Quiz Repository (API đặc thù cho ViewModel Quiz)
+    suspend fun getQuizCategories(): List<QuizCategory> {
+        val categoriesRef = database.reference.child("quizzes")
+        return try {
+            val snapshot = categoriesRef.get().await()
+            val categories = mutableListOf<QuizCategory>()
+
+            snapshot.children.forEach { categorySnapshot ->
+                val id = categorySnapshot.key ?: ""
+                val description = categorySnapshot.child("description").getValue(String::class.java) ?: ""
+                val icon = categorySnapshot.child("icon").getValue(String::class.java) ?: ""
+
+                val title = when (id.lowercase()) {
+                    "animals" -> "Động Vật"
+                    "colors" -> "Màu Sắc"
+                    "family" -> "Gia Đình"
+                    "food" -> "Thức Ăn"
+                    "numbers" -> "Số Đếm"
+                    "time" -> "Thời Gian"
+                    "transportation" -> "Phương Tiện"
+                    "weather" -> "Thời Tiết"
+                    "body" -> "Cơ Thể"
+                    "clothing" -> "Quần Áo"
+                    "house" -> "Nhà Cửa"
+                    "nature" -> "Thiên Nhiên"
+                    "school" -> "Trường Học"
+                    "work" -> "Công Việc"
+                    "hobby" -> "Sở Thích"
+                    "sports" -> "Thể Thao"
+                    "music" -> "Âm Nhạc"
+                    "travel" -> "Du Lịch"
+                    "shopping" -> "Mua Sắm"
+                    "health" -> "Sức Khỏe"
+                    else -> id.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
+                }
+
+                categories.add(
+                    QuizCategory(
+                        id = id,
+                        title = title,
+                        description = description,
+                        icon = icon
+                    )
+                )
+            }
+
+            categories
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun getQuizzesByLevel(level: String, category: String): List<Quiz> {
+        val quizRef = database.reference.child("quizzes/$category/levels/$level")
+        return try {
+            val snapshot = quizRef.get().await()
+            val quizzes = mutableListOf<Quiz>()
+
+            snapshot.children.forEach { quizSnapshot ->
+                val id = quizSnapshot.child("id").getValue(String::class.java) ?: ""
+                val title = quizSnapshot.child("title").getValue(String::class.java) ?: ""
+                val description = quizSnapshot.child("description").getValue(String::class.java) ?: ""
+                val timeLimit = quizSnapshot.child("timeLimit").getValue(Int::class.java) ?: 0
+
+                val questionsMap = mutableMapOf<String, Question>()
+                val questionsSnapshot = quizSnapshot.child("questions")
+                questionsSnapshot.children.forEach { questionSnapshot ->
+                    val questionId = questionSnapshot.key ?: ""
+                    val questionText = questionSnapshot.child("question").getValue(String::class.java) ?: ""
+                    val questionType = try {
+                        QuestionType.valueOf(questionSnapshot.child("type").getValue(String::class.java) ?: "MULTIPLE_CHOICE")
+                    } catch (e: Exception) {
+                        QuestionType.MULTIPLE_CHOICE
+                    }
+                    val correctAnswer = questionSnapshot.child("correctAnswer").getValue(String::class.java) ?: ""
+                    val explanation = questionSnapshot.child("explanation").getValue(String::class.java) ?: ""
+                    val points = questionSnapshot.child("points").getValue(Int::class.java) ?: 0
+
+                    val options = mutableMapOf<String, String>()
+                    val optionsSnapshot = questionSnapshot.child("options")
+                    optionsSnapshot.children.forEach { optionSnapshot ->
+                        val optionKey = optionSnapshot.key ?: ""
+                        val optionValue = optionSnapshot.getValue(String::class.java) ?: ""
+                        options[optionKey] = optionValue
+                    }
+
+                    val question = Question(
+                        id = questionId,
+                        type = questionType,
+                        question = questionText,
+                        options = options,
+                        correctAnswer = correctAnswer,
+                        explanation = explanation,
+                        points = points
+                    )
+                    questionsMap[questionId] = question
+                }
+
+                quizzes.add(
+                    Quiz(
+                        id = id,
+                        title = title,
+                        description = description,
+                        timeLimit = timeLimit,
+                        questions = questionsMap
+                    )
+                )
+            }
+
+            quizzes
+        } catch (e: Exception) {
+            emptyList()
+        }
+    }
+
+    suspend fun getQuizById(category: String, level: String, quizId: String): Quiz? {
+        val quizRef = database.reference.child("quizzes/$category/levels/$level/$quizId")
+        return try {
+            val snapshot = quizRef.get().await()
+
+            val id = snapshot.child("id").getValue(String::class.java) ?: ""
+            val title = snapshot.child("title").getValue(String::class.java) ?: ""
+            val description = snapshot.child("description").getValue(String::class.java) ?: ""
+            val timeLimit = snapshot.child("timeLimit").getValue(Int::class.java) ?: 0
+
+            val questionsMap = mutableMapOf<String, Question>()
+            val questionsSnapshot = snapshot.child("questions")
+            questionsSnapshot.children.forEach { questionSnapshot ->
+                val questionId = questionSnapshot.key ?: ""
+                val questionText = questionSnapshot.child("question").getValue(String::class.java) ?: ""
+                val questionType = try {
+                    QuestionType.valueOf(questionSnapshot.child("type").getValue(String::class.java) ?: "MULTIPLE_CHOICE")
+                } catch (e: Exception) {
+                    QuestionType.MULTIPLE_CHOICE
+                }
+                val correctAnswer = questionSnapshot.child("correctAnswer").getValue(String::class.java) ?: ""
+                val explanation = questionSnapshot.child("explanation").getValue(String::class.java) ?: ""
+                val points = questionSnapshot.child("points").getValue(Int::class.java) ?: 0
+
+                val options = mutableMapOf<String, String>()
+                val optionsSnapshot = questionSnapshot.child("options")
+                optionsSnapshot.children.forEach { optionSnapshot ->
+                    val optionKey = optionSnapshot.key ?: ""
+                    val optionValue = optionSnapshot.getValue(String::class.java) ?: ""
+                    options[optionKey] = optionValue
+                }
+
+                val question = Question(
+                    id = questionId,
+                    type = questionType,
+                    question = questionText,
+                    options = options,
+                    correctAnswer = correctAnswer,
+                    explanation = explanation,
+                    points = points
+                )
+                questionsMap[questionId] = question
+            }
+
+            Quiz(
+                id = id,
+                title = title,
+                description = description,
+                timeLimit = timeLimit,
+                questions = questionsMap
+            )
+        } catch (e: Exception) {
+            null
+        }
+    }
     
     // Achievements Operations
     suspend fun getAchievements(): Result<List<Achievement>> {
